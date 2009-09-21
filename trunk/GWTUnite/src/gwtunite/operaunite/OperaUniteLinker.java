@@ -68,16 +68,6 @@ public class OperaUniteLinker extends AbstractLinker {
 		return emitString(logger, out.toString(),"index.html");
 	}
 
-	private EmittedArtifact doEmitConfig(TreeLogger logger) throws UnableToCompleteException 
-	{
-		try {
-			String hostedHtml = Utility.getFileFromClassPath("com/maddison/operaunite/linker/config.xml");
-			return emitBytes(logger, Util.getBytes(hostedHtml), "config.xml");
-		}catch(Exception e) {
-			throw new UnableToCompleteException();
-		}
-	}
-	
 	private EmittedArtifact doEmitCompilation(TreeLogger logger, LinkerContext context, CompilationResult compilationResult) throws UnableToCompleteException {
 		StringBuffer code = new StringBuffer(((CompilationResult)compilationResult).getJavaScript());
 		
