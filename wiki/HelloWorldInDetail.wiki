@@ -35,7 +35,7 @@ The GWT module defintion for the Hello World service looks as follows:
 
 	<entry-point class="gwtunite.examples.client.HelloWorld"/>
  </module>
-}}}}
+}}}
 All Opera Unite services MUST inherit the opera.Unite module in order for the correct Opera Unite boot strap code to be produce.  The GWT entry point should also be set to the class which extends OperaUniteService (this is because OperaUniteService is in reality a  GWT Entry point)
 
 == Service Configuration ==
