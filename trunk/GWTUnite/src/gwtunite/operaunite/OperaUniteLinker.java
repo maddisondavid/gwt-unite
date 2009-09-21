@@ -12,8 +12,6 @@ import com.google.gwt.core.ext.linker.LinkerOrder.Order;
 import com.google.gwt.core.ext.linker.impl.StandardScriptReference;
 import com.google.gwt.dev.About;
 import com.google.gwt.dev.util.DefaultTextOutput;
-import com.google.gwt.dev.util.Util;
-import com.google.gwt.util.tools.Utility;
 
 @LinkerOrder(Order.PRIMARY)
 public class OperaUniteLinker extends AbstractLinker {
@@ -25,7 +23,6 @@ public class OperaUniteLinker extends AbstractLinker {
 
 	@Override
 	public ArtifactSet link(TreeLogger logger, LinkerContext context, ArtifactSet artifacts) throws UnableToCompleteException {
-		  // Create a new set of artifacts that we can modify and return.
         ArtifactSet toReturn = new ArtifactSet(artifacts);
 
         for (CompilationResult compilationResult : toReturn.find(CompilationResult.class)) {
