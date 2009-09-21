@@ -1,0 +1,38 @@
+#summary Guide to using the examples project
+#labels Featured,HelloWorld
+
+== Introduction ==
+GWT-Unite currently ships with two examples :
+ # HelloWorld - A VERY basic bare bones Hello World Service
+ # Blog - A GWT-Unite version of the blog application outlined in the Opera Unite developers primer
+
+The following sections explain how to get these examples up and running. 
+
+== Eclipse Setup ==
+When working with GWT projects inside Eclipse I always find it easier to have a User library which points to the GWT files.  With this in mind, a User library called GWT is required in order to work with the GWT-Unite example projects.
+
+The following steps show how to set up this library:
+
+ # Go to Windows -> Preferences and search for User Libraries
+ # Click New and enter GWT as the library name
+ # Click on the new library and click Add Jars
+ # Go to your GWT 1.7 installation and select:
+	* gwt-dev-[windows|unix].jar
+	* gwt-servlet.jar
+	* gwt-user.jar
+
+== Compiling and running the examples ==
+As with any library/framework, it's always easier to understand with a quick example.  Here's how to compile the example services (and get a framework develop your own services).
+
+Importing the Examples project :
+	# Download the GWTUniteExamples project zip
+	# File -> Import..
+	# Existing Projects Into Workspace
+	# Archive File -> GWTUniteExamples.zip
+
+Compiling the Hello World Service :
+	# Right click on build-helloworld.xml
+	# Select Run As -> Ant Build
+	# This will build dist/GWTUniteHelloWorld.us
+	# Drag this file onto your Opera 10.10 installation to install it
+	# The browser page will show "Hello World"
