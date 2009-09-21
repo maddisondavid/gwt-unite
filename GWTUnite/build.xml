@@ -11,8 +11,8 @@
 	<target name="package">
 		<mkdir dir="${build.dir}"/>
 		<copy todir="${build.dir}">
-			<fileset dir="bin"/>
-			<fileset dir="src"/>
+			<fileset dir="bin" excludes="*.svn"/>
+			<fileset dir="src" excludes="*.svn"/>
 		</copy>
 		
 		<mkdir dir="${dist.dir}"/>
