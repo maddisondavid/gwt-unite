@@ -1,5 +1,5 @@
+#summary A detailed breakdown of the HelloWorld service
 #labels HelloWorld
-#A detailed breakdown of the HelloWorld service
 
 == Looking at the Hello World in more detail ==
 The HelloWorld service is VERY simple, however it does show a few important concepts.
