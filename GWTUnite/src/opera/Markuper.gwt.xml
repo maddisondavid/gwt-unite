@@ -1,0 +1,7 @@
+<module>
+    <script src="scripts/markuper.js"></script>
+
+    <inherits name="com.google.gwt.user.User" />
+    
+    <source path="markuper" />
+ </module>

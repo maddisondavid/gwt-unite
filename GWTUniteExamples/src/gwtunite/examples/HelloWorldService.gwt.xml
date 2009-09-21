@@ -1,0 +1,5 @@
+<module rename-to="helloWorldService">
+    <inherits name="opera.Unite" />
+
+	<entry-point class="gwtunite.examples.client.HelloWorld"/>
+ </module>
