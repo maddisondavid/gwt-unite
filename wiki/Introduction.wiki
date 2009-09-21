@@ -1,3 +1,44 @@
-#summary One-sentence summary of this page.
+#labels Featured,GettingStarted
+== What is GWT-Unite? ==
 
-= Introduction =
+Opera Unite is a personal web server platform built into the next version of the Opera Browser (V10.10).  Services for the WebServer are built using JavaScript which, while being a good choice for a browser, doesn't lend well to building big applications.  GWT unite allows you to build Opera Unite services using GWT, and hence build your services directly in Java rather than JavaScript.
+
+== Requirements ==
+ * GWT-Unite was developed against GWT version 1.7
+ * The documentation for GWT Unite assumes some experience with GWT
+ * Eclipse IDE is required in order to work with the examples
+
+== Opera Unite Supported API's ==
+The current version of GWT Unite supports the following API's:
+	* Core Opera Unite Library
+	* Opera O/I File
+	* Markuper API *_(in progress)_*
+
+== Eclipse Setup ==
+When working with GWT projects inside Eclipse I always find it easier to have a User library which points to the GWT files.  With this in mind, a User library called GWT is required in order to work with the GWT-Unite example projects.
+
+The following steps show how to set up this library:
+
+ # Go to Windows -> Preferences and search for User Libraries
+ # Click New and enter GWT as the library name
+ # Click on the new library and click Add Jars
+ # Go to your GWT 1.7 installation and select:
+	* gwt-dev-[windows|unix].jar
+	* gwt-servlet.jar
+	* gwt-user.jar
+
+== Compiling and running the examples ==
+As with any library/framework, it's always easier to understand with a quick example.  Here's how to compile the example services (and get a framework develop your own services).
+
+Importing the Examples project :
+	# Download the GWTUniteExamples project zip
+	# File -> Import..
+	# Existing Projects Into Workspace
+	# Archive File -> GWTUniteExamples.zip
+
+Compiling the Hello World Service :
+	# Right click on build-helloworld.xml
+	# Select Run As -> Ant Build
+	# This will build dist/GWTUniteHelloWorld.us
+	# Drag this file onto your Opera 10.10 installation to install it
+	# The browser page will show "Hello World"
