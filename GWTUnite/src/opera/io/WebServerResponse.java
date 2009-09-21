@@ -71,7 +71,11 @@ final public class WebServerResponse extends JavaScriptObject {
 		this.setResponseHeader(name, value);
 	}-*/;
 
-	public native void setStatusCode(String statusCode, String text) /*-{
+	public native void setStatusCode(int statusCode) /*-{
+		this.setStatusCode(statusCode);
+	}-*/;
+	
+	public native void setStatusCode(int statusCode, String text) /*-{
 		this.setStatusCode(statusCode, text);
 	}-*/;
 
