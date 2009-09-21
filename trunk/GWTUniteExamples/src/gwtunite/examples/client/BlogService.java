@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+
 import opera.io.OperaUniteService;
 import opera.io.WebServer;
 import opera.io.WebServerEventHandler;
@@ -15,9 +17,6 @@ import opera.io.WebServerResponse;
  * 
  */
 public class BlogService extends OperaUniteService {
-	private static final String TITLE_INPUT = "title";
-	private static final String TEXT_INPUT = "text";
-	
 	private final List<BlogEntry> entries = new ArrayList<BlogEntry>();
 	private WebServer webServer;
 	
@@ -29,7 +28,7 @@ public class BlogService extends OperaUniteService {
 
 			    for (int i=0;i<entries.size();i++) {
 			    	BlogEntry entry = entries.get(i);
-			    	response.write("<li>"+entry.date+": <a href=\"entry?id="+i+"\">"+entry.title+"</a></li>");
+			    	response.write("<li>"+entry.getDate()+": <a href=\"entry?id="+i+"\">"+entry.getTitle()+"</a></li>");
 			    }
 			    
 			    response.write("</ul>" +
@@ -45,10 +44,10 @@ public class BlogService extends OperaUniteService {
 		    BlogEntry entry = entries.get(index);
 		    
 		    response.write("<!DOCTYPE html>" +
-		    			  "<html><head><title>"+entry.title+"</title></head>" +
-		    			  "<body><h1>"+entry.title+"</h1>" +
-		    			  "<p>"+entry.date+"</p>" +
-		    			  "<div>"+entry.text+"</div>" +
+		    			  "<html><head><title>"+entry.getTitle()+"</title></head>" +
+		    			  "<body><h1>"+entry.getTitle()+"</h1>" +
+		    			  "<p>"+entry.getDate()+"</p>" +
+		    			  "<div>"+entry.getText()+"</div>" +
 		        		  "</body></html>");
 		    response.close();			
 		}
@@ -76,7 +75,6 @@ public class BlogService extends OperaUniteService {
 
 		    entries.add(new BlogEntry(title, text, new Date()));
 
-		    //Redirect back to the index of the service
 		    response.setStatusCode(302);
 		    response.setResponseHeader("Location", webServer.getCurrentServicePath());
 		    response.close();
@@ -111,7 +109,8 @@ public class BlogService extends OperaUniteService {
 		}
 		
 		public String getDate() {
-			return date.toString();
+			DateTimeFormat formatter = DateTimeFormat.getFormat("EEE, MMM d, yyyy");
+			return formatter.format(date);
 		}
 	}
 }
