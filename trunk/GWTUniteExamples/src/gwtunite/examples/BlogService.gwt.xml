@@ -1,0 +1,6 @@
+<module rename-to="blogService">
+    <inherits name="opera.Unite" />
+    <inherits name="opera.Widget" />
+
+	<entry-point class="gwtunite.examples.client.BlogService"/>
+ </module>
