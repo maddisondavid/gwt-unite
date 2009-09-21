@@ -1,5 +1,5 @@
 #summary A detailed breakdown of the HelloWorld service
-#labels HelloWorld
+#labels HelloWorld,Featured
 
 == Looking at the Hello World in more detail ==
 The HelloWorld service is VERY simple, however it does show a few important concepts.
@@ -39,7 +39,7 @@ The GWT module defintion for the Hello World service looks as follows:
 All Opera Unite services MUST inherit the opera.Unite module in order for the correct Opera Unite boot strap code to be produce.  The GWT entry point should also be set to the class which extends OperaUniteService (this is because OperaUniteService is in reality a  GWT Entry point)
 
 == Service Configuration ==
+Each Opera Unite service requires a config.xml file which provides Opera with information about the service.  In GWT-Unite, configuration files are created as standard xml files and incorporated into the service archive after the compilation phase.  
 
 == The Builder ==
-
-== Uncaught Exceptions ==
+gwt-unite-service-builder.xml contains a few simple targets that assist in the creation of an Opera Unite service.  The targets in the ANT file are NOT designed to be called directly, but rather from a parent script which sets up the necessary properties.  Build-helloworld.xml shows one of these parent build files.
