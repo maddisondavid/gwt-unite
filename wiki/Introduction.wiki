@@ -15,4 +15,5 @@ The current version of GWT Unite supports the following API's:
 	* Core Opera Unite Library
 	* Opera Widget
 	* Opera I/O File
+        * Service Discovery
 	* Markuper API *_(in progress)_*
