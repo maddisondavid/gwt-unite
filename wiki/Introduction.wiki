@@ -13,6 +13,6 @@ Opera Unite is a personal web server platform built into the next version of the
 == Opera Unite Supported API's ==
 The current version of GWT Unite supports the following API's:
 	* Core Opera Unite Library
-        * Opera Widget
+	* Opera Widget
 	* Opera O/I File
 	* Markuper API *_(in progress)_*
