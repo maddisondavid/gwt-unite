@@ -328,43 +328,133 @@ final public class File extends JavaScriptObject {
 		return this.moveTo(path, overwrite, callback);
 	}-*/;  
 
+    /**
+     * Create a new directory.
+     *
+     * <p>Create a new directory using either a File object or a URL encoded String with a path to the new directory. All 
+     * non-existing parent directories are created along with it.</p>
+     *
+     * <h2>Examples:</h2>
+     *
+     * <pre><code>File file = mountPoint.createDirectory(somePath);
+     *File file = mountPoint.createDirectory(mountPoint.resolve(somePath));</code></pre>
+     *
+     * @param directory File referring to the desired directory, or a URL encoded String with the path to the directory.
+     * @returns File pointing to the new directory.
+     * @throws GENERIC_ERR If the directory or any of its parent directories could not be created.
+     */
     public native File createDirectory(String dirFile) /*-{
 		return this.createDirectory(dirFile);
 	}-*/;
-    
-    public native File createDirectory(File dirFile) /*-{
-    	return this.createDirectory(dirFile);
-    }-*/;
-    
+
+    /**
+     * Delete the given directory.
+     *
+     * <p>If the <code>recursive</code> argument is given as <code>true</code>, this method will attempt to delete the
+     * directory and all of its content. If deleting individual files or directories in it fails, the method will continue
+     * to delete the rest of the content.</p>
+     *
+     * <p>If the entire directory and all of its content is deleted, the method will return <code>true</code>. If parts
+     * of the content, and thus also the directory itself could not be deleted, the method will return
+     * <code>false</code>.</p>
+     *
+     * @param directory URL encoded String with the path to the directory to delete.
+     * @param recursive Whether or not to recursively delete any content references by this File. Optional, default false.
+     * @returns true if the directory and all its content was deleted, false if the directory or any part of its contents was not deleted.
+     */
     public native boolean deleteDirectory(String directory, boolean recursive) /*-{
 		return this.deleteDirectory(directory, recursive);
 	}-*/;    
     
+    /**
+     * Delete the given directory.
+     *
+     * <p>If the <code>recursive</code> argument is given as <code>true</code>, this method will attempt to delete the
+     * directory and all of its content. If deleting individual files or directories in it fails, the method will continue
+     * to delete the rest of the content.</p>
+     *
+     * <p>If the entire directory and all of its content is deleted, the method will return <code>true</code>. If parts
+     * of the content, and thus also the directory itself could not be deleted, the method will return
+     * <code>false</code>.</p>
+     *
+     * @param directory File representing the directory to delete.
+     * @param recursive Whether or not to recursively delete any content references by this File. Optional, default false.
+     * @returns true if the directory and all its content was deleted, false if the directory or any part of its contents was not deleted.
+     */
     public native boolean deleteDirectory(File directory, boolean recursive) /*-{
     	return this.deleteDirectory(directory, recursive);
     }-*/;
     
+    /**
+     * Delete the given file.
+     *
+     * This method takes either a <code>File</code> object or a URL encoded String with a path and deletes the
+     * referenced file.
+     *
+     * @param file URL encoded String with the path to the file to delete.
+     * @returns true if the file was successfully deleted, otherwise false.
+     * @throws GENERIC_ERR If the file could not be deleted.
+     */
     public native boolean deleteFile(String file) /*-{
 		return this.deleteFile(file);
 	}-*/;    
 
+    /**
+     * Delete the given file.
+     *
+     * This method takes either a <code>File</code> object or a URL encoded String with a path and deletes the
+     * referenced file.
+     *
+     * @param file File representing the directory to delete.
+     * @returns true if the file was successfully deleted, otherwise false.
+     * @throws GENERIC_ERR If the file could not be deleted.
+     */
     public native boolean deleteFile(File file) /*-{
 		return this.deleteFile(file);
 	}-*/;
     
+    /**
+     * If this is a directory, this returns the directory listing   
+     */
     public native File[] getContents() /*-{
     	return this;
     }-*/;
     
+    /**
+     * Refresh the content in this File.
+     *
+     * Initially a File representing a directory is loaded without its actual content.
+     * For directories you need to call this method at least once to load the content.
+     * The File is then not live, i.e. if the underlying file system changes, these
+     * changes are not propagated to this <code>File</code> object. You need to call this method
+     * again to see the changes.
+     */
     public native void refresh() /*-{
     	this.refresh();
     }-*/;
     
+    /**
+     * Resolve a path to a file.
+     *
+     * <p>This function will take a URL encoded String with a path and attempt to resolve the path.
+     * If the path is valid, a <code>File</code> object representing it is returned. The File may
+     * point to a non-existing file or directory, as long as the path is valid. The
+     * resulting File can, for example, be used with the {@link File#createDirectory(String)} method.</p>
+     *
+     * <p>If the path is invalid, i.e. pointing to something outside en existing sandbox, an
+     * exception is thrown. You may resolve paths with characters that are not recommended
+     * and get a File, though exceptions will typically be thrown if you attempt to read from
+     * or write to such files.</p>
+     *
+     * @param path URL encoded String with path of the file to resolve.
+     * @returns File resolved by the given path.
+     * @throws SECURITY_ERR If the path points to something outside an existing sandbox. 
+     */
     public native File resolve(String path) /*-{
     	return this.resolve(path);
     }-*/;
     
-    /** _ prefix required as toString clashes with JavaScriptObject::toString() */
+    /** _ prefix required as toString clashes with JavaScriptObject::toString() (which is final!) */
     public native String _toString() /*-{
     	return this.toString();
     }-*/;
