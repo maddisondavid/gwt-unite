@@ -22,7 +22,7 @@ The following steps show how to set up this library:
 	* gwt-user.jar
 
 == Compiling and running the examples ==
-As with any library/framework, it's always easier to understand with a quick example.  Here's how to compile the example services (and get a framework develop your own services).
+As with any library/framework, it's always easier to understand with a quick example.  Here's how to compile the example services (and get a framework to develop your own services).
 
 Importing the Examples project :
 	# Download the GWTUniteExamples project zip
