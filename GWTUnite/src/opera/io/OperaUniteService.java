@@ -2,7 +2,7 @@ package opera.io;
 
 import com.google.gwt.core.client.EntryPoint;
 
-/** Extend to create your service */
+/** Base class of all OperaUnite services */
 public abstract class OperaUniteService implements EntryPoint{
 
 	public void onModuleLoad() {
@@ -14,6 +14,9 @@ public abstract class OperaUniteService implements EntryPoint{
 		}
 	}
 	
-	
+	/**
+	 * Called during the startup phase of this service.  Services should use
+	 * this opportunity to register any required handlers. See {@link WebServer#addEventListener(String, WebServerEventHandler, boolean)}
+	 */
 	public abstract void init(WebServer webServer);
 }

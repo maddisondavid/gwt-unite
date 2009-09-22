@@ -2,6 +2,7 @@ package opera.io;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
+/** Base class for all WebServer Event handlers */
 public abstract class WebServerEventHandler {
 	private JavaScriptObject jsniEventHandler;
 	

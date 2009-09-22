@@ -16,8 +16,8 @@ final public class WebServerRequestEvent extends JavaScriptObject {
 	 *
 	 * <p>Use this property to access the incoming request and outgoing response:</p>
 	 * 
-	 * <pre><code>req = e.getConnection.request;
-	 *res = e.connection.response;</code></pre>
+	 * <pre><code>req = e.getConnection().getRequest();
+	 *res = e.getConnection().getResponse();</code></pre>
 	 *
 	 * <p>If this event was fired for a <code>_close</code> request, this property will be <code>null</code>.</p>
 	 */

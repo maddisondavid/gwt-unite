@@ -212,7 +212,13 @@ final public class WebServerRequest extends JavaScriptObject {
 	public native String getUri() /*-{
 		return this.uri;
 	}-*/;
-	
+
+    /**
+     * Set the Uniform Resource Identifier this request was made to.
+     *
+     * <p>Will throw a SECURITY_ERR if an invalid URI is set or if the URI 
+     * points to a different service than the one the request was issued from.</p>
+     */
 	public native void setUri(String uri) /*-{
 		this.uri = uri;
 	}-*/;
