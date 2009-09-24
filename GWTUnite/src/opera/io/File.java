@@ -244,6 +244,56 @@ final public class File extends JavaScriptObject {
     }-*/;
 
     /**
+     * Open this File for reading or writing.
+     *
+     * <p>The file can be opened in read, write, append or update mode, represented by the constants in {@link opera.io.filemode}.</p>
+     *
+     * <p>The mode argument is similar to PHPs <code>fopen()</code>, but implemented as constants which can be combined through a bitwise OR,
+     * for example as <code>opera.io.filemode.APPEND | opera.io.filemode.READ</code>.
+     *
+     * <p>If the file does not exist when opened in WRITE or APPEND mode, it is immediately created. The entire path to the file is created if this does not exist.</p> 
+     *
+     * <p>If the file does not exist when opened in READ or UPDATE mode, a FILE_NOT_FOUND_ERR is thrown.</p> 
+     *
+     * <p class="note">The previous version of the API accepted a string equal to the ones described below. This is now deprecated 
+     * in favor of the constants in {@link opera.io.filemode}.</p>
+     *
+     * <p>The the following is an extract from 
+     * <a href="http://no2.php.net/fopen">http://no2.php.net/fopen</a> and explains possible combinations:</p>
+     *
+     * <p>If a file is opened in an invalid mode, for example opening a read-online file in WRITE mode, a SECURITY_ERR is thrown.</p>
+     *
+     * <dl>
+     * <dt>'r'</dt><dd>Open for reading only; place the file pointer at the beginning of the file.</dd>
+     * <dt>'r+'</dt><dd>Open for reading and writing; place the file pointer at the beginning of the file. </dd>
+     * <dt>'w'</dt><dd>Open for writing only; place the file pointer at the beginning of the file and truncate the
+     * file to zero length. If the file does not exist, attempt to create it.</dd>
+     * <dt>'w+</dt><dd>Open for reading and writing; place the file pointer at the beginning of the file and truncate
+     * the file to zero length. If the file does not exist, attempt to create it.</dd>
+     * <dt>'a'</dt><dd>Open for writing only; place the file pointer at the end of the file. If the file does not
+     * exist, attempt to create it.</dd>
+     * <dt>'a+'</dt><dd></dd>
+     * <dt></dt><dd>Open for reading and writing; place the file pointer at the end of the file. If the file does not
+     * exist, attempt to create it.</dd>
+     * </dl>
+     *
+     * <p>Note that {@link opera.io.filemode#UPDATE} represents 'r+'.</p>
+     *
+     * @param mode Whether to open the file for reading, writing, appending or a combination.
+     * @returns A FileStream pointing to the given file, or null if no File with the given path can be resolved.
+     * 
+     * @throws WRONG_ARGUMENTS_ERR If the given path is not a valid File or if the mode argument is unrecognized.
+     * @throws WRONG_TYPE_OF_OBJECT_ERR If the given path is not valid for opening, for example if it is a directory.
+     * @throws SECURITY_ERR If opening the file is not permitted, for example if it is readonly and opened in write mode.
+     * @throws FILE_NOT_FOUND_ERR If the filemode requires that a file must exist before accessing, such as READ or UPDATE, and it doesn't.
+     */
+    public native FileStream open(int mode) /*-{
+    	// FIXME : Take an Enum and convert to the correct mode
+    	// FIXME : Catch exceptions and throw as Java Exception 
+    	return this.open(null, mode);
+    }-*/;    
+    
+    /**
      * Copy this File to the given File path.
      *
      * <p>Calling this function will copy all the contents of this File to the given target location, given
@@ -340,14 +390,33 @@ final public class File extends JavaScriptObject {
      * <pre><code>File file = mountPoint.createDirectory(somePath);
      *File file = mountPoint.createDirectory(mountPoint.resolve(somePath));</code></pre>
      *
-     * @param directory File referring to the desired directory, or a URL encoded String with the path to the directory.
+     * @param directory a URL encoded String with the path to the directory.
      * @returns File pointing to the new directory.
      * @throws GENERIC_ERR If the directory or any of its parent directories could not be created.
      */
-    public native File createDirectory(String dirFile) /*-{
-		return this.createDirectory(dirFile);
+    public native File createDirectory(String dir) /*-{
+		return this.createDirectory(dir);
 	}-*/;
 
+    /**
+     * Create a new directory.
+     *
+     * <p>Create a new directory using either a File object or a URL encoded String with a path to the new directory. All 
+     * non-existing parent directories are created along with it.</p>
+     *
+     * <h2>Examples:</h2>
+     *
+     * <pre><code>File file = mountPoint.createDirectory(somePath);
+     *File file = mountPoint.createDirectory(mountPoint.resolve(somePath));</code></pre>
+     *
+     * @param directory a File referring to the desired directory
+     * @returns File pointing to the new directory.
+     * @throws GENERIC_ERR If the directory or any of its parent directories could not be created.
+     */
+    public native File createDirectory(File dir) /*-{
+		return this.createDirectory(dir);
+	}-*/;
+    
     /**
      * Delete the given directory.
      *
