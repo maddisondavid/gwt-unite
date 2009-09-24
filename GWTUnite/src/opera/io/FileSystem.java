@@ -18,6 +18,10 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public final class FileSystem extends JavaScriptObject {
 
+	public static final String APPLICATION_SYSTEM_DIRECTORY = "application";
+	public static final String STORAGE_SYSTEM_DIRECTORY = "storage";
+	public static final String SHARED_SYSTEM_DIRECTORY = "shared";
+	
 	protected FileSystem() {
 	}
 	
@@ -38,6 +42,7 @@ public final class FileSystem extends JavaScriptObject {
 	}
 	
 	private static native FileSystem jsniGetInstance() /*-{
+		return opera.io.filesystem;
 	}-*/;
 	
     /**
@@ -97,6 +102,50 @@ public final class FileSystem extends JavaScriptObject {
      */
 	public native File mountSystemDirectory(String location, String name) /*-{
 		return this.mountSystemDirectory(location, name);
+	}-*/;
+	
+    /**
+     * Mount application or storage system directory.
+     *
+     * <p>Applications that use the File I/O API have access to three special directories:</p>
+     *
+     * <dl>
+     *   <dt>application</dt>
+     *   <dd>The application directory contains the actual files and directories of
+     * the current application accessing the API. For widgets, for example, the config.xml
+     * and index.html and other files of the widget are found here. This directory is
+     * mounted as readonly.</dd>
+     *   <dt>storage</dt>
+     *   <dd>The storage directory is for storing temporary files and configuration files specific
+     * to the service, for example uploaded files. This directory and its contents are persisted until
+     * the application is uninstalled.</dd>
+     *   <dt>shared</dt>
+     *   <dd>The shared directory is for sharing data from the regular file system. The directory 
+     * is typically selected by the user when installing the application.</dd>
+     *
+     * </dl>
+     *
+     * <p>These directories of the application are not mounted by default. You need to call this
+     * method to mount and use them. Once mounted, they are available through the 
+     * <code>mountPoints</code> property like other mount points. Files and directories under them 
+     * can be accessed by resolving and using the mountpoint URL protocol as for normal 
+     * files.</p>
+     *
+     * <p>The application directory is always mounted as readonly.</p>
+     *
+     * <p>If you do not supply the <code>name</code> argument, the <code>location</code> argument is used as the name
+     * of the mount point. They are then available as the mount points <code>storage</code>, 
+     * <code>application</code> and <code>shared</code>, with paths <code>/storage</code>, <code>/application</code> and <code>/shared</code> respectively.</p>
+     *
+     * <p>Note that the <code>shared</code> is mounted as read-write unless the underlying file system
+     * defines it to be read-only. You should take care to protect your data by limiting access and
+     * checking for exploitable code.</p>
+     *
+     * @param location Name of the system directory to mount, either <code>storage</code>, <code>application</code> or <code>shared</code>.
+     * @returns <code>File</code> object representing the mounted system directory, or null if the location is invalid or if the system directory is not defined.
+     */
+	public native File mountSystemDirectory(String name) /*-{
+		return this.mountSystemDirectory(name);
 	}-*/;
 	
     /**
