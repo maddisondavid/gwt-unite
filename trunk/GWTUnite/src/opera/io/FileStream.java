@@ -23,7 +23,7 @@ public final class FileStream extends JavaScriptObject {
      * Set the position programmatically. If it is set to &lt; 0, the position will be 0.
      * If it is set to &lt; <code>{@link File#getFileSize()}</code>, the position will be <code>{@link File#getFileSize()}</code>.
      */
-	public native void getPosition(int position) /*-{
+	public native void setPosition(int position) /*-{
 		return this.position = position;
 	}-*/;
 	
@@ -32,7 +32,7 @@ public final class FileStream extends JavaScriptObject {
      *
      * The value of this property is effectively <code>fileSize</code> - <code>position</code>.
      */
-	public native int bytesAvailable() /*-{
+	public native int getBytesAvailable() /*-{
 		return this.bytesAvailable;
 	}-*/;
 
