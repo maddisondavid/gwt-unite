@@ -7,6 +7,6 @@ public class Utils {
 	}-*/;
 	
 	public static void handleException(Exception e) {
-		log("Unhandled Exception : "+e.getClass().getName() + ":"+e.getMessage());
+		log("Unhandled Exception : "+e);
 	}
 }
