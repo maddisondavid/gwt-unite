@@ -19,17 +19,7 @@ public class IOUtils {
 	 * @return Complete contents of the file
 	 */
 	public static String getFileContentsAsString(File directory, String path) {
-		File actualFile = directory.resolve(path);
-		if (!actualFile.exists())
-			throw new RuntimeException("File " + directory._toString() + path + " cannot be found");
-
-		FileStream stream = directory.open(path, FileMode.READ);
-		try {
-			String fileContents = stream.read(stream.bytesAvailable());
-			return fileContents;
-		} finally {
-			stream.close();
-		}
+		return getFileContentsAsString(directory, path, null);
 	}
 	
 	/**
@@ -47,10 +37,31 @@ public class IOUtils {
 
 		FileStream stream = directory.open(path, FileMode.READ);
 		try {
-			String fileContents = stream.read(stream.bytesAvailable(), charset);
-			return fileContents;
+			if (charset == null) {
+				return stream.read(stream.getBytesAvailable());
+			} else {
+				return stream.read(stream.getBytesAvailable(), charset);
+			}
 		} finally {
 			stream.close();
 		}
-	}	
+	}
+	
+	public static void writeStringToFile(File directory, String path, String contents) {
+		writeStringToFile(directory, path, contents, FileMode.WRITE);
+	}
+	
+	public static void appendStringToFile(File directory, String path, String contents) {
+		writeStringToFile(directory, path, contents, FileMode.APPEND);
+	}
+	
+	private static void writeStringToFile(File directory, String path, String contents, int fileMode) {
+		File newFile = directory.resolve(path);
+		FileStream stream = newFile.open(fileMode);
+		try {
+			stream.write(contents);
+		} finally {
+			stream.close();
+		}
+	}
 }
