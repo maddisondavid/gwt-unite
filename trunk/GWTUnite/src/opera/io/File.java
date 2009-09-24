@@ -228,9 +228,10 @@ final public class File extends JavaScriptObject {
      *
      * <p>Note that {@link opera.io.filemode#UPDATE} represents 'r+'.</p>
      *
-     * @param {File} path File object to read, or a URL encoded String with the path to the file to read.
-     * @param {int} mode Whether to open the file for reading, writing, appending or a combination.
-     * @returns {FileStream} A FileStream pointing to the given file, or null if no File with the given path can be resolved.
+     * @param path File object to read, or a URL encoded String with the path to the file to read.
+     * @param mode Whether to open the file for reading, writing, appending or a combination.
+     * @returns A FileStream pointing to the given file, or null if no File with the given path can be resolved.
+     * 
      * @throws WRONG_ARGUMENTS_ERR If the given path is not a valid File or if the mode argument is unrecognized.
      * @throws WRONG_TYPE_OF_OBJECT_ERR If the given path is not valid for opening, for example if it is a directory.
      * @throws SECURITY_ERR If opening the file is not permitted, for example if it is readonly and opened in write mode.
