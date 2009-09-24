@@ -14,6 +14,10 @@ public final class DeviceList extends JavaScriptObject {
 		return this.size;
 	}-*/;
 	
+	public native DeviceDescriptor[] getAllDevices() /*-{
+		return this;
+	}-*/;
+	
     /**
      * Get the device at the given position in the list
      * @param index Positive integer denoting the position of the device in the list.
