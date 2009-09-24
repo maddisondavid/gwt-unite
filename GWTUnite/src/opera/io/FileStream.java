@@ -103,6 +103,30 @@ public final class FileStream extends JavaScriptObject {
      * null will be returned.</p>
      *
      * <p>The resulting String is encoded with the charset in the 
+     * <code>FileStream.getEncoding()</code> property.
+     *
+     * @param length Number of characters to read.
+     * @returns A String of characters, or null if there are no more characters left in the File.
+     * @throws GENERIC_ERR If it is not possible to read from the stream.
+     */
+	public native String read(int length) /*-{
+		return this.read(length);
+	}-*/;
+
+    /**
+     * Read a number of characters from the FileStream.
+     *
+     * <p>This function will read <em><code>length</code></em> number 
+     * of characters from the stream.</p>
+     *
+     * <p>If there are less than <em><code>length</code></em> characters left
+     * in the file, only the remaining characters in the file are
+     * read, and <code>{@link #isEof()}</code> will be <code>true</code>.</p>
+     *
+     * <p>If <code>{@link #isEof()}</code> is <code>true</code> when this method is called,
+     * null will be returned.</p>
+     *
+     * <p>The resulting String is encoded with the charset in the 
      * <code>FileStream.encoding</code> property unless the optional <code>charset</code>
      * argument is given.
      *
