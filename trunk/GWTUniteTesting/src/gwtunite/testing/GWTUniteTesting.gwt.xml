@@ -1,0 +1,6 @@
+<module  rename-to="testService">
+	<inherits name="opera.Unite"/>
+
+	<!-- Use deferred binding to find tests! -->
+	<entry-point class="gwtunite.testing.client.TestService"/>
+</module>
