@@ -24,6 +24,10 @@ public abstract class TestCaseExecutor {
 		return Collections.unmodifiableMap(testResults);
 	}
 	
+	protected void clearResults() {
+		testResults.clear();
+	}
+	
 	protected void registerResult(String testName, TestResult testResult) {
 		Utils.log("Result Registered");
 		testResults.put(testName, testResult);
