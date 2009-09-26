@@ -1,6 +1,10 @@
 package gwtunite.testing.client;
 
+import gwtunite.commons.WebServerUtils;
+
 import java.util.Map;
+
+import com.google.gwt.core.client.GWT;
 
 import opera.io.OperaUniteService;
 import opera.io.Utils;
@@ -13,14 +17,21 @@ import opera.io.WebServerResponse;
  * This is the main service for testing all the relevant GWTUnite API's
  */
 public class TestService extends OperaUniteService {
-	TestCaseExecutorRegistry testReg = new GeneratedTestCaseRegistry();
+	TestCaseExecutorRegistry testReg = GWT.create(TestCaseExecutorRegistry.class);
 	
 	@Override
 	public void init(WebServer webServer) {
+		try {
+			WebServerUtils.shareApplicationFile("MainFrame.html");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
 		webServer.addEventListener(WebServer.INDEX_PATH, new WebServerEventHandler() {
+			
 			@Override
 			protected void onConnection(WebServerRequest request, WebServerResponse response) {
-				response.write("<html><head><title>GWT-Unite Tests</title></head><body>");
+				response.write("<html><head><title>GWT-Unite Tests</title></head><body style=\"font-family:arial\">");
 
 				response.write("<ul>");
 				for (TestCaseExecutor testCase : testReg.getExecutors()) {

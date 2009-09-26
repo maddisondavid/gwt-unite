@@ -4,7 +4,7 @@
 	It is not designed to be called directly, but rather from parent scripts
 -->
 <project name="OperaUnite-Service-Builder" basedir=".">
-	<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.0"/>
+	<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.1"/>
 
 	<property name="build.dir" value="build"/>
 	<property name="dist.dir" value="dist"/>
@@ -13,6 +13,7 @@
 		<java fork="true" classname="com.google.gwt.dev.Compiler" failOnError="true">
 			<classpath>
 				<pathelement location="src"/>
+				<pathelement location="bin"/>
 				<pathelement location="${GWT_HOME}/gwt-dev-windows.jar"/>
 				<pathelement location="${GWT_HOME}/gwt-user.jar"/>
 				<dirset dir="../GWTUnite">
@@ -36,6 +37,6 @@
 	<target name="package" depends="cleanup">
 		<mkdir dir="${dist.dir}"/>
 		<zip basedir="${build.dir}/${dist.moduleName}" file="${dist.dir}/${dist.zipName}"/>
-		<delete dir="${build.dir}"/>
+<!--		<delete dir="${build.dir}"/> -->
 	</target>
 </project>

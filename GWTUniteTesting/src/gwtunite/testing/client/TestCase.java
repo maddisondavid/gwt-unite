@@ -1,8 +1,8 @@
 package gwtunite.testing.client;
 
 
-public abstract class TestCase {
 
+public abstract class TestCase {
 	public void setUp() throws Exception{
 		
 	}

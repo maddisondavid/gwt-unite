@@ -1,6 +1,12 @@
 <module  rename-to="testService">
 	<inherits name="opera.Unite"/>
+	<inherits name="gwtunite.Commons"/>
+	
 
 	<!-- Use deferred binding to find tests! -->
+	<generate-with class="gwtunite.testing.TestCaseExecutorRegistryGenerator">
+   		<when-type-assignable class="gwtunite.testing.client.TestCaseExecutorRegistry" />
+ 	</generate-with>
+	
 	<entry-point class="gwtunite.testing.client.TestService"/>
 </module>
