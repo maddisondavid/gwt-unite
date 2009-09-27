@@ -8,5 +8,5 @@
    		<when-type-assignable class="gwtunite.testing.client.TestCaseExecutorRegistry" />
  	</generate-with>
 	
-	<entry-point class="gwtunite.testing.client.TestService"/>
+	<entry-point class="gwtunite.testing.client.TestingService"/>
 </module>

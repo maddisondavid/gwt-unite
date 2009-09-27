@@ -16,16 +16,18 @@ import opera.io.WebServerResponse;
 /**
  * This is the main service for testing all the relevant GWTUnite API's
  */
-public class TestService extends OperaUniteService {
+public class TestingService extends OperaUniteService {
 	TestCaseExecutorRegistry testReg = GWT.create(TestCaseExecutorRegistry.class);
 	
 	@Override
 	public void init(WebServer webServer) {
 		try {
 			WebServerUtils.shareApplicationFile("MainFrame.html");
+			WebServerUtils.shareApplicationFile("public_html/TestResults.html");
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			Utils.log(e1.toString());
 		}
+		
 		
 		webServer.addEventListener(WebServer.INDEX_PATH, new WebServerEventHandler() {
 			
@@ -69,10 +71,12 @@ public class TestService extends OperaUniteService {
 					} else {
 						testResults = testReg.runTest(testCaseName, testName);
 					}
+					
+					
 					for (Map.Entry<String, TestResult> result : testResults.entrySet()) {
 						response.writeLine(result.getKey()+"="+result.getValue().getResult()+"</br>");
 						if (result.getValue().getResult() == TestResult.Result.FAILED) {
-							response.write(result.getValue().getException() + "<br/>");
+							response.write(result.getValue().getException().getCause() + "<br/>");
 						}
 					}
 				} catch(Exception e) {

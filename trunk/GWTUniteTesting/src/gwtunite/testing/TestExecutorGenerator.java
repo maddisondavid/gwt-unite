@@ -1,6 +1,6 @@
 package gwtunite.testing;
 
-import gwtunite.testing.client.FailureException;
+import gwtunite.testing.client.AssertionFailureException;
 import gwtunite.testing.client.TestCaseExecutor;
 import gwtunite.testing.client.TestResult;
 
@@ -68,7 +68,7 @@ public class TestExecutorGenerator {
 			sourceWriter.outdent();
 			sourceWriter.println("} catch(Exception e) {");
 			sourceWriter.indent();
-					sourceWriter.println("if (e instanceof FailureException) {");
+					sourceWriter.println("if (e instanceof "+AssertionFailureException.class.getName()+") {");
 					sourceWriter.indent();
 							sourceWriter.println("registerResult(\""+testName+"\", new TestResult(\""+testName+"\",TestResult.Result.FAILED, e));");
 					sourceWriter.outdent();
@@ -136,7 +136,7 @@ public class TestExecutorGenerator {
 	    ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory( packageName, className);
 	    composerFactory.setSuperclass(TestCaseExecutor.class.getName());
 
-	    composerFactory.addImport(FailureException.class.getName());
+	    composerFactory.addImport(AssertionFailureException.class.getName());
 	    composerFactory.addImport(TestResult.class.getName());
 	    
 	    return composerFactory.createSourceWriter(context, printWriter);
