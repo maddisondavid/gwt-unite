@@ -13,12 +13,22 @@ public abstract class TestCase {
 	
 	protected void assertTrue(boolean condition) {
 		if (!condition)
-			throw new FailureException();
+			throw new AssertionFailureException();
+	}
+
+	protected void assertTrue(boolean condition, String message) {
+		if (!condition)
+			throw new AssertionFailureException(message);
 	}
 	
 	protected void assertFalse(boolean condition) {
 		if (condition)
-			throw new FailureException();
+			throw new AssertionFailureException();
+	}
+
+	protected void assertFalse(boolean condition, String message) {
+		if (condition)
+			throw new AssertionFailureException();
 	}
 
 }

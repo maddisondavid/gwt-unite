@@ -36,8 +36,6 @@ public class TestCaseExecutorRegistryGenerator  extends Generator{
 		if (sourceWriter != null) {
 			emitConstructor(logger, sourceWriter, testCaseExecutorTypes);
 			sourceWriter.commit(logger);
-			
-			System.out.println("Finished "+packageName+"."+className);
 		}
 		return packageName+"."+className;
 	}

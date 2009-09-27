@@ -19,9 +19,8 @@ public abstract class TestCaseExecutorRegistry {
 	
 	/** Runs a single test case and returns the results of the individual tests */
 	public Map<String, TestResult> runTestCase(String testCase) throws Exception {
-		Utils.log("Getting test "+testCase);
 		TestCaseExecutor testExecutor = testCases.get(testCase);
-		Utils.log("Executed test "+testCase);
+		testExecutor.executeAllTests();
 		return testExecutor.getResults();
 	}
 	
