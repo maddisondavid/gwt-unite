@@ -97,7 +97,7 @@ public final class FileSystem extends JavaScriptObject {
      * checking for exploitable code.</p>
      *
      * @param location Name of the system directory to mount, either <code>storage</code>, <code>application</code> or <code>shared</code>.
-     * @param name Name to mount the directory as. If not present, the location is used. Optional.
+     * @param name Name to mount the directory as. If not present, the location is used.
      * @returns <code>File</code> object representing the mounted system directory, or null if the location is invalid or if the system directory is not defined.
      */
 	public native File mountSystemDirectory(String location, String name) /*-{
