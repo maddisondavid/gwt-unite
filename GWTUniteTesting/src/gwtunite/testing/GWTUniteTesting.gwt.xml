@@ -2,11 +2,12 @@
 	<inherits name="opera.Unite"/>
 	<inherits name="gwtunite.Commons"/>
 	
-
-	<!-- Use deferred binding to find tests! -->
-	<generate-with class="gwtunite.testing.TestCaseExecutorRegistryGenerator">
-   		<when-type-assignable class="gwtunite.testing.client.TestCaseExecutorRegistry" />
+	<source path="framework"/>
+	<source path="tests"/>
+	
+	<generate-with class="gwtunite.testing.TestCaseRegistryGenerator">
+   		<when-type-assignable class="gwtunite.testing.framework.TestCaseRegistry" />
  	</generate-with>
 	
-	<entry-point class="gwtunite.testing.client.TestingService"/>
+	<entry-point class="gwtunite.testing.framework.TestBenchService"/>
 </module>
