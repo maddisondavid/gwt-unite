@@ -64,7 +64,7 @@ final public class File extends JavaScriptObject {
      * Whether or not this File is a regular file.
      */
 	public native boolean isFile() /*-{
-		return this.isFile;
+		return !this.isDirectory;
 	}-*/;
 	
     /**
@@ -304,7 +304,7 @@ final public class File extends JavaScriptObject {
      *
      * <p>This operation will be performed synchronously</p>
      *
-     * @param path The target location to copy this File to, as either a File or an URL encoded String with the path.
+     * @param path The target location to copy this File to, as a URL encoded String with the path.
      * @param overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
      * @returns File object representing the location of the copy.
      * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
@@ -322,18 +322,62 @@ final public class File extends JavaScriptObject {
      * <p>If the target location exists, this operation will fail with an exception. Use the 
      * <code>overwrite</code> argument to replace existing files in target location.</p>
      *
+     * <p>This operation will be performed synchronously</p>
+     *
+     * @param path The target location to copy this File to, as a File.
+     * @param overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
+     * @returns File object representing the location of the copy.
+     * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
+     */
+    public native File copyTo(File path, boolean overwrite) /*-{
+		return this.copyTo(path, overwrite);
+	}-*/;
+    
+    /**
+     * Copy this File to the given File path.
+     *
+     * <p>Calling this function will copy all the contents of this File to the given target location, given
+     * as either a <code>File</code> object or a String containing the path.</p>
+     *
+     * <p>If the target location exists, this operation will fail with an exception. Use the 
+     * <code>overwrite</code> argument to replace existing files in target location.</p>
+     *
      * <p>This operation will be asynchronous, and the method
      * will immediately return a <code>File</code> object representing the copy of the File, regardless of whether the
      * operation is complete. The callback is called when the copy operation is complete, with the copy of the
      * File as an argument. If the operation fails, the callback is called with a <code>null</code> argument.</p>
      *
-     * @param {File} path The target location to copy this File to, as either a File or an URL encoded String with the path.
+     * @param {File} path The target location to copy this File to, as a URL encoded String with the path.
      * @param {boolean} overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
      * @param {Function} callback Function to call when the copy is completed.
      * @returns {File} File object representing the location of the copy.
      * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
      */
     public native File copyTo(String path, boolean overwrite, Object callback) /*-{
+    	return this.copyTo(path, overwrite, callback);
+    }-*/;
+    
+    /**
+     * Copy this File to the given File path.
+     *
+     * <p>Calling this function will copy all the contents of this File to the given target location, given
+     * as either a <code>File</code> object or a String containing the path.</p>
+     *
+     * <p>If the target location exists, this operation will fail with an exception. Use the 
+     * <code>overwrite</code> argument to replace existing files in target location.</p>
+     *
+     * <p>This operation will be asynchronous, and the method
+     * will immediately return a <code>File</code> object representing the copy of the File, regardless of whether the
+     * operation is complete. The callback is called when the copy operation is complete, with the copy of the
+     * File as an argument. If the operation fails, the callback is called with a <code>null</code> argument.</p>
+     *
+     * @param {File} path The target location to copy this File to, as a File.
+     * @param {boolean} overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
+     * @param {Function} callback Function to call when the copy is completed.
+     * @returns {File} File object representing the location of the copy.
+     * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
+     */
+    public native File copyTo(File path, boolean overwrite, Object callback) /*-{
     	return this.copyTo(path, overwrite, callback);
     }-*/;
     
@@ -347,7 +391,7 @@ final public class File extends JavaScriptObject {
      *
      * <p>This operation will be performed synchronously</p>
      *
-     * @param path The target location to move this File to, as either a File or an URL encoded String with the path.
+     * @param path The target location to move this File to, as URL encoded String with the path.
      * @param overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
      * @return File object representing the location of the new file.
      * @throws GENERICL_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
@@ -356,6 +400,25 @@ final public class File extends JavaScriptObject {
 		return this.moveTo(path, overwrite);
 	}-*/;
 
+    /**
+     * Move this File to the given File path.
+     *
+     * <p>Calling this function will move all the contents of this File to the given File target location.</p>
+     *
+     * <p>If the target location exists, this operation will fail with an exception. Use the 
+     * <code>overwrite</code> argument to replace existing files in target location.</p>
+     *
+     * <p>This operation will be performed synchronously</p>
+     *
+     * @param path The target location to move this File to, as a File.
+     * @param overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
+     * @return File object representing the location of the new file.
+     * @throws GENERICL_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
+     */
+    public native File moveTo(File path, boolean overwrite) /*-{
+		return this.moveTo(path, overwrite);
+	}-*/;    
+    
     /**
      * Move this File to the given File path.
      *
@@ -487,6 +550,9 @@ final public class File extends JavaScriptObject {
      * If this is a directory, this returns the directory listing   
      */
     public native File[] getContents() /*-{
+    	if (this.length == 0) 
+    		return [];
+    	
     	return this;
     }-*/;
     
