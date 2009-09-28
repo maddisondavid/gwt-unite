@@ -1,4 +1,10 @@
-ul,li,td {font-family:arial;font-size:9pt}
-ul {list-style:none}
-li {padding-left:2px}
-h2 {margin-bottom:2pt}
+body,td {font-family:arial; font-size:9pt}
+ul {list-style:none;  margin-top:2px}
+li {margin-top:2px;padding-top:0px}
+
+h1,h2,h3 {margin-bottom:2px}
+h2 {color:grey}
+
+.PASSED {color:green}
+.FAILED {color:darkblue}
+.ERROR {color:red}
