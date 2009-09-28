@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/GWTUnite/dist/GWTUnite-0.9.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GWT"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GWTUnite"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
