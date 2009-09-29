@@ -8,6 +8,9 @@ import java.util.Map;
 
 import opera.io.Utils;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+
 /**
  * A TestCase Executor is a proxy object that allows executing certain tests within a test case.
  * 
@@ -20,8 +23,8 @@ public abstract class TestCaseExecutor {
 	
 	public abstract String getTestCaseName();
 	public abstract String[] getTestNames();
-	public abstract void executeAllTests() throws Exception;
-	public abstract void executeTest(String testName) throws Exception;
+	public abstract void executeAllTests(TestCompleteHandler testCompleteHandler) throws Exception;
+	public abstract void executeTest(String testName, TestCompleteHandler testCompleteHandler) throws Exception;
 	
 	protected TestCaseExecutor() {
 		
@@ -44,6 +47,49 @@ public abstract class TestCaseExecutor {
 		} else if (testResult.getResult() == Result.FAILED && overallResult == Result.PASSED) {
 			overallResult = Result.FAILED;
 		}
+	}
+
+	/** Runs the list of tests Asynchronously, calling the handler when all the tests have executed */
+	protected void runTestsAsync(final String[] tests, final TestCompleteHandler testCompleteHandler) {
+		final TestCompleteHandler completeHandler = new TestCompleteHandler() {
+			int currentTest = 0;
+			@Override public void onTestComplete(final TestCaseExecutor testCaseExecutor) {
+				currentTest++;
+				if (currentTest < tests.length) {
+					// Invoke the next test in the chain
+					runTestAsync(tests[currentTest], this);
+				} else {
+					// We've finished all tests, inform the original testCompleteHandler
+					DeferredCommand.addCommand(new Command() {
+						@Override public void execute() {
+							Utils.log("Tests Finished");
+							testCompleteHandler.onTestComplete(testCaseExecutor);
+						}
+					});
+				}
+			}
+		};
+		
+		if (tests.length > 0)
+			runTestAsync(tests[0], completeHandler);
+	}
+	
+	/** Runs a test Asynchronously, calling the testCompleteHandler when it completes */
+	private void runTestAsync(final String testName, final TestCompleteHandler testCompleteHandler) {
+		DeferredCommand.addCommand(new Command() {
+			@Override public void execute() {
+				try {
+					executeTest(testName, testCompleteHandler);
+				}catch(Exception e) {
+					Utils.log("Test "+testName+" threw an exception : "+e);
+				}
+			}
+		});
+	}
+	
+	/** Called when this test completes. */
+	public static interface TestCompleteHandler {
+		public void onTestComplete(TestCaseExecutor testCaseExecutor);
 	}
 }
 

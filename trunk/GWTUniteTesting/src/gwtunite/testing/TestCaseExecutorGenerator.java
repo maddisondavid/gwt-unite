@@ -3,6 +3,7 @@ package gwtunite.testing;
 import gwtunite.testing.framework.TestCase;
 import gwtunite.testing.framework.TestCaseExecutor;
 import gwtunite.testing.framework.TestResult;
+import gwtunite.testing.framework.TestCaseExecutor.TestCompleteHandler;
 
 import java.io.PrintWriter;
 import java.util.Collection;
@@ -10,6 +11,8 @@ import java.util.Collection;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -58,14 +61,18 @@ public class TestCaseExecutorGenerator {
 	}
 
 	private static void emitExecuteAllTests(TreeLogger logger, SourceWriter sourceWriter, Collection<String> testNames) {
-		sourceWriter.println("public void executeAllTests() throws Exception{");
+		sourceWriter.println("public void executeAllTests(TestCompleteHandler handler) throws Exception{");
+		
 		sourceWriter.indent();
+			sourceWriter.println("runTestsAsync(new String[]{");
+			
 			for (String testName : testNames) 
-				sourceWriter.println(EXECUTE_METHOD_PREFIX+testName+"();");
+				sourceWriter.println("\""+testName+"\",");
+			
+			sourceWriter.println("}, handler);");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
-
 
 	private static void emitTestExecutorMethod(TreeLogger logger, SourceWriter sourceWriter, String testCaseName, String testName) {
 		sourceWriter.println("private void "+EXECUTE_METHOD_PREFIX+testName+"() throws Exception {");
@@ -99,14 +106,15 @@ public class TestCaseExecutorGenerator {
 		sourceWriter.println("}");
 	}
 
-
 	private static void emitExecuteTestMethod(TreeLogger logger, SourceWriter sourceWriter, Collection<String> testNames) {
-		sourceWriter.println("public void executeTest(String testName) throws Exception {");
+		sourceWriter.println("public void executeTest(String testName, TestCompleteHandler handler) throws Exception {");
 		sourceWriter.indent();
 			for (String testName : testNames) {
 				sourceWriter.println("if (testName.equals(\""+testName+"\")) {");
 				sourceWriter.indent();
 					sourceWriter.println(EXECUTE_METHOD_PREFIX+testName+"();");
+					sourceWriter.println("handler.onTestComplete(this);");
+					// If we're in Async mode here then we need to make sure we call the OnComplete!
 					sourceWriter.println("return;");
 				sourceWriter.outdent();
 				sourceWriter.println("}");

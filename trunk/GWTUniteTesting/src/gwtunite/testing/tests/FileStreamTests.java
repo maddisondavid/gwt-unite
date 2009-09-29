@@ -34,6 +34,22 @@ public class FileStreamTests extends TestCase {
 	
 	@Test
 	public void base64MethodsWork() throws Exception {
+		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File binFile = sharedDir.resolve("BinaryFile");
 		
+		String test64 = "dGVzdA=="; // == Test
+		FileStream newStream = binFile.open(FileMode.WRITE);
+		newStream.writeBase64(test64);
+		newStream.close();
+		
+		assertEquals(4, binFile.getFileSize());
+		
+		FileStream inStream = binFile.open(FileMode.READ);
+		String in64 = inStream.readBase64(inStream.getBytesAvailable());
+		inStream.close();
+		assertEquals(in64, test64);
+		
+		
+		binFile.deleteFile(binFile);
 	}
 }

@@ -1,17 +1,25 @@
 package gwtunite.testing.framework;
 
-public abstract class TestCase {
+import com.google.gwt.user.client.Timer;
 
+public abstract class TestCase {
+	private final boolean isInAsync = false;
+	
 	/** Called by the framework just before a test is run */
 	public void setUp() throws Exception{
 		/** By default, does nothing, should be overriden by SubClasses */
 	}
 	
-	/** Called by the framework after the test a test has run */
+	/** Called by the framework after the a test has run */
 	public void tearDown() throws Exception {
 		/** By default, does nothing, should be overriden by SubClasses */
 	}
 
+	/** Returns true if this TestCase is currently running in Async mode */
+	public boolean isInAsync() {
+		return isInAsync;
+	}
+	
 	/** Throws an AssertionFailureException if the given condition is not true */
 	protected void assertTrue(boolean condition) {
 		if (!condition)
@@ -76,6 +84,21 @@ public abstract class TestCase {
 	/** Throws an AssertionFailureException containing the given message*/
 	protected void fail(String message) {
 		throw new AssertionFailureException(message);
+	}
+
+	/** Delays the test finishing by the given amount */
+	final Timer delayTestTimer = new Timer() {
+		@Override public void run() {
+			fail("Test timeout");
+		}
+	};
+	
+	public void delayTestFinish(int timeout) {
+		delayTestTimer.schedule(timeout);
+	}
+	
+	public void finishTest() {
+		delayTestTimer.cancel();
 	}
 	
 	public static class AssertionFailureException extends RuntimeException {
