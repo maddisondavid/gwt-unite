@@ -353,8 +353,10 @@ final public class File extends JavaScriptObject {
      * @returns {File} File object representing the location of the copy.
      * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
      */
-    public native File copyTo(String path, boolean overwrite, Object callback) /*-{
-    	return this.copyTo(path, overwrite, callback);
+    public native File copyTo(String path, boolean overwrite, CompletedHandler callback) /*-{
+    	return this.copyTo(path, overwrite, new function() {
+    		callback.@opera.io.File.CompletedHandler::onComplete()();
+    	});
     }-*/;
     
     /**
@@ -594,4 +596,8 @@ final public class File extends JavaScriptObject {
     public native String _toString() /*-{
     	return this.toString();
     }-*/;
+    
+    public static interface CompletedHandler {
+    	public void onComplete();
+    }
 }
