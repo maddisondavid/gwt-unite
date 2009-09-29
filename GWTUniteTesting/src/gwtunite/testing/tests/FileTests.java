@@ -2,9 +2,6 @@ package gwtunite.testing.tests;
 
 import gwtunite.testing.framework.Test;
 import gwtunite.testing.framework.TestCase;
-
-import java.util.Date;
-
 import opera.io.File;
 import opera.io.FileMode;
 import opera.io.FileStream;
@@ -12,6 +9,19 @@ import opera.io.FileSystem;
 
 public class FileTests extends TestCase{
 
+	public void setUp() throws Exception {
+		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		appDir.refresh();
+		for (File file : appDir.getContents()) {
+			if (file.isDirectory()) {
+				file.deleteDirectory(file, true);
+			} else {
+				file.deleteFile(file);
+			}
+		}
+		FileSystem.getInstance().removeMountPoint(FileSystem.SHARED_SYSTEM_DIRECTORY);
+	}
+	
 	@Test
 	public void canReadAnApplicationFile() throws Exception {
 		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.APPLICATION_SYSTEM_DIRECTORY);
@@ -261,5 +271,28 @@ public class FileTests extends TestCase{
 		
 		sharedDir.refresh();
 		assertEquals(0, sharedDir.getLength());
+	}
+	
+	@Test
+	public void copyMethodsWithCallbackWork() {
+		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		
+		File newDir1 = sharedDir.createDirectory("testMe");
+		File newDir2 = sharedDir.createDirectory("testMe2");
+		
+		File newFile = newDir1.resolve("TestFile");
+		FileStream fileStream = newFile.open(FileMode.WRITE);
+		fileStream.write("Hello");
+		fileStream.close();
+		
+		newDir1.refresh();
+		assertEquals(1,newDir1.getLength());
+
+		delayTestFinish(5000);
+		newFile.copyTo(newDir2, true, new File.CompletedHandler() {
+			public void onComplete() {
+				finishTest();
+			}
+		});
 	}
 }
