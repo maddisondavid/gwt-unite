@@ -1,5 +1,0 @@
-<project name="apitest" default="package" basedir=".">
-	<target name="package">
-		<zip basedir="src" zipfile="ApiTestService.ua"/>
-	</target>
-</project>
