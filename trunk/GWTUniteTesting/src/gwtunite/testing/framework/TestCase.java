@@ -1,10 +1,10 @@
 package gwtunite.testing.framework;
 
+import java.util.Date;
+
 import com.google.gwt.user.client.Timer;
 
 public abstract class TestCase {
-	private final boolean isInAsync = false;
-	
 	/** Called by the framework just before a test is run */
 	public void setUp() throws Exception{
 		/** By default, does nothing, should be overriden by SubClasses */
@@ -15,11 +15,6 @@ public abstract class TestCase {
 		/** By default, does nothing, should be overriden by SubClasses */
 	}
 
-	/** Returns true if this TestCase is currently running in Async mode */
-	public boolean isInAsync() {
-		return isInAsync;
-	}
-	
 	/** Throws an AssertionFailureException if the given condition is not true */
 	protected void assertTrue(boolean condition) {
 		if (!condition)
@@ -85,20 +80,32 @@ public abstract class TestCase {
 	protected void fail(String message) {
 		throw new AssertionFailureException(message);
 	}
-
-	/** Delays the test finishing by the given amount */
-	final Timer delayTestTimer = new Timer() {
-		@Override public void run() {
-			fail("Test timeout");
-		}
-	};
 	
-	public void delayTestFinish(int timeout) {
-		delayTestTimer.schedule(timeout);
+	/** Spin waiting whilst the timeout or the condition is not true 
+	 * 
+	 * WARNING : This is a REALLY evil method and SHOULD NOT really be used.  However, we
+	 * don't have a sleep method in JavaScript and doing things in an Async way creates
+	 * is difficult and leads to pretty bad tests
+	 */
+	protected void spinWait(long timeout, Condition condition) {
+		long timeoutTime = (new Date()).getTime() + timeout;
+		
+		long dummyCounter = 0;
+		while ((new Date()).getTime() < timeoutTime && !condition.isTrue())
+			dummyCounter++;
+		
+		if (!condition.isTrue())
+			throw new TimeoutException(timeout);
 	}
 	
-	public void finishTest() {
-		delayTestTimer.cancel();
+	public static class TimeoutException extends RuntimeException {
+		TimeoutException(long timeout) {
+			super("Timeout waiting "+timeout+"ms");
+		}
+	}
+	
+	public interface Condition {
+		public boolean isTrue();
 	}
 	
 	public static class AssertionFailureException extends RuntimeException {
