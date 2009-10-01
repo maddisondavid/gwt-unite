@@ -1,9 +1,0 @@
-<project name="Tests" basedir=".">
-	<property name="moduleName" value="gwtunite.testing.GWTUniteTesting"/>
-		
-	<property name="dist.moduleName" value="testService"/>
-	<property name="dist.zipName" value="GWTUniteTestFramework.us"/>
-	<property name="dist.config-File" value="tests-config.xml"/>
-
-	<ant antfile="gwt-unite-service-builder.xml" inheritall="true" target="package"/>
-</project>
