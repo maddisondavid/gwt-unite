@@ -35,7 +35,7 @@ final public class WebServerResponse extends JavaScriptObject {
 			try {
 				callback.@opera.io.WebServerResponse.CloseCallback::onClose()();
 			} catch(exception) {
-				@opera.io.Utils::handleException(Ljava/lang/Exception;)(exception);
+				@opera.io.Utils::handleException(Ljava/lang/Throwable;)(exception);
 			}
 		});
 	}-*/;
@@ -88,7 +88,7 @@ final public class WebServerResponse extends JavaScriptObject {
 			try {
 				callback.@opera.io.WebServerResponse.FlushCallback::onFlush()();
 			} catch(exception) {
-				@opera.io.Utils::handleException(Ljava/lang/Exception;)(exception);
+				@opera.io.Utils::handleException(Ljava/lang/Throwable;)(exception);
 			}
 		});	
 	}-*/;

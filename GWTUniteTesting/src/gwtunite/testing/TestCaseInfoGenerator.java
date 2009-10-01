@@ -14,10 +14,10 @@ import com.google.gwt.user.rebind.SourceWriter;
 /**
  * Creates the {@link TestCaseInfo} classes for all TestCases found
  * 
- * TestCase info objects will be places in the same package as the original TestCase and be called TestInfo_<TestCaseName>
+ * TestCase info objects are placed in the same package as the original TestCase and be called <TestCaseName>_TestInfo
  */
 public class TestCaseInfoGenerator {
-	private static final String TESTINFO_NAME_PREFIX = "TestInfo_";
+	private static final String TESTINFO_NAME_PREFIX = "_TestInfo";
 
 	public static String generateTestCaseInfo(TreeLogger logger, GeneratorContext context, JClassType testCaseType) {
 		String className = getExecutorClassName(testCaseType);
@@ -26,7 +26,7 @@ public class TestCaseInfoGenerator {
 		SourceWriter sourceWriter = emitClassDefinition(logger, context, packageName, className);
 		if (sourceWriter != null) {
 			emitGetNameMethod(logger, sourceWriter, testCaseType.getQualifiedSourceName());
-			emitGetTestsMethod(logger, sourceWriter, ReflectionUtils.findTestMethodNames(testCaseType));
+			emitGetTestsMethod(logger, sourceWriter, TestReflectionUtils.findTestMethodNames(testCaseType));
 			
 			sourceWriter.commit(logger);
 		}
@@ -68,7 +68,7 @@ public class TestCaseInfoGenerator {
 	}
 
 	private static String getExecutorClassName(JClassType type) {
-		return TESTINFO_NAME_PREFIX+type.getName();
+		return type.getName()+TESTINFO_NAME_PREFIX;
 	}
 	
 	private static String getExecutorPackageName(JClassType type) {

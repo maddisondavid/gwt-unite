@@ -8,7 +8,7 @@ import java.util.Collection;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 
-class ReflectionUtils {
+class TestReflectionUtils {
 
 	/** Returns the names of all test methods */
 	public static Collection<String> findTestMethodNames(JClassType type) {

@@ -6,7 +6,7 @@ public class Utils {
 		opera.postError(msg);
 	}-*/;
 	
-	public static void handleException(Exception e) {
+	public static void handleException(Throwable e) {
 		log("Unhandled Exception : "+e);
 	}
 }

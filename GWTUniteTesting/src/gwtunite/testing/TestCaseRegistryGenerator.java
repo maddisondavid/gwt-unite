@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.transform.Source;
+
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -29,14 +31,14 @@ public class TestCaseRegistryGenerator  extends Generator{
 		JClassType testCaseClass = context.getTypeOracle().findType(TestCase.class.getName());
 		JClassType testCasesInstances[] = testCaseClass.getSubtypes();
 	
-		// Generate the TestCaseExecutors
-		Map<String, String> testCaseExecutorTypes = new HashMap<String, String>();
+		// Generate the TestCaseWrappers Map<Name, WrapperClass>
+		Map<String, String> testCaseWrapperTypes = new HashMap<String, String>();
 		for (JClassType testCaseType : testCasesInstances) {
-			String testExecutorName = TestCaseExecutorGenerator.generateTestCaseExecutor(logger, context, testCaseType);
-			testCaseExecutorTypes.put(testExecutorName, testCaseType.getQualifiedSourceName());
+			String testWrapperName = TestCaseWrapperGenerator.generateTestCaseWrapper(logger, context, testCaseType);
+			testCaseWrapperTypes.put(testWrapperName, testCaseType.getQualifiedSourceName());
 		}
 		
-		// Generate the TestCaseInfos
+		// Generate the TestCaseInfos Collection<TestCaseInfoClass>
 		Collection<String> testCaseInfos = new ArrayList<String>();
 		for (JClassType testCaseType : testCasesInstances) {
 			testCaseInfos.add(TestCaseInfoGenerator.generateTestCaseInfo(logger, context, testCaseType));
@@ -45,8 +47,8 @@ public class TestCaseRegistryGenerator  extends Generator{
 		// Write the actual class file
 		SourceWriter sourceWriter = emitClassDefinition(logger, context);
 		if (sourceWriter != null) {
-			emitGetTestCaseInfosMethod(logger, sourceWriter, testCaseInfos);
-			emitNewExecutorInstanceMethod(logger, sourceWriter, testCaseExecutorTypes);
+			emitConstructor(logger, sourceWriter, testCaseInfos);
+			emitNewTestCaseInstanceMethod(logger, sourceWriter, testCaseWrapperTypes);
 			sourceWriter.commit(logger);
 		}
 		return packageName+"."+className;
@@ -58,26 +60,23 @@ public class TestCaseRegistryGenerator  extends Generator{
 			return null;
 		
 	    ClassSourceFileComposerFactory composerFactory = new ClassSourceFileComposerFactory( packageName, className);
-	    composerFactory.addImplementedInterface(TestCaseRegistry.class.getName());
+	    composerFactory.setSuperclass(TestCaseRegistry.class.getName());
 	        
 	    return composerFactory.createSourceWriter(context, printWriter);
 	}
-	
-	private void emitGetTestCaseInfosMethod(TreeLogger logger, SourceWriter sourceWriter, Collection<String> testCaseInfos) {
-		sourceWriter.println("public TestCaseInfo[] getTestCaseInfos() {");
+
+	private void emitConstructor(TreeLogger logger, SourceWriter sourceWriter, Collection<String> testInfoClassNames) {
+		sourceWriter.println("public "+className+"() {");
 		sourceWriter.indent();
-			sourceWriter.println("return new TestCaseInfo[]{");
-			sourceWriter.indent();
-				for (String name : testCaseInfos) 
-					sourceWriter.println("new "+name+"(),");
-			sourceWriter.outdent();
-			sourceWriter.println("};");
+			for (String infoClassName: testInfoClassNames) {
+				sourceWriter.println("registerInfo(new "+infoClassName+"());");
+			}
 		sourceWriter.outdent();
-		sourceWriter.println("}");	
+		sourceWriter.println("}");
 	}
 	
-	private void emitNewExecutorInstanceMethod(TreeLogger logger, SourceWriter sourceWriter, Map<String,String> testCaseExecutors) {
-		sourceWriter.println("public TestCaseExecutor newExecutorInstance(String testCaseName) {");
+	private void emitNewTestCaseInstanceMethod(TreeLogger logger, SourceWriter sourceWriter, Map<String,String> testCaseExecutors) {
+		sourceWriter.println("public TestCase newTestCaseInstance(String testCaseName) {");
 		sourceWriter.indent();
 			for (Map.Entry<String, String> entry : testCaseExecutors.entrySet()) {
 				sourceWriter.println("if (testCaseName.equals(\"" + entry.getValue()  + "\"))");
