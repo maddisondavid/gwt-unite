@@ -6,6 +6,7 @@ import opera.io.File;
 import opera.io.FileMode;
 import opera.io.FileStream;
 import opera.io.FileSystem;
+import opera.io.File.CompletedHandler;
 
 public class FileTests extends TestCase{
 
@@ -277,36 +278,30 @@ public class FileTests extends TestCase{
 	public void copyMethodsWithCallbackWork() {
 		// Callbacks are not currently, erm, called back (see Opera bug US-1160)
 		
-//		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
-//		
-//		File newDir1 = sharedDir.createDirectory("testMe");
-//		File newDir2 = sharedDir.createDirectory("testMe2");
-//		
-//		File newFile = newDir1.resolve("TestFile");
-//		FileStream fileStream = newFile.open(FileMode.WRITE);
-//		fileStream.write("Hello");
-//		fileStream.close();
-//		
-//		newDir1.refresh();
-//		assertEquals(1,newDir1.getLength());
-//
-//		CompleteHandler h = new CompleteHandler();
-//		newFile.copyTo(newDir2, true, h);
-//		TestUtils.spinWait(2000, h);
+		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		
+		File newDir1 = sharedDir.createDirectory("testMe");
+		File newDir2 = sharedDir.createDirectory("testMe2");
+		
+		File newFile = newDir1.resolve("TestFile");
+		FileStream fileStream = newFile.open(FileMode.WRITE);
+		fileStream.write("Hello");
+		fileStream.close();
+		
+		newDir1.refresh();
+		assertEquals(1,newDir1.getLength());
+
+		delayTestFinish(1000);
+		newFile.copyTo(newDir2, true, new CompletedHandler() {
+			@Override public void onComplete(File file) {
+				try {
+					assertEquals("MyFile",file.getName());
+					finishTest();
+				} catch(Exception e) {
+					handleException(e);
+				}
+			}
+		});
 	}
 	
-	class CompleteHandler implements File.CompletedHandler, Condition {
-		private boolean isFinished = false;
-		
-		@Override
-		public void onComplete(File file) {
-			isFinished = true;
-		}
-
-		@Override
-		public boolean isTrue() {
-			return isFinished;
-		}
-		
-	}
 }

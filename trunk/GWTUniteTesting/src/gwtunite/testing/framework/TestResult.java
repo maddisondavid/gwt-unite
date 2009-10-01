@@ -12,19 +12,36 @@ public class TestResult {
 	}
 
 	private final String testName;
-	private final Result result; 
-	private final Throwable throwable;
+	private final Result result;
+	private String failureMessage;
+	private Exception exception;
 	
-	public TestResult(String testName, Result result) {
-		this.testName = testName;
-		this.result = result;
-		throwable = null;
+	public static TestResult pass(String testName) {
+		return new TestResult(testName, Result.PASSED);
 	}
 
-	public TestResult(String testName, Result result, Throwable e) {
+	public static TestResult failed(String testName, String failureMessage) {
+		return new TestResult(testName, Result.FAILED, failureMessage);
+	}
+
+	public static TestResult error(String testName, Exception exception) {
+		return new TestResult(testName, Result.FAILED, exception);
+	}
+	
+	private TestResult(String testName, Result result) {
 		this.testName = testName;
 		this.result = result;
-		this.throwable = e;
+	}
+	
+	private TestResult(String testName, Result result, Exception e) {
+		this(testName, Result.FAILED);
+		this.exception = e;
+	}
+
+	private TestResult(String testName, Result result, String failedMessage) {
+		this.testName = testName;
+		this.result = result;
+		this.failureMessage = failedMessage;
 	}
 	
 	public String getTestName() {
@@ -35,8 +52,12 @@ public class TestResult {
 		return result;
 	}
 	
-	public Throwable getException() {
-		return throwable;
+	public String getFailureMessage() {
+		return failureMessage;
+	}
+	
+	public Exception getException() {
+		return exception;
 	}
 }
 

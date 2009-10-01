@@ -30,6 +30,7 @@ public class FileStreamTests extends TestCase {
 		inStream.close();
 		
 		binFile.deleteFile(binFile);
+		assertFalse(binFile.exists());
 	}
 	
 	@Test

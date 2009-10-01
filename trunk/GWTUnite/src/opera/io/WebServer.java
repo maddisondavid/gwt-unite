@@ -98,7 +98,7 @@ final public class WebServer extends JavaScriptObject {
 				try {
 					handler.@opera.io.WebServerEventHandler::onConnection(Lopera/io/WebServerRequestEvent;)(webServerRequestEvent);
 				} catch(exception) {
-					@opera.io.Utils::handleException(Ljava/lang/Exception;)(exception);
+					@opera.io.Utils::handleException(Ljava/lang/Throwable;)(exception);
 					webServerRequestEvent.connection.response.close();
 				}
 			}
