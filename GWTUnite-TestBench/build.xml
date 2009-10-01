@@ -1,0 +1,21 @@
+<!--
+	Packaging Script For GWT-Unite-TestingFramework
+-->
+<project name="gwt-unite-testing-framework" basedir="." default="package">
+	<property name="build.dir" value="build"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="jarname" value="GWTUnite-Testing-Framework"/>
+
+	<target name="package">
+		<mkdir dir="${build.dir}"/>
+		<copy todir="${build.dir}">
+			<fileset dir="bin" excludes="*.svn"/>
+			<fileset dir="src" excludes="*.svn"/>
+		</copy>
+		
+		<mkdir dir="${dist.dir}"/>
+		<zip basedir="${build.dir}" zipfile="${dist.dir}/${jarname}.jar"/>
+		
+		<delete dir="${build.dir}"/>
+	</target>
+</project>
