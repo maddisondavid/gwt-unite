@@ -8,5 +8,5 @@
    		<when-type-assignable class="gwtunite.testing.framework.TestCaseRegistry" />
  	</generate-with>
 	
-	<entry-point class="gwtunite.testing.framework.TestBenchService"/>
+	<entry-point class="gwtunite.testing.framework.TestBenchApplication"/>
 </module>

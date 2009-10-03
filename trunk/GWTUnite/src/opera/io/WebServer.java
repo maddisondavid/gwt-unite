@@ -52,9 +52,7 @@ final public class WebServer extends JavaScriptObject {
      *
      * <p>Registered event handlers are called with an event of the type {@link WebServerRequestEvent}.</p>
      *
-     * <p>Any request names starting with underscore ('_') is reserved and cannot be used.</p>
-     *
-     * <p>The exceptions are the following request names, which have special meanings:</p>
+     * <p>The following request names, have special meanings:</p>
      *
      * <dl>
      * <dt>{@link WebServer#INDEX_PATH}</dt>
@@ -71,8 +69,9 @@ final public class WebServer extends JavaScriptObject {
      * <p>Events for specific event listeners and _index events are fired before the _request event is fired. 
      * Consider the following code example:</p>
      *
-     * <pre><code>WebServer.getInstance().addEventListener(WebServer.ALL_REQUESTS_PATH, generalhandler, false);
-     *WebServer.getInstance().addEventListener("add", addhandler, false);</code></pre>
+     * <pre><code>
+     *      WebServer.getInstance().addEventListener(WebServer.ALL_REQUESTS_PATH, generalhandler, false);
+     *      WebServer.getInstance().addEventListener("add", addhandler, false);</code></pre>
      *
      * <p>The handlers for a specific path, including _index is called before _request.</p>
      *
@@ -89,6 +88,17 @@ final public class WebServer extends JavaScriptObject {
 		jsniAddEventListener(pathFragment, handler.getJSNIEventHandler(), useCapture);
 	};
 
+    /**
+     * Remove an event listener from the server previously added with {@link #addEventListener(String, WebServerEventHandler, boolean)}
+     * 
+     * @param pathFragment Path fragment to remove a listener for.
+     * @param handler Event listener function to remove.
+     * @param useCapture Whether or not this applies to the capture phase.
+     */
+	public void removeEventListener(String pathFragment, WebServerEventHandler handler, boolean useCapture) {
+		jsniRemoveEventListener(pathFragment,handler.getJSNIEventHandler(), useCapture);
+	}
+	
 	private native void jsniAddEventListener(String pathFragment, JavaScriptObject handler, boolean useCapture) /*-{
 		opera.io.webserver.addEventListener(pathFragment, handler, useCapture);
 	}-*/;
@@ -96,7 +106,7 @@ final public class WebServer extends JavaScriptObject {
 	private native JavaScriptObject createEventHandlerFunction(WebServerEventHandler handler) /*-{
 		return function(webServerRequestEvent) {
 				try {
-					handler.@opera.io.WebServerEventHandler::onConnection(Lopera/io/WebServerRequestEvent;)(webServerRequestEvent);
+					handler.@opera.io.WebServerEventHandler::onConnection(Lopera/io/WebServerRequest;Lopera/io/WebServerResponse;)(webServerRequestEvent.connection.request, webServerRequestEvent.connection.response);
 				} catch(exception) {
 					@opera.io.Utils::handleException(Ljava/lang/Throwable;)(exception);
 					webServerRequestEvent.connection.response.close();
@@ -105,44 +115,22 @@ final public class WebServer extends JavaScriptObject {
 	}-*/;
 
     /**
-     * The name of the service currently accessing the webserver object, for example 'File Sharing'. Readonly.
+     * The name of the service currently accessing the webserver object, for example 'File Sharing'.
      *
      * <p>The name of the service, for example as defined in the <code>widgetname</code> element
      * in the <code>config.xml</code> of a Opera Unite service.</p>
+     * 
+     * @return The name of the service currently accessing the WebServer object
      */
 	public native String getCurrentServiceName() /*-{
 		return opera.io.webserver.currentServiceName;
-	}-*/;
-	
-    /** 
-     * The current connections made to this Web server.
-     *
-     * <p>Connections remain in this collection even if they are closed. They are removed when there are
-     * no longer any references to the connection elsewhere in the system.</p>
-     */
-	public native WebServerConnection[] getConnections() /*-{
-		return this.connections;
-	}-*/;
-
-	/**
-     * Get the MIME content type mapped to a particular file name.
-     *
-     * This function looks up the MIME content type associated with the given file name in Opera.
-     * It can for example be used to set proper headers when serving special types of files. The file name
-     * must contain a period ('.').
-     *
-     * @param file The file name to get a MIME type for, for example 'index.html'.
-     * @returns The MIME content type mapped to the given file name.
-     */
-	public native String getContentType(File file) /*-{
-		return this.getContentType(file);
 	}-*/;
 
 	/**
      * The path of the service currently accessing the webserver object, for example '/fileSharing/'.
      *
-     * <p>The path of the service, for example as defined in the <code>servicePath</code> element
-     * in the <code>config.xml</code> of a Opera Unite service. In contrast to the <code>serviceName</code>,
+     * <p>The path of the service, as defined in the <code>servicePath</code> element
+     * in the <code>config.xml</code> of a Opera Unite Application. In contrast to {@link #getCurrentServiceName()},
      * this name can only contain characters that are valid in an IRI.</p>
      *
      * <p>The path includes a leading and trailing slash.</p>
@@ -153,19 +141,47 @@ final public class WebServer extends JavaScriptObject {
      *
      * <p>In the example above this property would contain '/share/'.</p>
      *
-     * <p>Note that anything after the first path component is handled by
-     * the service.</p>
+     * <p>Note that anything after the first path component is handled by the service.</p>
+     * 
+     * @return The path of the service currently accessing the webserver
      */
 	public native String getCurrentServicePath() /*-{
 		return opera.io.webserver.currentServicePath;
 	}-*/;
-
 	
-	/**
-     * The name of the device the Web server is running on, for example 'work'.
+    /** 
+     * The current connections made to this Web server.
      *
-     * You may run a Web server on different devices, like two different computers
-     * in your home network and your mobile phone, e.g. <code>work</code> as in http://work.john.operaunite.com.
+     * <p>Connections remain in this collection even if they are closed. They are removed when there are
+     * no longer any references to the connection elsewhere in the system.</p>
+     * 
+     * @return all current connections made to this webserver
+     */
+	public native WebServerConnection[] getConnections() /*-{
+		return this.connections;
+	}-*/;
+
+	/**
+     * Get the MIME content type mapped to a particular file name.
+     *
+     * <p>The MIME content type associated with the given file name is looked up in the Opera browser.
+     * It can for example be used to set proper headers when serving special types of files. The file name
+     * must contain a period ('.').</p>
+     *
+     * @param file The file name to get a MIME type for, for example 'index.html'.
+     * @return The MIME content type mapped to the given file name.
+     */
+	public native String getContentType(String file) /*-{
+		return this.getContentType(file);
+	}-*/;
+
+	/**
+     * The name of the Opera Unite device the Web server is running on, for example 'work'.
+     *
+     * <p>You may run a Web server on different devices, like two different computers
+     * in your home network and your mobile phone, e.g. <code>work</code> as in http://work.john.operaunite.com.</p>
+     * 
+     * @return The name of the Opera Unite device this Websever is running on
      */
 	public native String getDeviceName() /*-{
 		return opera.io.webserver.deviceName;
@@ -179,6 +195,8 @@ final public class WebServer extends JavaScriptObject {
      * as in <code>http://work.john.operaunite.com/wiki</code> and <code>http://home.john.operaunite.com/wiki</code>.</p>
      *
      *<p>Note that this will always be a host name which contains the proxy name.</p>
+     *
+     *@return the hostname of the webserver
      */
 	public native String getHostName() /*-{
 		return opera.io.webserver.hostName;
@@ -189,6 +207,8 @@ final public class WebServer extends JavaScriptObject {
      *
      * <p>This property can be used to make a download link to the service and can also function
      * as part of an auto update scheme.</p>
+     * 
+     * @return the URL this service was downloaded from
      */
 	public native String getOriginURL() /*-{
 		return opera.io.webserver.originURL;
@@ -197,9 +217,11 @@ final public class WebServer extends JavaScriptObject {
     /**
      * The port this Web server is listening to, for example 8840.
      *
-     * You may run multiple Web servers from the same computer by assigning different port
+     * <p>You may run multiple Web servers from the same computer by assigning different port
      * numbers and device names to each instance of Opera running the Web server in opera:config.
-     * Valid ports are in the range 0-65536
+     * Valid ports are in the range 0-65536</p>
+     * 
+     * @return the port this webserver is listening to
      */
 	public native String getPort() /*-{
 		return opera.io.webserver.port;
@@ -208,8 +230,10 @@ final public class WebServer extends JavaScriptObject {
 	/**
      * The name of the proxy the Web server is connected to, for example 'operaunite.com'.
      *
-     * The proxy name is the last part of the full host name, 
-     * e.g. <code>operaunite.com</code> as in <code>http://work.john.operaunite.com/wiki</code>
+     * <p>The proxy name is the last part of the full host name, 
+     * e.g. <code>operaunite.com</code> as in <code>http://work.john.operaunite.com/wiki</code></p>
+     * 
+     * @return the name of the proxy this Webserver is connected to
      */
 	public native String getProxyName() /*-{
 		return opera.io.webserver.proxyName;
@@ -218,7 +242,9 @@ final public class WebServer extends JavaScriptObject {
     /**
      * The public facing IP address of this Web server, as seen by the proxy.
      *
-     * If the Web server does not accept direct connections, this property is <code>null</code>.
+     * <p>If the Web server does not accept direct connections, this property is <code>null</code>.</p>
+     * 
+     * @return the public facing IP address of this WebServer
      */
 	public native String getPublicIP() /*-{
 		return opera.io.webserver.publicIP;
@@ -227,7 +253,9 @@ final public class WebServer extends JavaScriptObject {
 	/**
 	 * The public facing port of this Web server, as seen by the proxy.
 	 *
-	 * If the Web server does not accept direct connections, this property is <code>null</code>.
+	 * <p>If the Web server does not accept direct connections, this property is <code>null</code>.</p>
+	 * 
+	 * @return the public facing port of this WebServer
 	 */
 	public native int getPublicPort() /*-{
 		return opera.io.webserver.publicPort;
@@ -236,9 +264,11 @@ final public class WebServer extends JavaScriptObject {
     /**
      * Services running on this Web server.
      *
-     * An array of {@link WebServerServiceDescriptor} objects that describe the services currently running
+     * <p>An array of {@link WebServerServiceDescriptor} objects that describe the services currently running
      * on this device. You can use this property to discover and communicate with other services, and potentially share data 
-     * with them.
+     * with them.</p>
+     * 
+     * @return descriptors describing other services running on this WebServer
      */
 	public native WebServerServiceDescriptor[] getServices() /*-{
 		return opera.io.webserver.services;
@@ -247,23 +277,15 @@ final public class WebServer extends JavaScriptObject {
     /**
      * The My Opera user name of the user owning the Web server, for example 'john'.
      *
-     * For authentication purposes, a <a href="http://my.opera.com">My Opera</a> user name is required for connecting to the
-     * proxy and publishing services.
+     * <p>For authentication purposes, a <a href="http://my.opera.com">My Opera</a> user name is required for connecting to the
+     * proxy and publishing services.</p>
+     * 
+     * @return the MyOpera username of the user owning the WebServer
      */
 	public native String getUserName() /*-{
 		return opera.io.webserver.userName;
 	}-*/;
 
-    /**
-     * Remove an event listener from the server.
-     * @param pathFragment Path fragment to remove a listener for.
-     * @param handler Event listener function to remove.
-     * @param useCapture Whether or not this applies to the capture phase.
-     */
-	public void removeEventListener(String pathFragment, WebServerEventHandler handler, boolean useCapture) {
-		jsniRemoveEventListener(pathFragment,handler.getJSNIEventHandler(), useCapture);
-	}
-	
 	private native void jsniRemoveEventListener(String pathFragment, JavaScriptObject handler, boolean useCapture) /*-{
 		opera.io.webserver.removeEventListener(pathFragment, handler, useCapture);
 	}-*/;
@@ -278,7 +300,7 @@ final public class WebServer extends JavaScriptObject {
      *
      * <p>The share is automatically deleted when the service is closed.</p>
      *
-     * <p>Example: If you have resolved a File to a given folder and then specify <code>opera.io.webserver.shareFile(myFile, 'share')</code>, 
+     * <p>Example: If you have resolved a File to a given folder and then specify <code>WebServer.getInstance().shareFile(myFile, 'share')</code>, 
      * it will be shared as the URL <code>http://device.user.proxy/service/share</code></p>
      *
      * @param file The File to share
@@ -291,8 +313,8 @@ final public class WebServer extends JavaScriptObject {
     /**
      * Unshares a previously shared file
      *
-     * When a file has been shared using shareFile, it can be unshared again
-     * by calling this method with the same File reference used to share the file
+     * <p>When a file has been shared using shareFile, it can be unshared again
+     * by calling this method with the same File reference used to share the file</p>
      *
      * @param file The file to unshare.
      */

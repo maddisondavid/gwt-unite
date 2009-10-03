@@ -2,8 +2,8 @@ package opera.io;
 
 import com.google.gwt.core.client.EntryPoint;
 
-/** Base class of all OperaUnite services */
-public abstract class OperaUniteService implements EntryPoint{
+/** Base class of all OperaUnite application */
+public abstract class OperaUniteApplication implements EntryPoint{
 
 	public void onModuleLoad() {
 		try {

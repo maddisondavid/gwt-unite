@@ -6,6 +6,10 @@ import com.google.gwt.core.client.JavaScriptObject;
 * Event fired when requests are made to the Web server.
 *
 * <p>See {@link WebServer#addEventListener(String, WebServerEventHandler, boolean)} for details on different event names.</p>
+* 
+* CODE_REVIEW : Remove this class, it's not really required in GWT-Unite.  The only thing we need to
+*               be careful of is the ID for _closed requests
+* @deprecated
 */
 final public class WebServerRequestEvent extends JavaScriptObject {
 	protected WebServerRequestEvent() {
