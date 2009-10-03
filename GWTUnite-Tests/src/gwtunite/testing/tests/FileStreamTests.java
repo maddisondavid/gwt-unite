@@ -1,19 +1,20 @@
 package gwtunite.testing.tests;
 
-import java.util.Arrays;
-
 import gwtunite.testing.framework.Test;
 import gwtunite.testing.framework.TestCase;
+
+import java.util.Arrays;
+
 import opera.io.File;
-import opera.io.FileMode;
 import opera.io.FileStream;
 import opera.io.FileSystem;
+import opera.io.File.FileMode;
 
 public class FileStreamTests extends TestCase {
 
 	@Test
 	public void ableToReadAndWriteBytes() throws Exception {
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
 		File binFile = sharedDir.resolve("BinaryFile");
 		
 		byte[] testBytes = {1,2,3,4,5};
@@ -29,13 +30,13 @@ public class FileStreamTests extends TestCase {
 		
 		inStream.close();
 		
-		binFile.deleteFile(binFile);
+		binFile.delete();
 		assertFalse(binFile.exists());
 	}
 	
 	@Test
 	public void base64MethodsWork() throws Exception {
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
 		File binFile = sharedDir.resolve("BinaryFile");
 		
 		String test64 = "dGVzdA=="; // == Test
@@ -51,6 +52,6 @@ public class FileStreamTests extends TestCase {
 		assertEquals(in64, test64);
 		
 		
-		binFile.deleteFile(binFile);
+		binFile.delete();
 	}
 }

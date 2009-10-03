@@ -3,10 +3,13 @@ package opera.io;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * Request made to the Web server.
+ * A Request made to the Web server.
  *
  * <p>WebServerRequest holds information about the incoming request, such as its URI, method and any data 
  * sent along with it.</p>
+ * 
+ * <p>An instance of this object will be sent to any {@link WebServerEventHandler} when the <code>onConnection</code> method
+ * is called.</p>
  */
 final public class WebServerRequest extends JavaScriptObject {
 	
@@ -16,83 +19,153 @@ final public class WebServerRequest extends JavaScriptObject {
     /**
      * The full body of the HTTP request as a String.
      *
-     * If the body is non existintant or binary, this property is null.
+     * @returns The full body as test or NULL if there is no body or it is binary
      */
-	public native String getBody() /*-{
+	public native String getBodyAsText() /*-{
 		return this.body;
 	}-*/;
 
-    /**
-     * The names of items in the body of this request, meaning data sent as POST.
-     */
-	public native String[] getBodyItemNames() /*-{
-		var keys = new Array();
-		
-		for (key in this.bodyItems)
-			keys.push(key);
-			
-		return keys;
+	/** 
+	 * Tests whether the specified item has been POSTed in this request
+	 * 
+	 * @param name The name of the body item to test for
+	 * @returns true if a body item with the given name exists in this request 
+	 */
+	public native boolean hasBodyItem(String name) /*-{
+		if (this.bodyItems[name])
+			return true
+		else
+			return false;
 	}-*/;
 	
     /**
-     * @return the values of the body item.  This is an array as a body item can be specified 
-     * mulitple times
+     * The names of items in the POST body of this request.
+     * 
+     * @return the names of all items posted in the Body of this request
      */
-	public native String[] getBodyItem(String bodyItem) /*-{
-		return this.bodyItems[bodyItem];
+	public native String[] getBodyItemNames() /*-{
+	        var keys = new Array();
+	        for (key in this.bodyItems)
+	                keys.push(key);
+	                
+	        return keys;
+	}-*/;
+        
+	/**
+	 * Retrieves a specific POSTed Body item from this request
+	 * 
+	 * @param name The name of the body item to be retrieved
+	 * @return A list of values for the body item or null if the body item does not exist in this request
+	 */
+	public native String[] getBodyItem(String name) /*-{
+	        return this.bodyItems[bodyItem];
+	}-*/;
+
+	/**
+	 * Test whether the specified item was sent in the query string of this request
+	 * 
+	 * @param name The name of the item to test for
+	 * @return True if the item exists in this request
+	 */
+	public native boolean hasQueryItem(String name)/*-{
+		if (this.queryItems[name]) 
+			return true
+		else 
+			return false;
+	}-*/;
+	
+    /**
+     * The names of all items sent on the query string of this request
+     * 
+     * @return the names of all items sent on the query string of this request
+     */
+	public native String[] getQueryItemNames() /*-{
+	        var keys = new Array();
+	        for (key in this.queryItems)
+	                keys.push(key);
+	                
+	        return keys;
+	}-*/;
+
+	/**
+	 * Retrieves the values of a particular item from the query string sent with this request
+	 * 
+	 * @param The name of the item to be retrieved
+	 * @return The values for the specific item from the query string
+     */
+	public native String[] getQueryItem(String name) /*-{
+	        return this.queryItems[name];
+	}-*/;
+	
+	/**
+	 * Tests whether the specified header was sent with this request
+	 * 
+	 * @param name The name of the header to test for
+	 * @return true if the specified header was sent with this request
+	 */
+	public native boolean hasHeader(String name) /*-{
+		if (this.headers[name])
+			return true
+		else 
+			return false;
+	}-*/;
+	
+    /**
+     * Retrieves the names of all headers sent with this request
+     * 
+     * @return The names of all HTTP headers sent with this request.
+     */
+	public native String[] getHeaderNames() /*-{
+	        var keys = new Array();
+	        for (key in this.headers)
+	                keys.push(key);
+	                
+	        return keys;
 	}-*/;
 
     /**
-     * @return The connection this request was sent through.
+     * Retrieves the values of the specified header
+     * 
+     * @param name The name of the header
+     * @return The values for the specified header or Null if the specified header does not exist
+     */
+	public native String[] getHeader(String name) /*-{
+	        return this.headers[header];
+	}-*/;	
+	
+    /**
+     * Retrieves the {@link WebServerConnection} this request was sent through
+     * 
+     * @return the connection this request was sent through
      */
 	public native WebServerConnection getConnection() /*-{
 		return this.connection;
 	}-*/;
 
     /**
-     * Files uploaded with this request.
-     *
-     * <p>This File object represents a virtual directory which points to the
-     * uploaded files. Access the individual files by getting the listing
-     * from the file.</p>
+     * Retrieves the files uploaded and sent with this request
+     * 
+     * <p>The returned {@link File} object represents a virtual directory which points to the
+     * uploaded files. Access the individual files using {@link File#listFiles()}.</p>
      *
      * <p>The name of the file is the filename the user selected when uploading.</p>
      *
-     * <p>Request headers for these files are available through the metaData property:
-     * <code>req.getFiles().getContents()[0].getMetaData().headers['some header'];</code></p>
+     * <p>Request headers for these files are available through the file metadata</p>
      * 
-     * FIXME: The above comment is wrong (and so is possibly the meta data property in File!)
+     * @return A {@link File} object representing a virtual directory holding the uploaded files
      */
-	public native File getFiles() /*-{
+	public native File getUploadedFiles() /*-{
 		return this.files;
-	}-*/;
-
-    /**
-     * @return The names of all HTTP headers sent with this request.
-     */
-	public native String[] getHeaderNames() /*-{
-		var keys = new Array();
-		
-		for (key in this.headers)
-			keys.push(key);
-			
-		return keys;
-	}-*/;
-
-    /**
-     * @return The values for a particular header.  This is an array as a header could be 
-     * specified multiple times
-     */
-	public native String[] getHeader(String headerName) /*-{
-		return this.headers[header];
 	}-*/;
 	
     /**
      * The value of the Host header sent with this request.
      *
-     * As opposed to the {@link #getUri()} metho, this will give you the host name the request
+     * As opposed to the {@link #getUri()} method, this will give you the host name the request
      * was made to, which can be used for among other things redirects. This may contain the
      * port of the request, i.e. 'foo.bar:80'.
+     * 
+     * @return the value of the Host header sent with this request
      */
 	public native String getHost() /*-{
 		return this.host;
@@ -101,9 +174,11 @@ final public class WebServerRequest extends JavaScriptObject {
     /**
      * The IP address of the client that sent this request.
      *
-     * <p class="ni">This currently only gives you the IP address of the proxy.</p>
+     * <p>Note: This currently only gives you the IP address of the proxy.</p>
+     * 
+     * @return the IP address of the client that sent this request
      */
-	public native String getIP() /*-{
+	public native String getRemoteIP() /*-{
 		return this.ip;
 	}-*/;
 
@@ -112,102 +187,43 @@ final public class WebServerRequest extends JavaScriptObject {
      *
      * <p>This method gets the values of items sent in a query string (typically through GET requests)
      * or in the body of the request (typically through POST requests). Each item may occur multiple times
-     * with different values, both in the query string and the body. The optional second argument
-     * <code>method</code> can be used to limit the selection to either of those two.</p>
+     * with different values, both in the query string and the body.</p>
      *
-     * @param requestItem Name of the request item to get
+     * @param name Name of the request item to retrieve
      * @returns An Array of values for the given request item, or null if there are no values for the given request item.
      */
-	public native String[] getItem(String requestItem) /*-{ 
+	public native String[] getItem(String name) /*-{ 
 		return this.getItem(requestItem);
 	}-*/;
-
+	
     /**
-     * Get the value of a request item.
-     *
-     * <p>This method gets the values of items sent in a query string (typically through GET requests)
-     * or in the body of the request (typically through POST requests). Each item may occur multiple times
-     * with different values, both in the query string and the body. The optional second argument
-     * <code>method</code> can be used to limit the selection to either of those two.</p>
-     *
-     * @param requestItem Name of the request item to get
-     * @param method Optional argument with the method of the request item to get, either GET or POST.
-     * @returns An Array of values for the given request item, or null if there are no values for the given request item.
-     */
-	public native String[] getItem(String requestItem, String method) /*-{ 
-		return this.getItem(requestItem, method);
-	}-*/;
-
-    /**
-     * @return The HTTP method of this request, one of GET, POST, PUT or DELETE. Readonly.
+     * Retrieves the method of this request, one of GET, POST, PUT or DELETE.
+     * 
+     * @return The HTTP method of this request
      */
 	public native String getMethod() /*-{
 		return this.method;
 	}-*/;
 
     /**
-     * The protocol this request was made to.
+     * The protocol this request was made over.
      *
-     * This is either 'http' or 'https'. Use it to construct links
-     * and redirects and preserve the correct security qualifications of the URIs.
+     * <p>This is either 'http' or 'https'. Use it to construct links
+     * and redirects and preserve the correct security qualifications of the URIs.</p>
+     * 
+     * @returns the protocol that this request was made over.
      */
 	public native String getProtocol()/*-{
 		return this.protocol;
 	}-*/;
 
     /**
-     * The names of items sent as part of the query string in this request, meaning data sent as GET.
-     */
-	public native String[] getQueryItemNames() /*-{
-		var keys = new Array();
-		
-		for (key in this.queryItems)
-			keys.push(key);
-			
-		return keys;
-	}-*/;
-
-	/**
-	 *    
-     * The values of a query string parameter sent as part of the query string in this request, 
-     * meaning data sent as GET.
-     */
-	public native String[] getQueryItem(String name) /*-{
-		return this.queryItems[name];
-	}-*/;
-
-    /**
-     * Get the values of a HTTP header in the request.
-     *
-     * <p>The returned object is a collection of headers matching the given header name.</p>
-     *
-     * <h3>Example:</h3>
-     *
-     * <p>Assuming that the client sent a request with a header of <code>Foo</code>, access it as follows:</p>
-     *
-     * <pre><code>
-     * headers = request.getRequestHeader('Foo');
-     * if ( headers )
-     * {
-     *     opera.postError(headers[0]);
-     * }</code></pre>
-     *
-     * @param requestHeader Name of the HTTP header to get.
-     * @returns An Array with headers matching the given name, or null if there are no headers with the given name.
-     */
-	public native String[] getRequestHeader(String requestHeader) /*-{
-		return this.getRequestHeader(requestHeader);
-	}-*/;
-
-    /**
      * The Uniform Resource Identifier this request was made to.
      *
      * <p>Relative URI the request is made out to, starting with '/' and the name of the service, 
-     * e.g. http://work.john.operaunite.com/wiki/add becomes '/wiki/add'. It is rewritable to allow 
-     * redispatching of the request. See the {@link WebServerResponse#closeAndRedispatch} method.</p>
-     *
-     * <p>Setting this property will throw a SECURITY_ERR if an invalid URI is set or if the URI 
-     * points to a different service than the one the request was issued from.</p>
+     * e.g. http://work.john.operaunite.com/wiki/add becomes '/wiki/add'.</p>
+     * 
+     * @return The URI this request was made to
      */
 	public native String getUri() /*-{
 		return this.uri;
@@ -215,11 +231,19 @@ final public class WebServerRequest extends JavaScriptObject {
 
     /**
      * Set the Uniform Resource Identifier this request was made to.
+     * 
+     * <p>Setting the URI is used when the request should be redispatched. 
+     * See the {@link WebServerResponse#closeAndRedispatch} method.</p> 
      *
-     * <p>Will throw a SECURITY_ERR if an invalid URI is set or if the URI 
+     * @param uri The URI to set
+     * @throws MalformedURIException if an invalid URI is set or if the URI 
      * points to a different service than the one the request was issued from.</p>
      */
-	public native void setUri(String uri) /*-{
-		this.uri = uri;
+	public native void setUri(String uri) throws MalformedURIException /*-{
+		try {
+			this.uri = uri;
+		}catch(SECURITY_ERR){
+			throw(@opera.io.MalformedURIException::new(Ljava/lang/String;)(uri));
+		}
 	}-*/;
 }

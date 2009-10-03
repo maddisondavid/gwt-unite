@@ -2,7 +2,7 @@
 	<property name="moduleName" value="gwtunite.testing.Tests"/>
 		
 	<property name="dist.moduleName" value="gwtuniteTests"/>
-	<property name="dist.zipName" value="GWTUniteTests.us"/>
+	<property name="dist.zipName" value="GWTUniteTests.ua"/>
 	<property name="dist.config-File" value="tests-config.xml"/>
 
 	<ant antfile="gwt-unite-service-builder.xml" inheritall="true" target="package"/>

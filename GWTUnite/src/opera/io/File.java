@@ -1,5 +1,7 @@
 package opera.io;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -25,7 +27,23 @@ import com.google.gwt.core.client.JavaScriptObject;
  * </code></pre>
  */
 final public class File extends JavaScriptObject {
-
+	
+	public enum FileMode {
+		READ(1),
+		WRITE(2),
+		APPEND(4),
+		UPDATE(8);
+		
+		int value;
+		private FileMode(int value) {
+			this.value = value;
+		}
+		public int getValue() {
+			return value;
+		}
+	}
+	
+	
 	protected File() {
 	}
 	
@@ -35,7 +53,7 @@ final public class File extends JavaScriptObject {
      * In most cases, the parent will be a directory. It can also be an archive. For
      * Files that are mount points, this property is <code>null</code>.
      */
-	public native File getParent() /*-{
+	public native File getParentFile() /*-{
 		return this.parent;
 	}-*/;
 	
@@ -177,73 +195,6 @@ final public class File extends JavaScriptObject {
     }-*/;
     
     /**
-     * The number of files and directories referenced by this File.
-     *
-     * <p>This property is used for array style lookup. If the <code>File</code> object is a regular file,
-     * its length is 0. Use the <code>fileSize</code> property to get the size of regular
-     * files in bytes.</p>
-     *
-     * <p>For directories or archives, this property is 0 until <code>refresh()</code> is called,
-     * except for mount point <code>File</code> objects that are already loaded.</p>
-     */
-    public native int getLength() /*-{
-    	return this.length;
-    }-*/;
-    
-    /**
-     * Open a File for reading or writing.
-     *
-     * <p>If the path argument is given as <code>null</code>, this File will be opened.</p>
-     *
-     * <p>The file can be opened in read, write, append or update mode, represented by the constants in {@link opera.io.filemode}.</p>
-     *
-     * <p>The mode argument is similar to PHPs <code>fopen()</code>, but implemented as constants which can be combined through a bitwise OR,
-     * for example as <code>opera.io.filemode.APPEND | opera.io.filemode.READ</code>.
-     *
-     * <p>If the file does not exist when opened in WRITE or APPEND mode, it is immediately created. The entire path to the file is created if this does not exist.</p> 
-     *
-     * <p>If the file does not exist when opened in READ or UPDATE mode, a FILE_NOT_FOUND_ERR is thrown.</p> 
-     *
-     * <p class="note">The previous version of the API accepted a string equal to the ones described below. This is now deprecated 
-     * in favor of the constants in {@link opera.io.filemode}.</p>
-     *
-     * <p>The the following is an extract from 
-     * <a href="http://no2.php.net/fopen">http://no2.php.net/fopen</a> and explains possible combinations:</p>
-     *
-     * <p>If a file is opened in an invalid mode, for example opening a read-online file in WRITE mode, a SECURITY_ERR is thrown.</p>
-     *
-     * <dl>
-     * <dt>'r'</dt><dd>Open for reading only; place the file pointer at the beginning of the file.</dd>
-     * <dt>'r+'</dt><dd>Open for reading and writing; place the file pointer at the beginning of the file. </dd>
-     * <dt>'w'</dt><dd>Open for writing only; place the file pointer at the beginning of the file and truncate the
-     * file to zero length. If the file does not exist, attempt to create it.</dd>
-     * <dt>'w+</dt><dd>Open for reading and writing; place the file pointer at the beginning of the file and truncate
-     * the file to zero length. If the file does not exist, attempt to create it.</dd>
-     * <dt>'a'</dt><dd>Open for writing only; place the file pointer at the end of the file. If the file does not
-     * exist, attempt to create it.</dd>
-     * <dt>'a+'</dt><dd></dd>
-     * <dt></dt><dd>Open for reading and writing; place the file pointer at the end of the file. If the file does not
-     * exist, attempt to create it.</dd>
-     * </dl>
-     *
-     * <p>Note that {@link opera.io.filemode#UPDATE} represents 'r+'.</p>
-     *
-     * @param path File object to read, or a URL encoded String with the path to the file to read.
-     * @param mode Whether to open the file for reading, writing, appending or a combination.
-     * @returns A FileStream pointing to the given file, or null if no File with the given path can be resolved.
-     * 
-     * @throws WRONG_ARGUMENTS_ERR If the given path is not a valid File or if the mode argument is unrecognized.
-     * @throws WRONG_TYPE_OF_OBJECT_ERR If the given path is not valid for opening, for example if it is a directory.
-     * @throws SECURITY_ERR If opening the file is not permitted, for example if it is readonly and opened in write mode.
-     * @throws FILE_NOT_FOUND_ERR If the filemode requires that a file must exist before accessing, such as READ or UPDATE, and it doesn't.
-     */
-    public native FileStream open(String path, int mode) /*-{
-    	// FIXME : Take an Enum and convert to the correct mode
-    	// FIXME : Catch exceptions and throw as Java Exception 
-    	return this.open(path, mode);
-    }-*/;
-
-    /**
      * Open this File for reading or writing.
      *
      * <p>The file can be opened in read, write, append or update mode, represented by the constants in {@link opera.io.filemode}.</p>
@@ -287,32 +238,26 @@ final public class File extends JavaScriptObject {
      * @throws SECURITY_ERR If opening the file is not permitted, for example if it is readonly and opened in write mode.
      * @throws FILE_NOT_FOUND_ERR If the filemode requires that a file must exist before accessing, such as READ or UPDATE, and it doesn't.
      */
-    public native FileStream open(int mode) /*-{
-    	// FIXME : Take an Enum and convert to the correct mode
-    	// FIXME : Catch exceptions and throw as Java Exception 
-    	return this.open(null, mode);
+    public native FileStream open(FileMode... modes) throws FileNotFoundException, SecurityException/*-{
+    	var mode=0;
+    	for (var f=0;f<modes.length;f++)
+    		mode = mode | modes[f].@opera.io.File.FileMode::getValue()();
+
+    	try { 
+    		return this.open(null, mode);
+    	}catch(e) {
+    		if (e=="FILE_NOT_FOUND_ERR" ||
+    		 	e=="GENERICL_ERR" ||
+    			e=="SECURITY_ERR" || 
+    			e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+    			e=="WRONG_ARGUMENTS_ERR") {
+    			throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
     }-*/;    
-    
-    /**
-     * Copy this File to the given File path.
-     *
-     * <p>Calling this function will copy all the contents of this File to the given target location, given
-     * as either a <code>File</code> object or a String containing the path.</p>
-     *
-     * <p>If the target location exists, this operation will fail with an exception. Use the 
-     * <code>overwrite</code> argument to replace existing files in target location.</p>
-     *
-     * <p>This operation will be performed synchronously</p>
-     *
-     * @param path The target location to copy this File to, as a URL encoded String with the path.
-     * @param overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
-     * @returns File object representing the location of the copy.
-     * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
-     */
-    public native File copyTo(String path, boolean overwrite) /*-{
-		return this.copyTo(path, overwrite);
-	}-*/;
-    
+        
     /**
      * Copy this File to the given File path.
      *
@@ -329,8 +274,20 @@ final public class File extends JavaScriptObject {
      * @returns File object representing the location of the copy.
      * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
      */
-    public native File copyTo(File path, boolean overwrite) /*-{
-		return this.copyTo(path, overwrite);
+    public native File copyTo(File targetFile, boolean overwrite) /*-{
+    	try {
+			return this.copyTo(targetFile, overwrite);
+    	}catch(e) {
+    		if (e=="FILE_NOT_FOUND_ERR" || 
+    			e=="GENERICL_ERR" ||
+    			e=="SECURITY_ERR" || 
+    			e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+    			e=="WRONG_ARGUMENTS_ERR") {
+    			throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
     
     /**
@@ -353,58 +310,24 @@ final public class File extends JavaScriptObject {
      * @returns {File} File object representing the location of the copy.
      * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
      */
-    public native File copyTo(String path, boolean overwrite, CompletedHandler callback) /*-{
-    	return this.copyTo(path, overwrite, new function(file) {
-    		callback.@opera.io.File.CompletedHandler::onComplete(Lopera/io/File;)();
-    	});
-    }-*/;
-    
-    /**
-     * Copy this File to the given File path.
-     *
-     * <p>Calling this function will copy all the contents of this File to the given target location, given
-     * as either a <code>File</code> object or a String containing the path.</p>
-     *
-     * <p>If the target location exists, this operation will fail with an exception. Use the 
-     * <code>overwrite</code> argument to replace existing files in target location.</p>
-     *
-     * <p>This operation will be asynchronous, and the method
-     * will immediately return a <code>File</code> object representing the copy of the File, regardless of whether the
-     * operation is complete. The callback is called when the copy operation is complete, with the copy of the
-     * File as an argument. If the operation fails, the callback is called with a <code>null</code> argument.</p>
-     *
-     * @param {File} path The target location to copy this File to, as a File.
-     * @param {boolean} overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
-     * @param {Function} callback Function to call when the copy is completed.
-     * @returns {File} File object representing the location of the copy.
-     * @throws GENERIC_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
-     */
-    public native File copyTo(File path, boolean overwrite, CompletedHandler callback) /*-{
-    	return this.copyTo(path, overwrite, function(file) {
-    		callback.@opera.io.File.CompletedHandler::onComplete(Lopera/io/File;)();
+    public native File copyTo(File targetFile, boolean overwrite, FileOperationCompletedHandler callback) throws FileNotFoundException /*-{
+    	try {
+	    	return this.copyTo(targetFile, overwrite, new function(file) {
+	    		callback.@opera.io.File.FileOperationCompletedHandler::onComplete(Lopera/io/File;)();
+	    	});
+    	}catch(e) {
+    		if (e=="FILE_NOT_FOUND_ERR" || 
+    			e=="GENERICL_ERR" ||
+    			e=="SECURITY_ERR" || 
+    			e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+    			e=="WRONG_ARGUMENTS_ERR") {
+    			throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
     		}
-    	);
+    	}
     }-*/;
     
-    /**
-     * Move this File to the given File path.
-     *
-     * <p>Calling this function will move all the contents of this File to the given File target location.</p>
-     *
-     * <p>If the target location exists, this operation will fail with an exception. Use the 
-     * <code>overwrite</code> argument to replace existing files in target location.</p>
-     *
-     * <p>This operation will be performed synchronously</p>
-     *
-     * @param path The target location to move this File to, as URL encoded String with the path.
-     * @param overwrite Whether or not to overwrite any content present in the target path. Optional, default false.
-     * @return File object representing the location of the new file.
-     * @throws GENERICL_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
-     */
-    public native File moveTo(String path, boolean overwrite) /*-{
-		return this.moveTo(path, overwrite);
-	}-*/;
-
     /**
      * Move this File to the given File path.
      *
@@ -420,8 +343,20 @@ final public class File extends JavaScriptObject {
      * @return File object representing the location of the new file.
      * @throws GENERICL_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
      */
-    public native File moveTo(File path, boolean overwrite) /*-{
-		return this.moveTo(path, overwrite);
+    public native File moveTo(File path, boolean overwrite) throws FileNotFoundException /*-{
+    	try {
+			return this.moveTo(path, overwrite);
+		}catch(e) {
+    		if (e=="FILE_NOT_FOUND_ERR" || 
+    			e=="GENERICL_ERR" ||
+    			e=="SECURITY_ERR" || 
+    			e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+    			e=="WRONG_ARGUMENTS_ERR") {
+    			throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;    
     
     /**
@@ -443,28 +378,23 @@ final public class File extends JavaScriptObject {
      * @return File object representing the location of the new file.
      * @throws GENERICL_ERR If the destination File already exists and the <code>overwrite</code> argument is <code>false</code>.
      */
-    public native File moveTo(String path, boolean overwrite, Object callback) /*-{
-		return this.moveTo(path, overwrite, callback);
+    public native File moveTo(File directory, boolean overwrite, FileOperationCompletedHandler callback) /*-{
+    	try {
+			return this.moveTo(directory, overwrite, new function(file) {
+	    		callback.@opera.io.File.FileOperationCompletedHandler::onComplete(Lopera/io/File;)();
+	    	});
+		}catch(e) {
+    		if (e=="FILE_NOT_FOUND_ERR" || 
+    			e=="GENERICL_ERR" ||
+    			e=="SECURITY_ERR" || 
+    			e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+    			e=="WRONG_ARGUMENTS_ERR") {
+    			throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;  
-
-    /**
-     * Create a new directory.
-     *
-     * <p>Create a new directory using either a File object or a URL encoded String with a path to the new directory. All 
-     * non-existing parent directories are created along with it.</p>
-     *
-     * <h2>Examples:</h2>
-     *
-     * <pre><code>File file = mountPoint.createDirectory(somePath);
-     *File file = mountPoint.createDirectory(mountPoint.resolve(somePath));</code></pre>
-     *
-     * @param directory a URL encoded String with the path to the directory.
-     * @returns File pointing to the new directory.
-     * @throws GENERIC_ERR If the directory or any of its parent directories could not be created.
-     */
-    public native File createDirectory(String dir) /*-{
-		return this.createDirectory(dir);
-	}-*/;
 
     /**
      * Create a new directory.
@@ -481,29 +411,22 @@ final public class File extends JavaScriptObject {
      * @returns File pointing to the new directory.
      * @throws GENERIC_ERR If the directory or any of its parent directories could not be created.
      */
-    public native File createDirectory(File dir) /*-{
-		return this.createDirectory(dir);
+    public native File mkDir() throws FileNotFoundException  /*-{
+    	try {   		
+			return this.createDirectory(this);
+		}catch(e) {
+    		if (e=="FILE_NOT_FOUND_ERR" || 
+    			e=="GENERICL_ERR" ||
+    			e=="SECURITY_ERR" || 
+    			e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+    			e=="WRONG_ARGUMENTS_ERR") {
+    			throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}	
 	}-*/;
-    
-    /**
-     * Delete the given directory.
-     *
-     * <p>If the <code>recursive</code> argument is given as <code>true</code>, this method will attempt to delete the
-     * directory and all of its content. If deleting individual files or directories in it fails, the method will continue
-     * to delete the rest of the content.</p>
-     *
-     * <p>If the entire directory and all of its content is deleted, the method will return <code>true</code>. If parts
-     * of the content, and thus also the directory itself could not be deleted, the method will return
-     * <code>false</code>.</p>
-     *
-     * @param directory URL encoded String with the path to the directory to delete.
-     * @param recursive Whether or not to recursively delete any content references by this File. Optional, default false.
-     * @returns true if the directory and all its content was deleted, false if the directory or any part of its contents was not deleted.
-     */
-    public native boolean deleteDirectory(String directory, boolean recursive) /*-{
-		return this.deleteDirectory(directory, recursive);
-	}-*/;    
-    
+        
     /**
      * Delete the given directory.
      *
@@ -519,60 +442,64 @@ final public class File extends JavaScriptObject {
      * @param recursive Whether or not to recursively delete any content references by this File. Optional, default false.
      * @returns true if the directory and all its content was deleted, false if the directory or any part of its contents was not deleted.
      */
-    public native boolean deleteDirectory(File directory, boolean recursive) /*-{
-    	return this.deleteDirectory(directory, recursive);
-    }-*/;
-    
-    /**
-     * Delete the given file.
-     *
-     * This method takes either a <code>File</code> object or a URL encoded String with a path and deletes the
-     * referenced file.
-     *
-     * @param file URL encoded String with the path to the file to delete.
-     * @returns true if the file was successfully deleted, otherwise false.
-     * @throws GENERIC_ERR If the file could not be deleted.
-     */
-    public native boolean deleteFile(String file) /*-{
-		return this.deleteFile(file);
-	}-*/;    
+    public native boolean delete() /*-{
+		try {
+			if (this.isDirectory) {
+				return this.deleteDirectory(this, true);
+			} else {
+				return this.deleteFile(this);
+			}
+		}catch(e) {
+			if (e=="FILE_NOT_FOUND_ERR" || 
+				e=="GENERICL_ERR" ||
+				e=="SECURITY_ERR" || 
+				e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+				e=="WRONG_ARGUMENTS_ERR") {
+				throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+			} else {
+				throw e;
+			}
+		}	
+	}-*/;	
 
     /**
-     * Delete the given file.
-     *
-     * This method takes either a <code>File</code> object or a URL encoded String with a path and deletes the
-     * referenced file.
-     *
-     * @param file File representing the directory to delete.
-     * @returns true if the file was successfully deleted, otherwise false.
-     * @throws GENERIC_ERR If the file could not be deleted.
+     * If this is a directory, this returns the directory listing   
      */
-    public native boolean deleteFile(File file) /*-{
-		return this.deleteFile(file);
-	}-*/;
+    public native File[] listFiles() throws FileNotFoundException /*-{
+    	if (!this.isDirectory)
+    		throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+    
+    	try {
+    		this.refresh();
+    		
+	    	if (this.length == 0) 
+	    		return [];
+    	
+    		return this;
+    	}catch(e) {
+			if (e=="FILE_NOT_FOUND_ERR" || 
+				e=="GENERICL_ERR" ||
+				e=="SECURITY_ERR" || 
+				e=="WRONG_TYPE_OF_OBJECT_ERR" || 
+				e=="WRONG_ARGUMENTS_ERR") {
+				throw @opera.io.FileNotFoundException::new(Ljava/lang/String;)(this.name);
+			} else {
+				throw e;
+			}
+		}
+    }-*/;
     
     /**
      * If this is a directory, this returns the directory listing   
      */
-    public native File[] getContents() /*-{
-    	if (this.length == 0) 
-    		return [];
-    	
-    	return this;
-    }-*/;
-    
-    /**
-     * Refresh the content in this File.
-     *
-     * Initially a File representing a directory is loaded without its actual content.
-     * For directories you need to call this method at least once to load the content.
-     * The File is then not live, i.e. if the underlying file system changes, these
-     * changes are not propagated to this <code>File</code> object. You need to call this method
-     * again to see the changes.
-     */
-    public native void refresh() /*-{
-    	this.refresh();
-    }-*/;
+    public File[] listFiles(FileFilter fileFilter) throws FileNotFoundException {
+    	Collection<File> acceptedFiles = new ArrayList<File>();
+    	for (File file :  listFiles() )
+    		if (fileFilter.accept(file))
+    			acceptedFiles.add(file);
+        	
+    	return acceptedFiles.toArray(new File[acceptedFiles.size()]);
+    }
     
     /**
      * Resolve a path to a file.
@@ -600,7 +527,7 @@ final public class File extends JavaScriptObject {
     	return this.toString();
     }-*/;
     
-    public static interface CompletedHandler {
+    public static interface FileOperationCompletedHandler {
     	public void onComplete(File file);
     }
 }

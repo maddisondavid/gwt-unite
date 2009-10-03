@@ -6,7 +6,6 @@ import com.google.gwt.dom.client.ImageElement;
 public final class FileStream extends JavaScriptObject {
 
 	protected FileStream() {
-		
 	}
 	
     /**
@@ -109,8 +108,16 @@ public final class FileStream extends JavaScriptObject {
      * @returns A String of characters, or null if there are no more characters left in the File.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native String read(int length) /*-{
-		return this.read(length);
+	public native String read(int length) throws IOException /*-{
+		try {
+			return this.read(length);
+    	}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 
     /**
@@ -135,8 +142,16 @@ public final class FileStream extends JavaScriptObject {
      * @returns A String of characters, or null if there are no more characters left in the File.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native String read(int length, String charset) /*-{
-		return this.read(length, charset);
+	public native String read(int length, String charset) throws IOException /*-{
+		try {
+			return this.read(length, charset);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 	
     /**
@@ -157,8 +172,16 @@ public final class FileStream extends JavaScriptObject {
      * @returns {String} A String of characters, or null if there are no data to read.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native String readLine(String charset) /*-{
-		return this.readLine(charset);
+	public native String readLine(String charset) throws IOException /*-{
+		try {
+			return this.readLine(charset);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 	
     /**
@@ -179,8 +202,16 @@ public final class FileStream extends JavaScriptObject {
      * @returns {String} A String of characters, or null if there are no data to read.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native String readLine() /*-{
-		return this.readLine();
+	public native String readLine() throws IOException /*-{
+		try {
+			return this.readLine();
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 	
     /**
@@ -200,8 +231,16 @@ public final class FileStream extends JavaScriptObject {
      * @returns A Byte Array with the bytes read from the FileStream, or null if there are no data to read.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native byte[] readBytes(int length) /*-{
-		return this.readBytes(length);
+	public native byte[] readBytes(int length) throws IOException /*-{
+		try {
+			return this.readBytes(length);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 	
     /**
@@ -230,8 +269,16 @@ public final class FileStream extends JavaScriptObject {
      * @returns The content of the <code>FileStream</code> as a Base64 encoded String, or null if there are no data to read.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native String readBase64(int length) /*-{
-		return this.readBase64(length);
+	public native String readBase64(int length) throws IOException /*-{
+		try { 
+			return this.readBase64(length);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 
     /**
@@ -245,8 +292,16 @@ public final class FileStream extends JavaScriptObject {
      * @param string The String of characters to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void write(String string) /*-{
-		this.write(string);
+	public native void write(String string) throws IOException /*-{
+		try {
+			this.write(string);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 
     /**
@@ -261,8 +316,16 @@ public final class FileStream extends JavaScriptObject {
      * @deprecated Not currently used as the charset is ignored
      */
 	@Deprecated
-	public native void write(String string, String charset) /*-{
-		this.write(string, charset);
+	public native void write(String string, String charset) throws IOException /*-{
+		try {
+			this.write(string, charset);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}
 	}-*/;
 
     /**
@@ -277,8 +340,16 @@ public final class FileStream extends JavaScriptObject {
      * @param {String} string The string of characters to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void writeLine(String string) /*-{
-		this.writeLine(string);
+	public native void writeLine(String string) throws IOException /*-{
+		try {
+			this.writeLine(string);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;	
 
     /**
@@ -293,8 +364,16 @@ public final class FileStream extends JavaScriptObject {
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      * @deprecated Not curently used as the charset is currently ignored
      */
-	public native void writeLine(String string, String charset) /*-{
-		this.writeLine(string, charset);
+	public native void writeLine(String string, String charset) throws IOException /*-{
+		try {
+			this.writeLine(string, charset);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;
 	
     /**
@@ -307,8 +386,16 @@ public final class FileStream extends JavaScriptObject {
      * @param length The number of bytes to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void writeBytes(byte[] bytes, int length) /*-{
-		this.writeBytes(bytes, length);
+	public native void writeBytes(byte[] bytes, int length) throws IOException /*-{
+		try {
+			this.writeBytes(bytes, length);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;
 	
     /**
@@ -322,8 +409,16 @@ public final class FileStream extends JavaScriptObject {
      * @param string Base64 encoded String to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void writeBase64(String string) /*-{
-		this.writeBase64(string);
+	public native void writeBase64(String string) throws IOException /*-{
+		try {
+			this.writeBase64(string);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;
 	
     /**
@@ -335,8 +430,16 @@ public final class FileStream extends JavaScriptObject {
      * @param file The File to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void writeFile(File file) /*-{
-		this.writeFile(file);
+	public native void writeFile(File file) throws IOException /*-{
+		try {
+			this.writeFile(file);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;
 	
     /**
@@ -349,7 +452,15 @@ public final class FileStream extends JavaScriptObject {
      * @param image The <code>ImageElement</code> to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void writeImage(ImageElement image) /*-{
-		this.writeImage(image);
+	public native void writeImage(ImageElement image) throws IOException /*-{
+		try {
+			this.writeImage(image);
+		}catch(e) {
+    		if (e=="GENERICL_ERR") {
+    			throw @opera.io.IOException::new(Ljava/lang/String;)(this.name);
+    		} else {
+    			throw e;
+    		}
+    	}		
 	}-*/;
 }

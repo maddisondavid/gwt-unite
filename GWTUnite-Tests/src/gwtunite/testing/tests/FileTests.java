@@ -3,30 +3,29 @@ package gwtunite.testing.tests;
 import gwtunite.testing.framework.Test;
 import gwtunite.testing.framework.TestCase;
 import opera.io.File;
-import opera.io.FileMode;
 import opera.io.FileStream;
 import opera.io.FileSystem;
-import opera.io.File.CompletedHandler;
+import opera.io.File.FileMode;
+import opera.io.File.FileOperationCompletedHandler;
 
 public class FileTests extends TestCase{
 
 	public void setUp() throws Exception {
-		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
-		appDir.refresh();
-		for (File file : appDir.getContents()) {
+		File appDir = FileSystem.getInstance().mountSharedFileSystem();
+		for (File file : appDir.listFiles()) {
 			if (file.isDirectory()) {
-				file.deleteDirectory(file, true);
+				file.delete();
 			} else {
-				file.deleteFile(file);
+				file.delete();
 			}
 		}
-		FileSystem.getInstance().removeMountPoint(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		FileSystem.getInstance().removeMountPoint("application");
 	}
 	
 	@Test
 	public void canReadAnApplicationFile() throws Exception {
-		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.APPLICATION_SYSTEM_DIRECTORY);
-		FileStream testFile = appDir.open("TestArtifacts/ATestFile.txt", FileMode.READ);
+		File appDir = FileSystem.getInstance().mountApplicationFileSystem();
+		FileStream testFile = appDir.resolve("TestArtifacts/ATestFile.txt").open(FileMode.READ);
 		assertEquals("Hello".length(), testFile.getBytesAvailable());
 		String string = testFile.read(testFile.getBytesAvailable());
 		assertEquals("Hello", string);
@@ -35,8 +34,8 @@ public class FileTests extends TestCase{
 	
 	@Test 
 	public void resetingPositionIsReflectedInFileStream() throws Exception {
-		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.APPLICATION_SYSTEM_DIRECTORY);
-		FileStream testFile = appDir.open("TestArtifacts/ATestFile.txt", FileMode.READ);
+		File appDir = FileSystem.getInstance().mountApplicationFileSystem();
+		FileStream testFile = appDir.resolve("TestArtifacts/ATestFile.txt").open(FileMode.READ);
 		
 		{
 		assertEquals("Hello".length(), testFile.getBytesAvailable());
@@ -68,8 +67,8 @@ public class FileTests extends TestCase{
 	
 	@Test
 	public void eofFlagSetCorrectly() throws Exception {
-		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.APPLICATION_SYSTEM_DIRECTORY);
-		FileStream testFile = appDir.open("TestArtifacts/ATestFile.txt", FileMode.READ);
+		File appDir = FileSystem.getInstance().mountApplicationFileSystem();
+		FileStream testFile = appDir.resolve("TestArtifacts/ATestFile.txt").open(FileMode.READ);
 		
 		assertEquals("Hello".length(), testFile.getBytesAvailable());
 		String string = testFile.read(testFile.getBytesAvailable());
@@ -81,8 +80,8 @@ public class FileTests extends TestCase{
 	
 	@Test
 	public void readingSeveralCharactersLeavesStreamInKnownPosition() throws Exception {
-		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.APPLICATION_SYSTEM_DIRECTORY);
-		FileStream testFile = appDir.open("TestArtifacts/ATestFile.txt", FileMode.READ);
+		File appDir = FileSystem.getInstance().mountApplicationFileSystem();
+		FileStream testFile = appDir.resolve("TestArtifacts/ATestFile.txt").open(FileMode.READ);
 		
 		assertEquals("Hello".length(), testFile.getBytesAvailable());
 		String string = testFile.read(2);
@@ -95,7 +94,7 @@ public class FileTests extends TestCase{
 	
 	@Test
 	public void fileAttributesAreCorrect() throws Exception {
-		File appDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.APPLICATION_SYSTEM_DIRECTORY);
+		File appDir = FileSystem.getInstance().mountApplicationFileSystem();
 		File testArtifictsDir = appDir.resolve("TestArtifacts");
 
 		// Dir Tests
@@ -145,9 +144,8 @@ public class FileTests extends TestCase{
 	
 	@Test
 	public void canWriteAndReadFilesInSharedSpace() throws Exception {
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
-		sharedDir.refresh();
-		assertEquals(0, sharedDir.getContents().length, "sharedDir not empty");
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
+		assertEquals(0, sharedDir.listFiles().length, "sharedDir not empty");
 		
 		final String testString = "HelloWorld";
 
@@ -160,141 +158,125 @@ public class FileTests extends TestCase{
 		}
 		
 		// Check directory listing
-		sharedDir.refresh();
-		assertEquals(1,sharedDir.getContents().length);
-		assertEquals(1,sharedDir.getLength());
-		assertEquals("NewFile", sharedDir.getContents()[0].getName());
+		assertEquals(1,sharedDir.listFiles().length);
+		assertEquals("NewFile", sharedDir.listFiles()[0].getName());
 		
 		// Read File back in
 		{
-		FileStream stream = newFile.open(FileMode.READ);
-		assertEquals(testString.length(), stream.getBytesAvailable());
-		assertEquals(testString, stream.read(stream.getBytesAvailable()));
+		FileStream stream = newFile.open(FileMode.READ, FileMode.APPEND);
+		assertEquals(testString.length(), stream.getBytesAvailable(), "Testing file size");
+		assertEquals(testString, stream.read(stream.getBytesAvailable()), "Testing file contents");
 		stream.close();
 		}
 		
 		// Delete File
 		{
-		newFile.deleteFile(newFile);
-		sharedDir.refresh();
-		assertEquals(0,sharedDir.getContents().length);
+		newFile.delete();
+		assertEquals(0,sharedDir.listFiles().length);
 		}
 	}
 	
 	@Test
 	public void createDirectoryWorks()  throws Exception {
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
 		
 		// Delete With File object
 		{
-		File newDir = sharedDir.createDirectory("testMe");
-		sharedDir.refresh();
+		File newDir = sharedDir.resolve("testMe").mkDir();
 		
-		assertEquals(1, sharedDir.getLength());
-		sharedDir.deleteDirectory(newDir, true);
-		sharedDir.refresh();
-		assertEquals(0, sharedDir.getLength());
+		assertEquals(1, sharedDir.listFiles().length);
+		newDir.delete();
+		assertEquals(0, sharedDir.listFiles().length);
 		}
 		
 		// Delete With String Name
 		{
-		File newDir = sharedDir.createDirectory("testMe");
-		sharedDir.refresh();
+		File newDir = sharedDir.resolve("testMe").mkDir();
 		
-		assertEquals(1, sharedDir.getLength());
-		sharedDir.deleteDirectory("testMe", true);
-		sharedDir.refresh();
-		assertEquals(0, sharedDir.getLength());
+		assertEquals(1, sharedDir.listFiles().length);
+		sharedDir.delete();
+		assertEquals(0, sharedDir.listFiles().length);
 		}
 	}
 	
 	@Test
 	public void copyMethodsWork() throws Exception {
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
 		
-		File newDir1 = sharedDir.createDirectory("testMe");
-		File newDir2 = sharedDir.createDirectory("testMe2");
+		File newDir1 = sharedDir.resolve("testMe").mkDir();
+		File newDir2 = sharedDir.resolve("testMe2").mkDir();
 		
 		File newFile = newDir1.resolve("TestFile");
 		FileStream fileStream = newFile.open(FileMode.WRITE);
 		fileStream.write("Hello");
 		fileStream.close();
 		
-		newDir1.refresh();
-		assertEquals(1,newDir1.getLength());
+		assertEquals(1,newDir1.listFiles().length);
 		
 		newFile.copyTo(newDir2, false);
 
-		newDir1.refresh();
-		assertEquals(1,newDir1.getLength());
+		assertEquals(1,newDir1.listFiles().length);
 
 		
-		newDir2.refresh();
-		assertEquals(1, newDir2.getLength());
-		assertEquals("TestFile", newDir2.getContents()[0].getName());
+		assertEquals(1, newDir2.listFiles().length);
+		assertEquals("TestFile", newDir2.listFiles()[0].getName());
 		
 		// Cleanup
-		newDir1.deleteDirectory(newDir1, true);
-		newDir2.deleteDirectory(newDir2, true);
+		newDir1.delete();
+		newDir2.delete();
 		
-		sharedDir.refresh();
-		assertEquals(0, sharedDir.getLength());
+		assertEquals(0, sharedDir.listFiles().length);
 	}
 	
 	@Test
 	public void moveMethodsWork() throws Exception {
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
 		
-		File newDir1 = sharedDir.createDirectory("testMe");
-		File newDir2 = sharedDir.createDirectory("testMe2");
+		File newDir1 = sharedDir.resolve("testMe").mkDir();
+		File newDir2 = sharedDir.resolve("testMe2").mkDir();
 		
 		File newFile = newDir1.resolve("TestFile");
 		FileStream fileStream = newFile.open(FileMode.WRITE);
 		fileStream.write("Hello");
 		fileStream.close();
 		
-		newDir1.refresh();
-		assertEquals(1,newDir1.getLength());
+		assertEquals(1,newDir1.listFiles().length,"Listing Contents of newDir1");
 		
 		newFile.moveTo(newDir2, false);
 
-		newDir1.refresh();
-		assertEquals(0,newDir1.getLength());
+		assertEquals(0,newDir1.listFiles().length);
 
-		
-		newDir2.refresh();
-		assertEquals(1, newDir2.getLength());
-		assertEquals("TestFile", newDir2.getContents()[0].getName());
+		assertEquals(1, newDir2.listFiles().length,"Listing Contents of newDir2 (afterMove)");
+		assertEquals("TestFile", newDir2.listFiles()[0].getName());
 		
 		// Cleanup
-		newDir1.deleteDirectory(newDir1, true);
-		newDir2.deleteDirectory(newDir2, true);
+		newDir1.delete();
+		newDir2.delete();
 		
-		sharedDir.refresh();
-		assertEquals(0, sharedDir.getLength());
+		assertEquals(0, sharedDir.listFiles().length);
 	}
 	
 	@Test
-	public void copyMethodsWithCallbackWork() {
+	public void copyMethodsWithCallbackWork() throws Exception{
 		// Callbacks are not currently, erm, called back (see Opera bug US-1160)
 		
-		File sharedDir = FileSystem.getInstance().mountSystemDirectory(FileSystem.SHARED_SYSTEM_DIRECTORY);
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
 		
-		File newDir1 = sharedDir.createDirectory("testMe");
-		File newDir2 = sharedDir.createDirectory("testMe2");
+		File newDir1 = sharedDir.resolve("testMe").mkDir();
+		File newDir2 = sharedDir.resolve("testMe2").mkDir();
 		
 		File newFile = newDir1.resolve("TestFile");
 		FileStream fileStream = newFile.open(FileMode.WRITE);
 		fileStream.write("Hello");
 		fileStream.close();
 		
-		newDir1.refresh();
-		assertEquals(1,newDir1.getLength());
+		assertEquals(1,newDir1.listFiles().length);
 
 		delayTestFinish(1000);
-		newFile.copyTo(newDir2, true, new CompletedHandler() {
+		newFile.copyTo(newDir2, true, new FileOperationCompletedHandler() {
 			@Override public void onComplete(File file) {
 				try {
+					assertNotNull(file);
 					assertEquals("MyFile",file.getName());
 					finishTest();
 				} catch(Exception e) {
@@ -303,5 +285,4 @@ public class FileTests extends TestCase{
 			}
 		});
 	}
-	
 }

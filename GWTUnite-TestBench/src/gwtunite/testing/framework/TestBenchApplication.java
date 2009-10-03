@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import opera.io.OperaUniteService;
+import opera.io.IOException;
+import opera.io.OperaUniteApplication;
 import opera.io.WebServer;
 import opera.io.WebServerEventHandler;
 import opera.io.WebServerRequest;
@@ -16,9 +17,9 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 
 /**
- * The main Opera Unite Service for the Test Bench
+ * The main Opera Unite Application for the Test Bench
  */
-public class TestBenchService extends OperaUniteService {
+public class TestBenchApplication extends OperaUniteApplication {
 	private static final String TEST_CASE_QUERY_ITEM = "testCase";
 	private static final String TEST_NAME_QUERY_ITEM = "testName";
 	private static final String TEST_LIST_CONTEXT = "testList";
@@ -35,7 +36,7 @@ public class TestBenchService extends OperaUniteService {
 			@Override
 			protected void onConnection(WebServerRequest request, WebServerResponse response) {
 				response.setStatusCode(Response.SC_MOVED_TEMPORARILY);
-				response.setResponseHeader("Location", "TestBench.html");
+				response.setHeader("Location", "TestBench.html");
 				response.close();
 			}
 		}, false);
@@ -76,7 +77,7 @@ public class TestBenchService extends OperaUniteService {
 				}
 				
 				String testName = null;
-				if (request.getQueryItem(TEST_NAME_QUERY_ITEM) != null) {
+				if (request.hasQueryItem(TEST_NAME_QUERY_ITEM)) {
 					testName = request.getQueryItem(TEST_NAME_QUERY_ITEM)[0];
 				}
 				
