@@ -6,9 +6,9 @@
 *Getting Started*
   	* Quick Start
 	* Tutorials
-	* Creating a GWT Unite Project
-	* Using the FileSystem
-	* Using Discovery
+		* Creating a GWT Unite Project
+		* Using the FileSystem
+		* Using Discovery
 
 *Documentation*
 
