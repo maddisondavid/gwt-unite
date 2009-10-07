@@ -1,7 +1,5 @@
-package gwtunite.testing;
+package org.gwtunite.testing.generators;
 
-import gwtunite.testing.framework.TestCase;
-import gwtunite.testing.framework.TestCaseRegistry;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -9,7 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.transform.Source;
+import org.gwtunite.testing.client.framework.TestCase;
+import org.gwtunite.testing.client.framework.TestCaseRegistry;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;

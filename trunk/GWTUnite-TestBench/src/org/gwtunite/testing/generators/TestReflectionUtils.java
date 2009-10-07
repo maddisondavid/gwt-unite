@@ -1,9 +1,10 @@
-package gwtunite.testing;
+package org.gwtunite.testing.generators;
 
-import gwtunite.testing.framework.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.gwtunite.testing.client.framework.Test;
 
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;

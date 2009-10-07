@@ -1,9 +1,10 @@
-package gwtunite.testing;
+package org.gwtunite.testing.generators;
 
-import gwtunite.testing.framework.TestCaseInfo;
 
 import java.io.PrintWriter;
 import java.util.Collection;
+
+import org.gwtunite.testing.client.framework.TestCaseInfo;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;

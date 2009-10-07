@@ -1,15 +1,17 @@
-package gwtunite.testing.framework;
+package org.gwtunite.testing.client.framework;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import opera.io.IOException;
-import opera.io.OperaUniteApplication;
-import opera.io.WebServer;
-import opera.io.WebServerEventHandler;
-import opera.io.WebServerRequest;
-import opera.io.WebServerResponse;
+import org.gwtunite.client.file.IOException;
+import org.gwtunite.client.net.OperaUniteApplication;
+import org.gwtunite.client.net.WebServer;
+import org.gwtunite.client.net.WebServerEventHandler;
+import org.gwtunite.client.net.WebServerRequest;
+import org.gwtunite.client.net.WebServerResponse;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Response;

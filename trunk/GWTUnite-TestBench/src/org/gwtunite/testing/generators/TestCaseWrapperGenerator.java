@@ -1,4 +1,4 @@
-package gwtunite.testing;
+package org.gwtunite.testing.generators;
 
 import java.io.PrintWriter;
 import java.util.Collection;
