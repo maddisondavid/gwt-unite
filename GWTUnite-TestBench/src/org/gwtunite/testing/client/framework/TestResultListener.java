@@ -1,4 +1,4 @@
-package gwtunite.testing.framework;
+package org.gwtunite.testing.client.framework;
 
 public interface TestResultListener {
 
