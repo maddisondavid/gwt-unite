@@ -1,8 +1,0 @@
-<module>
-    <inherits name="com.google.gwt.user.User" />
-    <source path="io" />
-    <source path="widget" />
-   
-    <define-linker name="OperaUnite" class="gwtunite.operaunite.OperaUniteLinker" />
-	<add-linker name="OperaUnite" />
- </module>
