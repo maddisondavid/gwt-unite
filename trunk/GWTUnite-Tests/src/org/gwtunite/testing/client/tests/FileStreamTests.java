@@ -1,14 +1,15 @@
-package gwtunite.testing.tests;
+package org.gwtunite.testing.client.tests;
 
-import gwtunite.testing.framework.Test;
-import gwtunite.testing.framework.TestCase;
 
 import java.util.Arrays;
 
-import opera.io.File;
-import opera.io.FileStream;
-import opera.io.FileSystem;
-import opera.io.File.FileMode;
+import org.gwtunite.client.file.File;
+import org.gwtunite.client.file.FileStream;
+import org.gwtunite.client.file.FileSystem;
+import org.gwtunite.client.file.File.FileMode;
+import org.gwtunite.testing.client.framework.Test;
+import org.gwtunite.testing.client.framework.TestCase;
+
 
 public class FileStreamTests extends TestCase {
 

@@ -1,12 +1,14 @@
-package gwtunite.testing.tests;
+package org.gwtunite.testing.client.tests;
 
-import gwtunite.testing.framework.Test;
-import gwtunite.testing.framework.TestCase;
-import opera.io.File;
-import opera.io.FileStream;
-import opera.io.FileSystem;
-import opera.io.File.FileMode;
-import opera.io.File.FileOperationCompletedHandler;
+import org.gwtunite.client.file.File;
+import org.gwtunite.client.file.FileFilter;
+import org.gwtunite.client.file.FileStream;
+import org.gwtunite.client.file.FileSystem;
+import org.gwtunite.client.file.File.FileMode;
+import org.gwtunite.client.file.File.FileOperationCompletedHandler;
+import org.gwtunite.testing.client.framework.Test;
+import org.gwtunite.testing.client.framework.TestCase;
+
 
 public class FileTests extends TestCase{
 
@@ -20,6 +22,30 @@ public class FileTests extends TestCase{
 			}
 		}
 		FileSystem.getInstance().removeMountPoint("application");
+	}
+
+	@Test
+	public void listFilesProvidesAllFiles() throws Exception {
+		File mountPoint = FileSystem.getInstance().mountApplicationFileSystem();
+		File artifacts = mountPoint.resolve("TestArtifacts");
+		File[] files = artifacts.listFiles();
+		
+		assertEquals(2, files.length);
+	}
+	
+	@Test
+	public void listFilesWithFilterGivesOnlyCertainFiles() throws Exception {
+		File mountPoint = FileSystem.getInstance().mountApplicationFileSystem();
+		File artifacts = mountPoint.resolve("TestArtifacts");
+		File[] files = artifacts.listFiles(new FileFilter() {
+							@Override
+							public boolean accept(File pathname) {
+								return pathname.getName().endsWith(".txt");
+							}
+						});
+		
+		assertEquals(1, files.length);
+		assertEquals("ATestFile.txt", files[0].getName());
 	}
 	
 	@Test
@@ -115,7 +141,7 @@ public class FileTests extends TestCase{
 		assertTrue(testFile.isReadOnly(),"isReadOnly");
 		assertTrue(testFile.exists());
 		assertEquals("ATestFile.txt", testFile.getName());
-		assertEquals("mountpoint://application/TestArtifacts/ATestFile.txt", testFile.getPath());
+		assertEquals("mountpoint://application/TestArtifacts/ATestFile.txt", testFile.getVirtualPath());
 		assertEquals("Hello".length(), testFile.getFileSize());
 	//	assertEquals("TestArtifacts/ATestFile.txt", testFile.getNativePath()); // Currently Broken
 		}

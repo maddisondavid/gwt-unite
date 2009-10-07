@@ -1,9 +1,9 @@
-package gwtunite.testing.tests;
-
-import gwtunite.testing.framework.Test;
-import gwtunite.testing.framework.TestCase;
+package org.gwtunite.testing.client.tests;
 
 import java.util.Map;
+
+import org.gwtunite.testing.client.framework.Test;
+import org.gwtunite.testing.client.framework.TestCase;
 
 public class ExplorartiveTests extends TestCase {
 
