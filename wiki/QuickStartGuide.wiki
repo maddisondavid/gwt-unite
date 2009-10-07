@@ -1,3 +1,4 @@
+#summary A guide to get you up and running fast!
 ==Getting Started=
 Firstly, welcome to GWT-Unite, the easiest way to develop Opera Unite application.  This quick start guide will show you how to write your first Hello World application in just a few lines of code.
 
