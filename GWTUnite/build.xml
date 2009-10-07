@@ -8,6 +8,20 @@
 
 	<property name="version" value="0.9.1"/>
 	
+	<target name="javadoc">
+			<mkdir dir="javadoc"/>
+		<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.0"/>
+			<javadoc sourcepath="src"  destdir="javadoc" windowtitle="GWT-Unite">
+				<excludepackage name="org.gwtunite.linkers"/>
+				<classpath>
+					<pathelement location="src"/>
+					<pathelement location="bin"/>
+					<pathelement location="${GWT_HOME}/gwt-dev-windows.jar"/>
+					<pathelement location="${GWT_HOME}/gwt-user.jar"/>
+				</classpath>
+			</javadoc>
+	</target>
+	
 	<target name="package">
 		<mkdir dir="${build.dir}"/>
 		<copy todir="${build.dir}">
