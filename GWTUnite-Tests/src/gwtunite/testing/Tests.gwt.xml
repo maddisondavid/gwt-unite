@@ -1,7 +1,0 @@
-<module rename-to="gwtuniteTests">
-	<inherits name="opera.Unite"/>
-	<inherits name="gwtunite.Commons"/>
-	<inherits name="gwtunite.testing.TestBench"/>
-	
-	<source path="tests"/>
-</module>

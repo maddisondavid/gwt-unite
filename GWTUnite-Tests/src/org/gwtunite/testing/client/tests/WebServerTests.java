@@ -1,12 +1,13 @@
-package gwtunite.testing.tests;
+package org.gwtunite.testing.client.tests;
 
-import gwtunite.testing.framework.Test;
-import gwtunite.testing.framework.TestCase;
-import opera.io.Utils;
-import opera.io.WebServer;
-import opera.io.WebServerEventHandler;
-import opera.io.WebServerRequest;
-import opera.io.WebServerResponse;
+import org.gwtunite.client.commons.Logging;
+import org.gwtunite.client.net.WebServer;
+import org.gwtunite.client.net.WebServerEventHandler;
+import org.gwtunite.client.net.WebServerRequest;
+import org.gwtunite.client.net.WebServerResponse;
+import org.gwtunite.testing.client.framework.Test;
+import org.gwtunite.testing.client.framework.TestCase;
+
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -17,7 +18,7 @@ public class WebServerTests extends TestCase {
 
 	WebServerEventHandler handler = new WebServerEventHandler() {
 		public void onConnection(WebServerRequest request, WebServerResponse response) {
-			Utils.log("HERE : "+response);
+			Logging.log("HERE : "+response);
 			response.write("Hello");
 			response.close();
 //			finishTest();
@@ -25,12 +26,30 @@ public class WebServerTests extends TestCase {
 	};
 	
 	public void setUp() {
-		Utils.log("Setup Called");
+		Logging.log("Setup Called");
 	}
 	
 	public void tearDown() {
 		WebServer.getInstance().removeEventListener("webservertest", handler, false);
-		Utils.log("teardown Called");
+		Logging.log("teardown Called");
+	}
+	
+	@Test
+	public void webServerAttributesAreCorrect() throws Exception {
+		WebServer webserver = WebServer.getInstance();
+		
+		assertNotNull(webserver.getCurrentServiceName(),"CurrentServiceName");
+		assertNotNull(webserver.getCurrentServicePath(),"CurrentServicePath");
+		assertNotNull(webserver.getDeviceName(),"DeviceName");
+		assertNotNull(webserver.getHostName(),"HostName");		
+		assertNotNull(webserver.getOriginURL(),"OriginURL");
+		assertNotNull(webserver.getPort(),"Port");
+		assertNotNull(webserver.getProxyName(),"ProxyName");
+		assertNotNull(webserver.getPublicPort(),"PublicPort");
+		assertNotNull(webserver.getUserName(), "UserName");
+//		assertNotNull(webserver.getPublicIP(),"PublicIP");
+		
+		assertTrue(webserver.getServices().length != 0);
 	}
 	
 	@Test
@@ -53,7 +72,7 @@ public class WebServerTests extends TestCase {
 			@Override
 			public void onResponseReceived(Request arg0, Response arg1) {
 				try {
-					Utils.log("Response REcieved");
+					Logging.log("Response REcieved");
 					assertEquals(200, arg1.getStatusCode());
 					finishTest();
 				}catch(Exception e) {
@@ -69,7 +88,7 @@ public class WebServerTests extends TestCase {
 	private class TestHandler extends WebServerEventHandler {
 		@Override
 		protected void onConnection(WebServerRequest request, WebServerResponse response) {
-			Utils.log("I've BEen CaLled!");
+			Logging.log("I've BEen CaLled!");
 			if (response != null)
 				response.close();
 		}

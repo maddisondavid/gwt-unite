@@ -1,5 +1,5 @@
 <project name="GWTUniteTests" basedir=".">
-	<property name="moduleName" value="gwtunite.testing.Tests"/>
+	<property name="moduleName" value="org.gwtunite.testing.Tests"/>
 		
 	<property name="dist.moduleName" value="gwtuniteTests"/>
 	<property name="dist.zipName" value="GWTUniteTests.ua"/>
