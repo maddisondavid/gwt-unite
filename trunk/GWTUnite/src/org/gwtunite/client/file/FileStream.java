@@ -250,7 +250,7 @@ public final class FileStream extends JavaScriptObject {
      * @return A Byte Array with the bytes read from the FileStream, or null if there are no data to read.
      * @throws GENERIC_ERR If it is not possible to read from the stream.
      */
-	public native byte[] readBytes(int length) throws IOException /*-{
+	public native ByteArray readBytes(int length) throws IOException /*-{
 		try {
 			return this.readBytes(length);
 		}catch(e) {
@@ -405,7 +405,7 @@ public final class FileStream extends JavaScriptObject {
      * @param length The number of bytes to write.
      * @throws GENERIC_ERR If it is not possible to write to the stream.
      */
-	public native void writeBytes(byte[] bytes, int length) throws IOException /*-{
+	public native void writeBytes(ByteArray bytes, int length) throws IOException /*-{
 		try {
 			this.writeBytes(bytes, length);
 		}catch(e) {

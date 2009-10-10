@@ -36,8 +36,8 @@ public class TestBenchApplication extends OperaUniteApplication {
 		 */
 		webServer.addEventListener(WebServer.INDEX_PATH, new WebServerEventHandler() {
 			@Override
-			protected void onConnection(WebServerRequest request, WebServerResponse response) {
-				response.setStatusCode(Response.SC_MOVED_TEMPORARILY);
+			public void onConnection(WebServerRequest request, WebServerResponse response) {
+				response.setStatusCode("302");
 				response.setHeader("Location", "TestBench.html");
 				response.close();
 			}
@@ -48,7 +48,7 @@ public class TestBenchApplication extends OperaUniteApplication {
 		 */
 		webServer.addEventListener(TEST_LIST_CONTEXT, new WebServerEventHandler() {
 			@Override
-			protected void onConnection(WebServerRequest request, WebServerResponse response) {
+			public void onConnection(WebServerRequest request, WebServerResponse response) {
 				response.writeLine("<html><link rel=\"stylesheet\" type=\"text/css\" href=\"Testing.css\"/><body><image src=\"images/Banner.png\"/>");
 				for (TestCaseInfo testCaseInfo : testCaseRegistry.getAllTestCaseInfo()) {
 					response.writeLine("<img src=\"images/WhiteArrow.png\">&nbsp;<img src=\"images/runTests.png\">&nbsp;<a target=\"testResults\" href=\""+RUN_TESTS_CONTEXT+"?"+TEST_CASE_QUERY_ITEM+"="+testCaseInfo.getName()+"\">"+testCaseInfo.getName()+"</a>");
@@ -70,7 +70,7 @@ public class TestBenchApplication extends OperaUniteApplication {
 		 * Handler to run a specific test
 		 */
 		webServer.addEventListener(RUN_TESTS_CONTEXT, new WebServerEventHandler(){
-			@Override protected void onConnection(WebServerRequest request, final WebServerResponse response) {
+			@Override public void onConnection(WebServerRequest request, final WebServerResponse response) {
 				final String testCaseName = request.getQueryItem(TEST_CASE_QUERY_ITEM)[0];
 				if (testCaseName == null) {
 					response.write(TEST_CASE_QUERY_ITEM+" must be supplied!");

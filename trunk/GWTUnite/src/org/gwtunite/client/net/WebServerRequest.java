@@ -46,11 +46,14 @@ final public class WebServerRequest extends JavaScriptObject {
      * @return the names of all items posted in the Body of this request
      */
 	public native String[] getBodyItemNames() /*-{
-	        var keys = new Array();
-	        for (key in this.bodyItems)
-	                keys.push(key);
-	                
-	        return keys;
+		if (!this.bodyItems)
+			return [];
+			
+        var keys = new Array();
+        for (key in this.bodyItems)
+                keys.push(key);
+                
+        return keys;
 	}-*/;
         
 	/**
@@ -60,7 +63,7 @@ final public class WebServerRequest extends JavaScriptObject {
 	 * @return A list of values for the body item or null if the body item does not exist in this request
 	 */
 	public native String[] getBodyItem(String name) /*-{
-	        return this.bodyItems[bodyItem];
+	        return this.bodyItems[name];
 	}-*/;
 
 	/**

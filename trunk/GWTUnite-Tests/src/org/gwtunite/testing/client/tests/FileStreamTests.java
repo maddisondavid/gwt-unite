@@ -1,8 +1,7 @@
 package org.gwtunite.testing.client.tests;
 
 
-import java.util.Arrays;
-
+import org.gwtunite.client.file.ByteArray;
 import org.gwtunite.client.file.File;
 import org.gwtunite.client.file.FileStream;
 import org.gwtunite.client.file.FileSystem;
@@ -16,22 +15,22 @@ public class FileStreamTests extends TestCase {
 	@Test
 	public void ableToReadAndWriteBytes() throws Exception {
 		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
-		File binFile = sharedDir.resolve("BinaryFile");
+		File appDir = FileSystem.getInstance().mountApplicationFileSystem();
 		
-		byte[] testBytes = {1,2,3,4,5};
-		FileStream newStream = binFile.open(FileMode.WRITE);
-		newStream.writeBytes(testBytes, testBytes.length);
-		newStream.close();
+		File imgFile = appDir.resolve("TestArtifacts/TestPass.png");
+		File binFile = sharedDir.resolve("BinaryFile.png");
+
+		FileStream imgStream = imgFile.open(FileMode.READ);
+		ByteArray imgBytes = imgStream.readBytes(imgStream.getBytesAvailable());
 		
-		assertEquals(testBytes.length, binFile.getFileSize());
+		FileStream binStream = binFile.open(FileMode.WRITE);
+		binStream.writeBytes(imgBytes, imgBytes.length());
+
+		binStream.close();
+		imgStream.close();
 		
-		FileStream inStream = binFile.open(FileMode.READ);
-		byte[] inBytes = inStream.readBytes(inStream.getBytesAvailable());
-		assertTrue(Arrays.equals(testBytes, inBytes));
-		
-		inStream.close();
-		
-		binFile.delete();
+//		binFile.delete();
+		assertEquals(binFile.getFileSize(), imgFile.getFileSize());
 		assertFalse(binFile.exists());
 	}
 	

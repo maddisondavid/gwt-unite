@@ -220,7 +220,7 @@ public class FileTests extends TestCase{
 		File newDir = sharedDir.resolve("testMe").mkDir();
 		
 		assertEquals(1, sharedDir.listFiles().length);
-		sharedDir.delete();
+		newDir.delete();
 		assertEquals(0, sharedDir.listFiles().length);
 		}
 	}

@@ -1,5 +1,7 @@
 package org.gwtunite.client.commons;
 
+import com.google.gwt.core.client.JavaScriptException;
+
 public class Logging {
 
 	public static native void log(String msg) /*-{
@@ -7,6 +9,10 @@ public class Logging {
 	}-*/;
 	
 	public static void handleException(Throwable e) {
-		log("Unhandled Exception : "+e);
+		if (e instanceof JavaScriptException) {
+			log("Unhandled Exception : "+e.getMessage());
+		} else {
+			log("Unhandled Exception : "+e);
+		}
 	}
 }
