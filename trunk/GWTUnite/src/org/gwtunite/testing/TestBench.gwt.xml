@@ -1,0 +1,9 @@
+<module  rename-to="TestBench">
+	<inherits name="org.gwtunite.Core"/>
+	
+	<generate-with class="org.gwtunite.testing.generators.TestCaseRegistryGenerator">
+   		<when-type-assignable class="org.gwtunite.testing.client.framework.TestCaseRegistry" />
+ 	</generate-with>
+	
+	<entry-point class="org.gwtunite.testing.client.framework.TestBenchApplication"/>
+</module>
