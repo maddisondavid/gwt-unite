@@ -1,4 +1,4 @@
-<widget network="public">
+<widget network="private public">
    <widgetname>GWT-Unite Tests</widgetname>
    <description>GWT-Unite's Tests</description>
    <author>

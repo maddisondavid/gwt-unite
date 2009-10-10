@@ -1,5 +1,6 @@
 package org.gwtunite.client.net;
 
+import org.gwtunite.client.file.ByteArray;
 import org.gwtunite.client.file.File;
 import org.gwtunite.client.file.IOException;
 
@@ -137,7 +138,7 @@ final public class WebServerResponse extends JavaScriptObject {
      * @param callback the object to be called when the flush happens
      */
 	public native void flush(FlushCallback callback) /*-{
-		this.close(function() {
+		this.flush(function() {
 			try {
 				callback.@org.gwtunite.client.net.WebServerResponse.FlushCallback::onFlush()();
 			} catch(exception) {
@@ -274,7 +275,7 @@ final public class WebServerResponse extends JavaScriptObject {
      * @param statusCode Status code to set, e.g. 200 or 404
      * @throws IOException If data has been written to the response before setting the status code.
      */
-	public native void setStatusCode(int statusCode) /*-{
+	public native void setStatusCode(String statusCode) /*-{
 		try {
 			this.setStatusCode(statusCode);
 		} catch(error) {
@@ -299,7 +300,7 @@ final public class WebServerResponse extends JavaScriptObject {
      * @param text Status text to set, e.g. "Success" or "Out of pidgeons".
      * @throws IOException If data has been written to the response before setting the status code.
      */
-	public native void setStatusCode(int statusCode, String text) /*-{
+	public native void setStatusCode(String statusCode, String text) /*-{
 		try {
 			this.setStatusCode(statusCode, text);
 		} catch(error) {
@@ -323,11 +324,9 @@ final public class WebServerResponse extends JavaScriptObject {
     /**
      * Write binary data to the response.
      *
-     * TODO : Fix the type used in this method!
-     *
      * @param data Binary data to write
      */
-	public native void writeBytes(byte[] data) /*-{
+	public native void writeBytes(ByteArray data) /*-{
 		this.writeBytes(data);
 	}-*/;
 
@@ -351,7 +350,10 @@ final public class WebServerResponse extends JavaScriptObject {
      * @param image HTML Image element to write.
      */
 	public native void writeImage(ImageElement image) /*-{
-		this.writeImage(image);
+		var imageElement=new Image();
+		imageElement.setAttribute("src", image.src);
+	
+		this.writeImage(imageElement);
 	}-*/;
 
     /**

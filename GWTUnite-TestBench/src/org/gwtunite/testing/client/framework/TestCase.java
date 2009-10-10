@@ -103,7 +103,7 @@ public abstract class TestCase {
 	 * If an assertion fails, or the test throws an exception, the test is marked as finished.
 	 * 
 	 */
-	protected void delayTestFinish(int timeout) {
+	public void delayTestFinish(int timeout) {
 		isInAsyncMode = true;
 		delayFinishTimer.schedule(timeout);
 	}
@@ -111,9 +111,12 @@ public abstract class TestCase {
 	/**
 	 * Informs the framework that a test which contained the {@link #delayTestFinish(int)} call, has now finished.
 s	 */
-	protected void finishTest() {
-		delayFinishTimer.cancel();
-		getResultListener().onPass();
+	public void finishTest() {
+//		if (isInAsyncMode) { // Only do this if we ARE in Async mode to reduce the risk of onPass being called twice
+			delayFinishTimer.cancel();
+			isInAsyncMode = false;
+			getResultListener().onPass();
+	//	}
 	}
 
 	/** 
@@ -132,7 +135,7 @@ s	 */
 	 * }
 	 * </code>
 	 */
-	protected void handleException(Exception e) {
+	public void handleException(Exception e) {
 		if (e instanceof AssertionFailureException) {
 			getResultListener().onFailed(((AssertionFailureException)e).getMessage());
 		} else {
@@ -153,35 +156,36 @@ s	 */
 	/** Cleans up when an assertion fails */
 	private void assertionFailed(String message) {
 		delayFinishTimer.cancel();
+		isInAsyncMode = false;
 		throw new AssertionFailureException(message);
 	}
 	
 	/** Throws an AssertionFailureException if the given condition is not true */
-	protected void assertTrue(boolean condition) {
+	public void assertTrue(boolean condition) {
 		if (!condition)
 			assertionFailed("AssertTrue failed");
 	}
 
 	/** Throws an AssertionFailureException containing the given message if the given condition is not true */
-	protected void assertTrue(boolean condition, String message) {
+	public void assertTrue(boolean condition, String message) {
 		if (!condition)
 			assertionFailed("AssertTrue Failed:"+message);
 	}
 	
 	/** Throws an AssertionFailureException if the given condition is true */
-	protected void assertFalse(boolean condition) {
+	public void assertFalse(boolean condition) {
 		if (condition)
 			assertionFailed("AssertFalse failed");
 	}
 
 	/** Throws an AssertionFailureException containing the given message if the given condition is true */
-	protected void assertFalse(boolean condition, String message) {
+	public void assertFalse(boolean condition, String message) {
 		if (condition)
 			assertionFailed("AssertFalse Failed:"+message);
 	}
 
 	/** Throws an AssertionFailureException if Obj1 is NOT equal to Obj2 */
-	protected void assertEquals(Object obj1, Object obj2) {
+	public void assertEquals(Object obj1, Object obj2) {
 		if (obj1 == null) {
 			if (obj2 != null)
 				assertionFailed("Expected:null Actual:"+obj2);
@@ -191,7 +195,7 @@ s	 */
 	}
 
 	/** Throws an AssertionFailureException containing the given message if Obj1 is NOT equal to Obj2 */
-	protected void assertEquals(Object obj1, Object obj2, String message) {
+	public void assertEquals(Object obj1, Object obj2, String message) {
 		if (obj1 == null) {
 			if (obj2 != null)
 				assertionFailed("Expected:null Actual:"+obj2);
@@ -201,35 +205,35 @@ s	 */
 	}
 	
 	/** Throws an AssertionFailureException if obj IS null */
-	protected void assertNotNull(Object obj) {
+	public void assertNotNull(Object obj) {
 		if (obj == null)
 			assertionFailed("AssertNotNull Failed");
 	}
 
 	/** Throws an AssertionFailureException if obj IS null */
-	protected void assertNotNull(Object obj, String message) {
+	public void assertNotNull(Object obj, String message) {
 		if (obj == null)
 			assertionFailed("AssertNotNull failed : " + message);
 	}
 
 	/** Throws an AssertionFailureException */
-	protected void fail() {
-		assertionFailed("");
+	public void fail() {
+		assertionFailed("Fail");
 	}
 
 	/** Throws an AssertionFailureException containing the given message*/
-	protected void fail(String message) {
+	public void fail(String message) {
 		assertionFailed(message);
 	}
 		
 	public static class AssertionFailureException extends RuntimeException {
 		private static final long serialVersionUID = 4127980293192958142L;
 
-		private AssertionFailureException() {
+		public AssertionFailureException() {
 			super("Assertion Failure");
 		}
 		
-		private AssertionFailureException(String message) {
+		public AssertionFailureException(String message) {
 			super(message);
 		}
 		

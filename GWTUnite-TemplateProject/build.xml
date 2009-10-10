@@ -1,0 +1,6 @@
+<project name="GWTUnite-TemplateApp" basedir=".">
+	<property name="moduleName" value="com.sample.template.Template"/>
+	<property name="applicationName" value="Template"/>
+		
+	<ant antfile="gwt-unite-application-builder.xml" inheritall="true" target="package"/>
+</project>

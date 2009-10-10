@@ -39,5 +39,5 @@ public abstract class WebServerEventHandler {
 	 * @param request holds details of the client request
 	 * @param response provides facilities to send a response back to the client
 	 */
-	protected abstract void onConnection(WebServerRequest request, WebServerResponse response);
+	public abstract void onConnection(WebServerRequest request, WebServerResponse response);
 }

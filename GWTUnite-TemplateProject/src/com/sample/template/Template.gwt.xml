@@ -1,0 +1,5 @@
+<module>
+	<inherits name="org.gwtunite.Core"/>
+	
+	<entry-point class="com.sample.template.client.TemplateApp"/>
+</module>
