@@ -1,17 +1,18 @@
 package gwtunite.examples.client;
 
-import opera.io.OperaUniteService;
-import opera.io.WebServer;
-import opera.io.WebServerEventHandler;
-import opera.io.WebServerRequest;
-import opera.io.WebServerResponse;
+import org.gwtunite.client.net.OperaUniteApplication;
+import org.gwtunite.client.net.WebServer;
+import org.gwtunite.client.net.WebServerEventHandler;
+import org.gwtunite.client.net.WebServerRequest;
+import org.gwtunite.client.net.WebServerResponse;
 
-public class HelloWorld extends OperaUniteService {
+
+public class HelloWorld extends OperaUniteApplication {
 
 	@Override
 	public void init(WebServer webServer) {
 		webServer.addEventListener(WebServer.INDEX_PATH, new WebServerEventHandler() {
-			protected void onConnection(WebServerRequest request, WebServerResponse response) {
+			public void onConnection(WebServerRequest request, WebServerResponse response) {
 				response.writeLine("Hello World");
 				response.close();
 			}

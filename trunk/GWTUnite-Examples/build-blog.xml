@@ -1,9 +1,7 @@
-<project name="OperaUnite-Blog" basedir=".">
-	<property name="moduleName" value="gwtunite.examples.BlogService"/>
+<project name="BlogExampleApp" basedir=".">
+	<property name="moduleName" value="gwtunite.examples.BlogApplication"/>
+	<property name="applicationName" value="BlogApplication"/>
 		
-	<property name="dist.moduleName" value="blogService"/>
-	<property name="dist.zipName" value="GWTUniteBlogService.us"/>
-	<property name="dist.config-File" value="blog-config.xml"/>
-
-	<ant antfile="gwt-unite-service-builder.xml" inheritall="true" target="package"/>
+	<ant antfile="gwt-unite-application-builder.xml" inheritall="true" target="package"/>
 </project>
+

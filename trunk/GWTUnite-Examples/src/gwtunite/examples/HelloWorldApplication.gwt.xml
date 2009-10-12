@@ -1,0 +1,5 @@
+<module>
+    <inherits name="org.gwtunite.Core" />
+
+	<entry-point class="gwtunite.examples.client.HelloWorld"/>
+ </module>
