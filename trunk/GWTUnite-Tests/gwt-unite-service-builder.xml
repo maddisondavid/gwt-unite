@@ -16,10 +16,6 @@
 				<pathelement location="bin"/>
 				<pathelement location="${GWT_HOME}/gwt-dev-windows.jar"/>
 				<pathelement location="${GWT_HOME}/gwt-user.jar"/>
-				<dirset dir="../GWTUnite-TestBench">
-					<include name="src" />
-					<include name="bin" />
-				</dirset>
 					<dirset dir="../GWTUnite">
 						<include name="src" />
 						<include name="bin" />
