@@ -1,0 +1,6 @@
+#Summary A list of known issues in different releases
+==Known Issues==
+
+Version 1.0
+
+* FileStream.WriteImage does not work and throws a TYPE_NOT_SUPPORTED_ERR 
