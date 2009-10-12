@@ -126,7 +126,7 @@ public final class FileStream extends JavaScriptObject {
      *
      * @param length Number of characters to read.
      * @return A String of characters, or null if there are no more characters left in the File.
-     * @throws GENERIC_ERR If it is not possible to read from the stream.
+     * @throws IOException If it is not possible to read from the stream.
      */
 	public native String read(int length) throws IOException /*-{
 		try {
@@ -160,7 +160,7 @@ public final class FileStream extends JavaScriptObject {
      * @param length Number of characters to read.
      * @param charset The character set to use when reading.
      * @return A String of characters, or null if there are no more characters left in the File.
-     * @throws GENERIC_ERR If it is not possible to read from the stream.
+     * @throws IOException If it is not possible to read from the stream.
      */
 	public native String read(int length, String charset) throws IOException /*-{
 		try {
@@ -190,7 +190,7 @@ public final class FileStream extends JavaScriptObject {
      * <code>FileStream.encoding</code> property
      *
      * @return {String} A String of characters, or null if there are no data to read.
-     * @throws GENERIC_ERR If it is not possible to read from the stream.
+     * @throws IOException If it is not possible to read from the stream.
      */
 	public native String readLine(String charset) throws IOException /*-{
 		try {
@@ -248,7 +248,7 @@ public final class FileStream extends JavaScriptObject {
      *
      * @param length The number of bytes to read.
      * @return A Byte Array with the bytes read from the FileStream, or null if there are no data to read.
-     * @throws GENERIC_ERR If it is not possible to read from the stream.
+     * @throws IOException If it is not possible to read from the stream.
      */
 	public native ByteArray readBytes(int length) throws IOException /*-{
 		try {
@@ -286,7 +286,7 @@ public final class FileStream extends JavaScriptObject {
      *
      * @param length Number of bytes to read.
      * @return The content of the <code>FileStream</code> as a Base64 encoded String, or null if there are no data to read.
-     * @throws GENERIC_ERR If it is not possible to read from the stream.
+     * @throws IOException If it is not possible to read from the stream.
      */
 	public native String readBase64(int length) throws IOException /*-{
 		try { 
@@ -309,7 +309,7 @@ public final class FileStream extends JavaScriptObject {
      * <p class="ni">The <code>charset</code> argument is currently ignored.</p>
      *
      * @param string The String of characters to write.
-     * @throws GENERIC_ERR If it is not possible to write to the stream.
+     * @throws IOException If it is not possible to write to the stream.
      */
 	public native void write(String string) throws IOException /*-{
 		try {
@@ -331,10 +331,8 @@ public final class FileStream extends JavaScriptObject {
      *
      * @param string The String of characters to write.
      * @param charset The charset to use when writing. Optional.
-     * @throws GENERIC_ERR If it is not possible to write to the stream.
-     * @deprecated Not currently used as the charset is ignored
+     * @throws IOException If it is not possible to write to the stream.
      */
-	@Deprecated
 	public native void write(String string, String charset) throws IOException /*-{
 		try {
 			this.write(string, charset);
@@ -381,7 +379,6 @@ public final class FileStream extends JavaScriptObject {
      * @param string The string of characters to write.
      * @param charset The <code>charset</code> to use when writing. Optional.
      * @throws IOException If it is not possible to write to the stream.
-     * @deprecated Not curently used as the charset is currently ignored
      */
 	public native void writeLine(String string, String charset) throws IOException /*-{
 		try {
@@ -403,7 +400,7 @@ public final class FileStream extends JavaScriptObject {
      *
      * @param bytes The bytes to write.
      * @param length The number of bytes to write.
-     * @throws GENERIC_ERR If it is not possible to write to the stream.
+     * @throws IOExeception If it is not possible to write to the stream.
      */
 	public native void writeBytes(ByteArray bytes, int length) throws IOException /*-{
 		try {
@@ -426,7 +423,7 @@ public final class FileStream extends JavaScriptObject {
      * over <code>XMLHttpRequest</code>.
      *
      * @param string Base64 encoded String to write.
-     * @throws GENERIC_ERR If it is not possible to write to the stream.
+     * @throws IOException If it is not possible to write to the stream.
      */
 	public native void writeBase64(String string) throws IOException /*-{
 		try {
@@ -447,7 +444,7 @@ public final class FileStream extends JavaScriptObject {
      * to the <code>FileStream</code>.
      *
      * @param file The File to write.
-     * @throws GENERIC_ERR If it is not possible to write to the stream.
+     * @throws IOException If it is not possible to write to the stream.
      */
 	public native void writeFile(File file) throws IOException /*-{
 		try {
@@ -469,11 +466,13 @@ public final class FileStream extends JavaScriptObject {
      * the image is first encoded as a PNG image.
      *
      * @param image The <code>ImageElement</code> to write.
-     * @throws GENERIC_ERR If it is not possible to write to the stream.
+     * @throws IOException If it is not possible to write to the stream.
      */
 	public native void writeImage(ImageElement image) throws IOException /*-{
 		try {
-			this.writeImage(image);
+			var testImage = new Image();
+			testImage.src = "http://www.google.com";
+			this.writeImage(testImage);
 		}catch(e) {
     		if (e=="GENERICL_ERR") {
     			throw @org.gwtunite.client.file.IOException::new(Ljava/lang/String;)(this.name);
