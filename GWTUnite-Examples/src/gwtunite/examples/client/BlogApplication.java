@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
+import org.gwtunite.client.net.OperaUniteApplication;
+import org.gwtunite.client.net.WebServer;
+import org.gwtunite.client.net.WebServerEventHandler;
+import org.gwtunite.client.net.WebServerRequest;
+import org.gwtunite.client.net.WebServerResponse;
 
-import opera.io.OperaUniteService;
-import opera.io.WebServer;
-import opera.io.WebServerEventHandler;
-import opera.io.WebServerRequest;
-import opera.io.WebServerResponse;
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 /**
  * A GWT Unite version of the Opera Unite Example Service described in the Developers primer
  * 
  */
-public class BlogService extends OperaUniteService {
+public class BlogApplication extends OperaUniteApplication {
 	private final List<BlogEntry> entries = new ArrayList<BlogEntry>();
 	private WebServer webServer;
 	
 	private WebServerEventHandler entryListHandler = new WebServerEventHandler() {
-		@Override protected void onConnection(WebServerRequest request, WebServerResponse response) {
+		@Override public void onConnection(WebServerRequest request, WebServerResponse response) {
 			    response.write( "<!DOCTYPE html>"+
 			        			"<html><head><title>Entries</title></head>" +
 			        			"<body><ul>");
@@ -39,7 +39,7 @@ public class BlogService extends OperaUniteService {
 	};	
 	
 	private WebServerEventHandler entryHandler = new WebServerEventHandler() {
-		@Override protected void onConnection(WebServerRequest request, WebServerResponse response) {
+		@Override public void onConnection(WebServerRequest request, WebServerResponse response) {
 		    int index = Integer.parseInt(request.getQueryItem("id")[0]);
 		    BlogEntry entry = entries.get(index);
 		    
@@ -54,7 +54,7 @@ public class BlogService extends OperaUniteService {
 	};		
 	
 	private WebServerEventHandler formHandler = new WebServerEventHandler() {
-		@Override protected void onConnection(WebServerRequest request, WebServerResponse response) {
+		@Override public void onConnection(WebServerRequest request, WebServerResponse response) {
 		    response.write("<!DOCTYPE html>" +
 		    			   "<html><head><title>Add entry</title></head>" +
 		    			   "<body><h1>Add entry</h1>" +
@@ -69,14 +69,14 @@ public class BlogService extends OperaUniteService {
 	};		
 	
 	private WebServerEventHandler saveHandler = new WebServerEventHandler() {
-		@Override protected void onConnection(WebServerRequest request, WebServerResponse response) {
+		@Override public void onConnection(WebServerRequest request, WebServerResponse response) {
 		    String title = request.getBodyItem("title")[0];
 		    String text = request.getBodyItem("text")[0];
 
 		    entries.add(new BlogEntry(title, text, new Date()));
 
-		    response.setStatusCode(302);
-		    response.setResponseHeader("Location", webServer.getCurrentServicePath());
+		    response.setStatusCode("302");
+		    response.setHeader("Location", webServer.getCurrentServicePath());
 		    response.close();
 		}
 	};	
