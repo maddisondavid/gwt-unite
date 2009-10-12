@@ -2,7 +2,6 @@ package org.gwtunite.client.commons;
 
 
 import org.gwtunite.client.file.File;
-import org.gwtunite.client.file.FileNotFoundException;
 import org.gwtunite.client.file.FileStream;
 import org.gwtunite.client.file.IOException;
 import org.gwtunite.client.file.SecurityException;
