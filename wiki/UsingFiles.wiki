@@ -4,7 +4,7 @@ In order to use any file system activity in your application, you must first inc
 
 {{{
   <feature name="http://xmlns.opera.com/fileio">
-  </feature
+  </feature>
 }}}
 
 ==Virtual File System==
