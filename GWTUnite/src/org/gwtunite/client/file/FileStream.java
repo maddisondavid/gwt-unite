@@ -470,9 +470,7 @@ public final class FileStream extends JavaScriptObject {
      */
 	public native void writeImage(ImageElement image) throws IOException /*-{
 		try {
-			var testImage = new Image();
-			testImage.src = "http://www.google.com";
-			this.writeImage(testImage);
+			this.writeImage(image);
 		}catch(e) {
     		if (e=="GENERICL_ERR") {
     			throw @org.gwtunite.client.file.IOException::new(Ljava/lang/String;)(this.name);
