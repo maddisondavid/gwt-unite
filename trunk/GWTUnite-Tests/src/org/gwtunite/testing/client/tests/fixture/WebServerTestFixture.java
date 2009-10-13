@@ -112,7 +112,7 @@ public class WebServerTestFixture {
 	 */
 	public class TestHttpHandler implements RequestCallback{
 		@Override public void onError(Request request, Throwable exception) {
-			testCase.handleException((Exception)exception);
+			testCase.handleException(exception);
 		}
 		@Override public void onResponseReceived(Request request, Response response) {
 			String result = response.getHeader(RESULT_HEADER);
