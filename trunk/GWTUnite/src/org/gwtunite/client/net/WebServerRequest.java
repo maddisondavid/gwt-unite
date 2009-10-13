@@ -234,6 +234,18 @@ final public class WebServerRequest extends JavaScriptObject {
 		return this.uri;
 	}-*/;
 
+	/**
+	 * Returns the user session connected to this request.
+	 * 
+	 * <b>WARNING:</b> This method is NOT included on the public OperaUnite API and is only included here
+	 * for compatibility. Be warned that it could very well change in future! 
+	 * 
+	 * @return The WebServerSession for the user
+	 */
+	public native WebServerSession getSession() /*-{
+		return this.session;
+	}-*/;
+	
     /**
      * Set the Uniform Resource Identifier this request was made to.
      * 
