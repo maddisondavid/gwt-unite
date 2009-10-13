@@ -9,9 +9,7 @@
   	* [QuickStartGuide Quick Start]
 
 	* Tutorials
-		* Creating a GWT Unite Project
 		* [UsingFiles Using the FileSystem]
-		* Using Discovery
 
 *Documentation*
         * [Testing]
