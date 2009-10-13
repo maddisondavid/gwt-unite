@@ -13,6 +13,7 @@
 		<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.0"/>
 			<javadoc sourcepath="src"  destdir="javadoc" windowtitle="GWT-Unite">
 				<excludepackage name="org.gwtunite.linkers"/>
+				<excludepackage name="org.gwtunite.testing.generators"/>
 				<classpath>
 					<pathelement location="src"/>
 					<pathelement location="bin"/>
