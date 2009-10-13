@@ -14,7 +14,7 @@ public class TestResult {
 	private final String testName;
 	private final Result result;
 	private String failureMessage;
-	private Exception exception;
+	private Throwable exception;
 	
 	public static TestResult pass(String testName) {
 		return new TestResult(testName, Result.PASSED);
@@ -24,7 +24,7 @@ public class TestResult {
 		return new TestResult(testName, Result.FAILED, failureMessage);
 	}
 
-	public static TestResult error(String testName, Exception exception) {
+	public static TestResult error(String testName, Throwable exception) {
 		return new TestResult(testName, Result.ERROR, exception);
 	}
 	
@@ -33,7 +33,7 @@ public class TestResult {
 		this.result = result;
 	}
 	
-	private TestResult(String testName, Result result, Exception e) {
+	private TestResult(String testName, Result result, Throwable e) {
 		this(testName, result);
 		this.exception = e;
 	}
@@ -56,7 +56,7 @@ public class TestResult {
 		return failureMessage;
 	}
 	
-	public Exception getException() {
+	public Throwable getException() {
 		return exception;
 	}
 }

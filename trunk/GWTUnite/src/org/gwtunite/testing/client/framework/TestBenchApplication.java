@@ -175,7 +175,7 @@ public class TestBenchApplication extends OperaUniteApplication {
 			}
 		}
 		
-		public void onError(Exception exception) {
+		public void onError(Throwable exception) {
 			testResults.add(TestResult.error(testsToRun[currentTest], exception));
 			startNextTestOrWriteResults();
 		}
