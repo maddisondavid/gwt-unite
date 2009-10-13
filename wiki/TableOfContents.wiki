@@ -1,18 +1,15 @@
 #summary TOC for GWT-Unite
 
 = GWT Unite =
-* [http:\\gwt-unite.googlecode.com Project Home]
-* [http://code.google.com/p/gwt-unite/downloads/list Downloads]
-* [KnownIssues Known Issues]
  
-*Getting Started
-  	* [QuickStartGuide Quick Start]
+* [QuickStartGuide Quick Start]
 
-	* Tutorials
-		* [UsingFiles Using the FileSystem]
+* Tutorials
+	* [UsingFiles Using the FileSystem]
 
 * [Testing]
 * [API Reference]
+* [KnownIssues Known Issues]
 
 
  
