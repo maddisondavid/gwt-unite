@@ -25,10 +25,10 @@ The GWT template project will now compile within Eclipse.
 The template project is a complete (mini) GWT-Unite application which we should build in order to make sure everything is setup.
 
  # Edit the gwt-unite-application-builder.xml
- # Change the GWT_HOME property to point to your GWT installation home (i.e. c:/program files/gwt-windows-1.7.1){{{
+ # Change the GWT_HOME property to point to your GWT installation home (i.e. c:/program files/gwt-windows-1.7.1)
+{{{
 <property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.1"/>
 }}}
-
  # Execute the ANT build.xml file
 
 At this stage the GWT compiler will be invoked and the template project built.  After it's finished, the dist directory will contain a Template.ua file.
