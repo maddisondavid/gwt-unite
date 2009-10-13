@@ -1,10 +1,5 @@
 package com.sample.template.client;
 
-import org.gwtunite.client.commons.Logging;
-import org.gwtunite.client.file.File;
-import org.gwtunite.client.file.FileStream;
-import org.gwtunite.client.file.FileSystem;
-import org.gwtunite.client.file.File.FileMode;
 import org.gwtunite.client.net.OperaUniteApplication;
 import org.gwtunite.client.net.WebServer;
 import org.gwtunite.client.net.WebServerEventHandler;
