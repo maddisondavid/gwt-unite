@@ -1,6 +1,3 @@
-<module rename-to="gwtuniteTests">
-	<inherits name="org.gwtunite.Core"/>
+<module>
 	<inherits name="org.gwtunite.testing.TestBench"/>
-	
-	<source path="tests"/>
 </module>
