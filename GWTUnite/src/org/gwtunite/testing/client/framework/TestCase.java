@@ -32,7 +32,7 @@ public abstract class TestCase {
 			}
 		}
 		
-		public void onError(Exception t) {
+		public void onError(Throwable t) {
 			try {
 				tearDown();
 			}catch(Exception e) {
@@ -135,7 +135,7 @@ s	 */
 	 * }
 	 * </code>
 	 */
-	public void handleException(Exception e) {
+	public void handleException(Throwable e) {
 		if (e instanceof AssertionFailureException) {
 			getResultListener().onFailed(((AssertionFailureException)e).getMessage());
 		} else {
