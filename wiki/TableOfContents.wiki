@@ -1,9 +1,9 @@
 #summary TOC for GWT-Unite
 
 = GWT Unite =
-*Learn More
-	* [Introduction Product Overview]
-        * [KnownIssues Known Issues]
+
+* [Introduction Product Overview]
+* [KnownIssues Known Issues]
  
 *Getting Started*
   	* [QuickStartGuide Quick Start]
