@@ -2,7 +2,7 @@
 
 = GWT Unite =
 
-* [Introduction Product Overview]
+* [Introduction Overview]
 * [KnownIssues Known Issues]
 * [http://code.google.com/p/gwt-unite/downloads/list Downloads]
  
