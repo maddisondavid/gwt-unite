@@ -4,6 +4,7 @@
 
 * [Introduction Product Overview]
 * [KnownIssues Known Issues]
+* [Downloads http://code.google.com/p/gwt-unite/downloads/list]
  
 *Getting Started
   	* [QuickStartGuide Quick Start]
