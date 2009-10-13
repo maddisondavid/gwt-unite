@@ -8,25 +8,25 @@ To resolve this issue, GWT-Unite includes a sophisticated JUnit style testing fr
 The Test Bench uses a similar style to JUnit which should be familar to most Java developers.  The following shows a very simple (trivial) test class:
 
 {{{
-	public MyTestClass extends TestCase {
-		String testFixture;
-		
-		@Override
-		public void setUp() {
-			testFixture = "Hello";
-		}
-		
+public MyTestClass extends TestCase {
+	String testFixture;
 
-		@Test
-		public void helloWorld() throws Exception {
-			assertEquals("Hello",testFixture);
-		}
-		
-		@Override
-		public void tearDown() {
-			testFixture = null;
-		}
+	@Override
+	public void setUp() {
+		testFixture = "Hello";
 	}
+
+
+	@Test
+	public void helloWorld() throws Exception {
+		assertEquals("Hello",testFixture);
+	}
+
+	@Override
+	public void tearDown() {
+		testFixture = null;
+	}
+}
 }}}
 
 As you can see, all test classes must extend _org.gwtunite.test.client.framework.TestCase_.  Methods in the class can be marked as tests by using the @Test annotation, and the test class can also include the optional setUp and tearDown methods.  A test class can include as many test methods as required, setUp will be called just before a test method is called, and tearDown called after the method finishes (regardless of the result).
@@ -44,10 +44,10 @@ When using standard JUnit, an assertion will throw an exception and the stack tr
 
 {{{
 
-	@Test
-	public void simpleTest() throws Exception {
-		assertEquals("hello",myObject.getGreeting(), "test Greeting");
-	}
+@Test
+public void simpleTest() throws Exception {
+	assertEquals("hello",myObject.getGreeting(), "test Greeting");
+}
 }}}
 
 When this assertion fails, it will display a result as "Expected: Hello Actual:Goodbye test Greeting" which will allow you to identify the particular failing assertion. 
@@ -72,32 +72,32 @@ When writing simple tests, the code is executed sequentially, however it's not l
 To get around this issue, the TestBench actually includes a sophisticated asynchronous model allowing the test case to actually finish, but the test to wait for a result.  Possibly the best way to explain this is with the following example in which we want to call a URL and assert the result:
 
 {{{
-	public class MyTest extends TestCase {
-		
-		public void testURL() throws Exception {
-		
-			RequestBuilder req = new RequestBuilder(RequestBuilder.GET, "http://www.google.com");
-			req.setCallback(new RequestCallback() {
-				
-				public void onError(Request request, Throwable exception) {
-					handleException(exception);
-				}
-			
-				public void onResponseReceived(Request request, Response response) {
-					try{ // <<<<< 3
-						assertEquals(Response.SC_OK, response.getStatusCode());
-						
-						finishTest(); //<<<<< 2
-					} catch(Throwable e) {
-						handleException(e);
-					}										
-				}
-			});
-		
-			delayTestFinish(3000); //<<<<< 1
-			req.send();  
-		}
+public class MyTest extends TestCase {
+
+	public void testURL() throws Exception {
+
+		RequestBuilder req = new RequestBuilder(RequestBuilder.GET, "http://www.google.com");
+		req.setCallback(new RequestCallback() {
+
+			public void onError(Request request, Throwable exception) {
+				handleException(exception);
+			}
+
+			public void onResponseReceived(Request request, Response response) {
+				try{ // <<<<< 3
+					assertEquals(Response.SC_OK, response.getStatusCode());
+
+					finishTest(); //<<<<< 2
+				} catch(Throwable e) {
+					handleException(e);
+				}										
+			}
+		});
+
+		delayTestFinish(3000); //<<<<< 1
+		req.send();  
 	}
+}
 }}}
 
 Under normal circumstances, this test would complete when the testURL method ends and a result returned, however, we actually want the test result to be delayed until we have a HTTP response back.  To accomplish this, we use the _delayTestFinish_ method, highlighted with the <<1 marker.  When this statement exectutes, a timeout timer is started, if the test hasn't completed by the time the timer expires, a "Timeout" failure occurs for the test.
