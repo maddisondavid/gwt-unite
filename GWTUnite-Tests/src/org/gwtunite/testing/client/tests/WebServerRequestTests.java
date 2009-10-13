@@ -134,5 +134,24 @@ public class WebServerRequestTests extends TestCase {
 		
 		delayTestFinish(5000);
 		fixture.invokeTestURLViaPost(handler,bodyData.toString());
+	}
+	
+	@Test
+	public void sessionIsAvailable() throws Exception {
+		String handler = "sessionTest";
+		fixture.addTestHandler(handler, new WebServerEventHandler() {
+			@Override
+			public void onConnection(WebServerRequest request, WebServerResponse response) {
+				assertNotNull(request.getSession());
+				assertNotNull(request.getSession().getId(),"ID");
+				assertNotNull(request.getSession().getType(),"Type");
+				assertNotNull(request.getSession().getUserName(),"UserName");
+				
+				request.getSession().logout();
+			}
+		});
+		
+		delayTestFinish(5000);
+		fixture.invokeTestURLViaGet(handler);
 	}	
 }

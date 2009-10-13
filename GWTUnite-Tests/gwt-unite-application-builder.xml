@@ -4,11 +4,17 @@
 	It is not designed to be called directly, but rather from parent scripts
 -->
 <project name="OperaUnite-Service-Builder" basedir=".">
-	<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.0"/>
+	<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.1"/>
+	
+	<property name="dist.zipName" value="${applicationName}.ua"/>
+	<property name="dist.moduleName" value="${moduleName}"/>
+	<property name="configFile" value="conf/${applicationName}-config.xml"/>
 
 	<property name="build.dir" value="build"/>
 	<property name="dist.dir" value="dist"/>
-		
+	
+	
+	<!-- Compiles the Service -->	
 	<target name="compile">
 		<java fork="true" classname="com.google.gwt.dev.Compiler" failOnError="true">
 			<classpath>
@@ -16,27 +22,33 @@
 				<pathelement location="bin"/>
 				<pathelement location="${GWT_HOME}/gwt-dev-windows.jar"/>
 				<pathelement location="${GWT_HOME}/gwt-user.jar"/>
-					<dirset dir="../GWTUnite">
-						<include name="src" />
-						<include name="bin" />
-					</dirset>				
+				<dirset dir="..\GWTUnite">
+					<include name="src" />
+					<include name="bin" />
+				</dirset>
+				<dirset dir=".">
+					<include name="src" />
+					<include name="bin" />
+				</dirset>
 			</classpath>
 			<jvmarg line="-Xmx256M"/>
 			<arg line="-war ${build.dir} -style detailed ${moduleName}"/>
 		</java>
 	</target>
 	
+	<!-- Remove unwanted stuff from the built application -->
 	<target name="cleanup" depends="compile">
 		<!-- GWT adds stuff that was in public directories of modules, we don't need it so get rid of it -->
 		<delete>
-			<fileset dir="${build.dir}/${dist.moduleName}" includes="*" excludes="index.html"/>
+			<fileset dir="${build.dir}/${moduleName}" includes="*" excludes="index.html"/>
 		</delete> 
-		<copy file="conf/${dist.config-File}" toFile="${build.dir}/${dist.moduleName}/config.xml"/>
+		<copy file="${configFile}" toFile="${build.dir}/${dist.moduleName}/config.xml"/>
 	</target>
 	
+	<!-- Package the application and Delete build DIR -->
 	<target name="package" depends="cleanup">
 		<mkdir dir="${dist.dir}"/>
 		<zip basedir="${build.dir}/${dist.moduleName}" file="${dist.dir}/${dist.zipName}"/>
-<!--		<delete dir="${build.dir}"/> -->
+ 		<delete dir="${build.dir}"/> 
 	</target>
 </project>
