@@ -5,7 +5,7 @@
 	* Product Overview
  
 *Getting Started*
-  	* [Quick Start QuickStartGuide]
+  	* [QuickStart Quick Start]
 	* Tutorials
 		* Creating a GWT Unite Project
 		* Using the FileSystem
