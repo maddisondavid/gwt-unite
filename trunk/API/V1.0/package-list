@@ -1,0 +1,7 @@
+org.gwtunite.client
+org.gwtunite.client.commons
+org.gwtunite.client.discovery
+org.gwtunite.client.file
+org.gwtunite.client.net
+org.gwtunite.client.widget
+org.gwtunite.testing.client.framework
