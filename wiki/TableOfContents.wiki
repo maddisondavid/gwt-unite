@@ -5,13 +5,13 @@
 * [Introduction Product Overview]
 * [KnownIssues Known Issues]
  
-*Getting Started*
+*Getting Started
   	* [QuickStartGuide Quick Start]
 
 	* Tutorials
 		* [UsingFiles Using the FileSystem]
 
-*Documentation*
+*Documentation
         * [Testing]
 
 
