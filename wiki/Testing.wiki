@@ -102,7 +102,15 @@ public class MyTest extends TestCase {
 
 Under normal circumstances, this test would complete when the testURL method ends and a result returned, however, we actually want the test result to be delayed until we have a HTTP response back.  To accomplish this, we use the _delayTestFinish_ method, highlighted with the <<1 marker.  When this statement exectutes, a timeout timer is started, if the test hasn't completed by the time the timer expires, a "Timeout" failure occurs for the test.
 
-A test is deemed finished when either an assertion fails, an error is thrown, or the _finishTest()_ method is called.  At any of these points, the result is returned for the test.
+A test is deemed finished when either :
+
+ * An asserion fails
+ * An Exception is thrown
+ * finishTest is called.
+
+At any of these points, the result is returned for the test.
 
 ==Catching Exceptions==
-One VERY important point to note about asynchronous tests it the try catch block marked with the << 3 marker.  When a test is executed synchronously, the TestBench automatically wraps the test in a try catch block and therefore is able to report on any failures, when running asynchrounsly this isn't available and therefore you must catch and then inform the TestCase of any failures.
+One VERY important point to note about asynchronous tests it the try catch block marked with the << 3 marker.  When a test is executed synchronously, the TestBench automatically wraps the test in a try catch block and therefore is able to report on any failures, when running asynchronously this isn't available and therefore you must catch and then inform the TestCase of any failures.
+
+It's important to include the try catch block EVEN if your code should thrown any exceptions, simply because AssertionFailures themselves are thrown as Exceptions.
