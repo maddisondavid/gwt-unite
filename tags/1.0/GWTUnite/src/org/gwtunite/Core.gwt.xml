@@ -1,0 +1,6 @@
+<module>
+    <inherits name="com.google.gwt.user.User" />
+   
+    <define-linker name="OperaUnite" class="org.gwtunite.linkers.OperaUniteLinker" />
+	<add-linker name="OperaUnite" />
+ </module>

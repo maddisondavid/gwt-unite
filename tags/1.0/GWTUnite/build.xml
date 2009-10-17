@@ -1,0 +1,38 @@
+<!--
+	Packaging Script For GWT-Unite
+-->
+<project name="gwt-unite" basedir="." default="package">
+	<property name="build.dir" value="build"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="jarname" value="GWTUnite"/>
+
+	<property name="version" value="1.0"/>
+	
+	<target name="javadoc">
+			<mkdir dir="javadoc"/>
+		<property name="GWT_HOME" value="c:/program files/gwt-windows-1.7.0"/>
+			<javadoc sourcepath="src"  destdir="javadoc" windowtitle="GWT-Unite">
+				<excludepackage name="org.gwtunite.linkers"/>
+				<excludepackage name="org.gwtunite.testing.generators"/>
+				<classpath>
+					<pathelement location="src"/>
+					<pathelement location="bin"/>
+					<pathelement location="${GWT_HOME}/gwt-dev-windows.jar"/>
+					<pathelement location="${GWT_HOME}/gwt-user.jar"/>
+				</classpath>
+			</javadoc>
+	</target>
+	
+	<target name="package">
+		<mkdir dir="${build.dir}"/>
+		<copy todir="${build.dir}">
+			<fileset dir="bin" excludes="*.svn"/>
+			<fileset dir="src" excludes="*.svn"/>
+		</copy>
+		
+		<mkdir dir="${dist.dir}"/>
+		<zip basedir="${build.dir}" zipfile="${dist.dir}/${jarname}-${version}.jar"/>
+		
+		<delete dir="${build.dir}"/>
+	</target>
+</project>

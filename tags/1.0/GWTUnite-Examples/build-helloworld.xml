@@ -1,0 +1,8 @@
+<project name="HelloWorldExampleApp" basedir=".">
+	<property name="moduleName" value="gwtunite.examples.HelloWorldApplication"/>
+	<property name="applicationName" value="HelloWorldApplication"/>
+		
+	<ant antfile="gwt-unite-application-builder.xml" inheritall="true" target="package"/>
+</project>
+
+

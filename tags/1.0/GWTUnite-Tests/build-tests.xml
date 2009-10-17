@@ -1,0 +1,6 @@
+<project name="GWTUnite-Tests" basedir=".">
+	<property name="moduleName" value="org.gwtunite.testing.Tests"/>
+	<property name="applicationName" value="GWTUniteTests"/>
+		
+	<ant antfile="gwt-unite-application-builder.xml" inheritall="true" target="package"/>
+</project>

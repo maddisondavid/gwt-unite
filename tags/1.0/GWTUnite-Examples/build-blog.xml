@@ -1,0 +1,7 @@
+<project name="BlogExampleApp" basedir=".">
+	<property name="moduleName" value="gwtunite.examples.BlogApplication"/>
+	<property name="applicationName" value="BlogApplication"/>
+		
+	<ant antfile="gwt-unite-application-builder.xml" inheritall="true" target="package"/>
+</project>
+
