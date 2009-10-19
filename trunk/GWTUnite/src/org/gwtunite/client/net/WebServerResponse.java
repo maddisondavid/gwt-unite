@@ -263,6 +263,17 @@ final public class WebServerResponse extends JavaScriptObject {
 		}		
 	}-*/;
 
+	
+	
+	public void setCookie(String name, String value) {
+		setHeader("Set-Cookie",value);
+	}
+	
+	public void sendRedirect(String Url) {
+		setStatusCode(WebServerResponse.SC_MOVED_PERMANENTLY);
+		setHeader("Location", Url);
+	}
+	
     /**
      * Set the HTTP status code of the response.
      *
@@ -275,7 +286,7 @@ final public class WebServerResponse extends JavaScriptObject {
      * @param statusCode Status code to set, e.g. 200 or 404
      * @throws IOException If data has been written to the response before setting the status code.
      */
-	public native void setStatusCode(String statusCode) /*-{
+	public native void setStatusCode(int statusCode) /*-{
 		try {
 			this.setStatusCode(statusCode);
 		} catch(error) {
@@ -300,7 +311,7 @@ final public class WebServerResponse extends JavaScriptObject {
      * @param text Status text to set, e.g. "Success" or "Out of pidgeons".
      * @throws IOException If data has been written to the response before setting the status code.
      */
-	public native void setStatusCode(String statusCode, String text) /*-{
+	public native void setStatusCode(int statusCode, String text) /*-{
 		try {
 			this.setStatusCode(statusCode, text);
 		} catch(error) {

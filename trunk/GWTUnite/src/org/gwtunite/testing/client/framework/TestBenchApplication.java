@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.gwtunite.client.file.IOException;
-import org.gwtunite.client.net.OperaUniteApplication;
+import org.gwtunite.client.net.OperaUniteEntryPoint;
 import org.gwtunite.client.net.WebServer;
 import org.gwtunite.client.net.WebServerEventHandler;
 import org.gwtunite.client.net.WebServerRequest;
@@ -21,7 +21,7 @@ import com.google.gwt.user.client.DeferredCommand;
 /**
  * The main Opera Unite Application for the Test Bench
  */
-public class TestBenchApplication extends OperaUniteApplication {
+public class TestBenchApplication extends OperaUniteEntryPoint {
 	private static final String TEST_CASE_QUERY_ITEM = "testCase";
 	private static final String TEST_NAME_QUERY_ITEM = "testName";
 	private static final String TEST_LIST_CONTEXT = "testList";
@@ -37,8 +37,7 @@ public class TestBenchApplication extends OperaUniteApplication {
 		webServer.addEventListener(WebServer.INDEX_PATH, new WebServerEventHandler() {
 			@Override
 			public void onConnection(WebServerRequest request, WebServerResponse response) {
-				response.setStatusCode("302");
-				response.setHeader("Location", "TestBench.html");
+				response.sendRedirect("TestBench.html");
 				response.close();
 			}
 		}, false);

@@ -1,4 +1,4 @@
-package org.gwtunite.generators;
+package org.gwtunite.rebind.generators;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

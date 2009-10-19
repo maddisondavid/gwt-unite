@@ -138,6 +138,16 @@ final public class WebServerRequest extends JavaScriptObject {
 	        return this.headers[name];
 	}-*/;	
 	
+	public String getCookie(String name) {
+		if (hasHeader("Cookie")) {
+//			for (String header : getHeader(name)) {
+				return getHeader("Cookie")[0];
+	//		}
+		} else {
+			return null;
+		}
+	}
+	
     /**
      * Retrieves the {@link WebServerConnection} this request was sent through
      * 

@@ -2,12 +2,12 @@ package org.gwtunite.client.rpc;
 
 import java.util.Map;
 
-import org.gwtunite.client.net.OperaUniteApplication;
+import org.gwtunite.client.net.OperaUniteEntryPoint;
 import org.gwtunite.client.net.WebServer;
 
 import com.google.gwt.core.client.GWT;
 
-public class RemoteServiceApplication extends OperaUniteApplication {
+public class RemoteServiceApplication extends OperaUniteEntryPoint {
 	@Override
 	public void init(WebServer webServer) {
 		final RemoteServiceRegistry registry = GWT.create(RemoteServiceRegistry.class);

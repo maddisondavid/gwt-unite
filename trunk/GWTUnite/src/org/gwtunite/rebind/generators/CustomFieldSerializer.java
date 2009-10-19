@@ -1,4 +1,4 @@
-package org.gwtunite.generators;
+package org.gwtunite.rebind.generators;
 
 
 import com.google.gwt.core.ext.typeinfo.JClassType;

@@ -8,7 +8,7 @@ import com.google.gwt.core.client.EntryPoint;
  * 
  * 
  */
-public abstract class OperaUniteApplication implements EntryPoint{
+public abstract class OperaUniteEntryPoint implements EntryPoint{
 
 	public void onModuleLoad() {
 		try {
