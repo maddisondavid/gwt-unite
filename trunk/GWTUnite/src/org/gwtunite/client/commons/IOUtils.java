@@ -37,7 +37,7 @@ public class IOUtils {
 	public static String getFileContentsAsString(File directory, String path, String charset) throws SecurityException, IOException{
 		File actualFile = directory.resolve(path);
 		if (!actualFile.exists())
-			throw new RuntimeException("File " + directory._toString() + path + " cannot be found");
+			throw new RuntimeException("File " + directory._toString() + "/"+path + " cannot be found");
 
 		FileStream stream = directory.resolve(path).open(FileMode.READ);
 		try {
