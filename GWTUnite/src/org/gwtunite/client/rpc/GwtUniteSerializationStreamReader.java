@@ -23,12 +23,6 @@ public class GwtUniteSerializationStreamReader extends AbstractSerializationStre
 	   */
 	  private static final Map<String, ValueReader> CLASS_TO_VALUE_READER = new IdentityHashMap<String, ValueReader>();
 
-	  /**
-	   * Map of {@link Class} objects to {@link VectorReader}s.
-	   */
-//	  private static final Map<Class<?>, VectorReader> CLASS_TO_VECTOR_READER = new IdentityHashMap<Class<?>, VectorReader>();
-
-
 	  {
 	    CLASS_TO_VALUE_READER.put(boolean.class.getName(), ValueReader.BOOLEAN);
 	    CLASS_TO_VALUE_READER.put(byte.class.getName(), ValueReader.BYTE);
@@ -92,18 +86,9 @@ public class GwtUniteSerializationStreamReader extends AbstractSerializationStre
 	    //
 	    deserializeStringTable();
 
-	    // Write the serialization policy info
+	    // We don't need these, but we need them out of the stream
 	    String moduleBaseURL = readString();
 	    String strongName = readString();
-//	    if (serializationPolicyProvider != null) {
-//	      serializationPolicy = serializationPolicyProvider.getSerializationPolicy(
-//	          moduleBaseURL, strongName);
-//
-//	      if (serializationPolicy == null) {
-//	        throw new NullPointerException(
-//	            "serializationPolicyProvider.getSerializationPolicy()");
-//	      }
-//	    }
 	}
 	
 	@Override
@@ -327,163 +312,4 @@ public class GwtUniteSerializationStreamReader extends AbstractSerializationStre
 	    abstract Object readValue(GwtUniteSerializationStreamReader stream)
 	        throws SerializationException;
 	  }
-	  
-	  /**
-	   * Enumeration used to provided typed instance readers for vectors.
-	   */
-//	  private enum VectorReader {
-//	    BOOLEAN_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readBoolean();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setBoolean(array, index, (Boolean) value);
-//	      }
-//	    },
-//	    BYTE_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readByte();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setByte(array, index, (Byte) value);
-//	      }
-//	    },
-//	    CHAR_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readChar();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setChar(array, index, (Character) value);
-//	      }
-//	    },
-//	    DOUBLE_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readDouble();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setDouble(array, index, (Double) value);
-//	      }
-//	    },
-//	    FLOAT_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readFloat();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setFloat(array, index, (Float) value);
-//	      }
-//	    },
-//	    INT_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readInt();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setInt(array, index, (Integer) value);
-//	      }
-//	    },
-//	    LONG_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readLong();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setLong(array, index, (Long) value);
-//	      }
-//	    },
-//	    OBJECT_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readObject();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.set(array, index, value);
-//	      }
-//	    },
-//	    SHORT_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readShort();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.setShort(array, index, (Short) value);
-//	      }
-//	    },
-//	    STRING_VECTOR {
-//	      @Override
-//	      protected Object readSingleValue(GwtUniteSerializationStreamReader stream)
-//	          throws SerializationException {
-//	        return stream.readString();
-//	      }
-//
-//	      @Override
-//	      protected void setSingleValue(Object array, int index, Object value) {
-//	        Array.set(array, index, value);
-//	      }
-//	    };
-//
-//	    protected abstract Object readSingleValue( GwtUniteSerializationStreamReader stream) throws SerializationException;
-//
-//	    protected abstract void setSingleValue(Object array, int index, Object value);
-//
-//	    /**
-//	     * Convert a BoundedList to an array of the correct type. This
-//	     * implementation consumes the BoundedList.
-//	     */
-//	    protected Object toArray(Class<?> componentType, BoundedList<Object> buffer)
-//	        throws SerializationException {
-//	      if (buffer.getExpectedSize() != buffer.size()) {
-//	        throw new SerializationException(
-//	            "Inconsistent number of elements received. Received "
-//	                + buffer.size() + " but expecting " + buffer.getExpectedSize());
-//	      }
-//
-//	      Object arr = Array.newInstance(componentType, buffer.size());
-//
-//	      for (int i = 0, n = buffer.size(); i < n; i++) {
-//	        setSingleValue(arr, i, buffer.removeFirst());
-//	      }
-//
-//	      return arr;
-//	    }
-//
-//	    Object read(GwtUniteSerializationStreamReader stream, BoundedList<Object> instance) throws SerializationException {
-//	      for (int i = 0, n = instance.getExpectedSize(); i < n; ++i) {
-//	        instance.add(readSingleValue(stream));
-//	      }
-//
-//	      return toArray(instance.getComponentType(), instance);
-//	    }
-//	  }
 }
