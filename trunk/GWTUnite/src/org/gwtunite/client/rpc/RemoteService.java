@@ -3,15 +3,12 @@
  */
 package org.gwtunite.client.rpc;
 
-import org.gwtunite.client.commons.IOUtils;
 import org.gwtunite.client.commons.Logging;
-import org.gwtunite.client.file.File;
-import org.gwtunite.client.file.FileSystem;
 import org.gwtunite.client.net.WebServerEventHandler;
 import org.gwtunite.client.net.WebServerRequest;
 import org.gwtunite.client.net.WebServerResponse;
 
-import com.google.gwt.user.client.rpc.impl.ClientSerializationStreamReader;
+import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.impl.Serializer;
 
 /**
@@ -19,35 +16,24 @@ import com.google.gwt.user.client.rpc.impl.Serializer;
  * 
  */
 public class RemoteService extends WebServerEventHandler {
-	protected final Object VOID = new Object();
+	final static Object VOID_RETURN = new Object();
 	
 	@Override
 	public void onConnection(WebServerRequest request, WebServerResponse response) {
 		try {
 			String encodedRequest = request.getBodyAsText();
-
 			RPCRequest rpcRequest = RPC.decodeRequest(encodedRequest, getSerializer());
-			Logging.log("Got RPC Request : "+rpcRequest);
 			
-			try {
-				Object methodResponse = callMethod(rpcRequest.getMethodName(), rpcRequest.getParameters());
-				
-				if (methodResponse == VOID) {
-					Logging.log("VOID method response");
-				} else {
-					Logging.log("Method Response="+methodResponse);
-				}
-				String responseToSend = RPC.encodeResponseForSuccess(methodResponse, getSerializer());
-				Logging.log("Returning Response : "+responseToSend);
-				
-				response.writeLine(responseToSend);
-				
-			} catch(Exception e) {
-				Logging.log("An exception was thrown! "+e.getMessage());
-			}
+			Object methodResponse = callMethod(rpcRequest.getMethodName(), rpcRequest.getParameters());
+			
+			// What do we do about VOID response?
+			response.write(RPC.encodeResponseForSuccess(methodResponse, getSerializer()));
 		} catch (Exception e) {
-			Logging.handleException(e);
-			response.close();
+			try {
+				response.write(RPC.encodeResponseForFailure(e, getSerializer()));
+			} catch(SerializationException se ) {
+				Logging.log("Unable to send result back to client due to "+se);
+			}
 		}
 		finally {
 			response.close();
