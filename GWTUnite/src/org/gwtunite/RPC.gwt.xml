@@ -1,7 +1,7 @@
 <module>
 	<inherits name="org.gwtunite.Core" />
 
-	<generate-with class="org.gwtunite.generators.RemoteServiceRegistryGenerator">
+	<generate-with class="org.gwtunite.rebind.generators.RemoteServiceRegistryGenerator">
 		<when-type-assignable class="org.gwtunite.client.rpc.RemoteServiceRegistry"/>
 	</generate-with>
 	

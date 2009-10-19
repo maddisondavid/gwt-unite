@@ -3,6 +3,6 @@
     
     <set-property name="user.agent" value="opera"/>
     
-    <define-linker name="OperaUnite" class="org.gwtunite.linkers.OperaUniteLinker" />
+    <define-linker name="OperaUnite" class="org.gwtunite.rebind.linkers.OperaUniteLinker" />
 	<add-linker name="OperaUnite" />
  </module>

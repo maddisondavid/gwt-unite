@@ -1,4 +1,4 @@
-package org.gwtunite.linkers;
+package org.gwtunite.rebind.linkers;
 
 import com.google.gwt.core.ext.LinkerContext;
 import com.google.gwt.core.ext.TreeLogger;
