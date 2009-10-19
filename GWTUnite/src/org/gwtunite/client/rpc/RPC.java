@@ -85,13 +85,18 @@ public class RPC {
 	public static String encodeResponseForSuccess(Object response, Serializer serializer) throws SerializationException{
 		return encodeResponse(response, serializer, false);
 	}
+
+	public static String encodeResponseForFailure(Exception response, Serializer serializer) throws SerializationException{
+		return encodeResponse(response, serializer, true);
+	}
 	
 	private static String encodeResponse(Object object, Serializer serializer, boolean wasThrown) throws SerializationException {	
 		GwtUniteSerializationStreamWriter stream = new GwtUniteSerializationStreamWriter(serializer);
 		stream.prepareToWrite();
 		
 		try {
-			stream.writeObject(object);
+			if (object != RemoteService.VOID_RETURN)
+				stream.writeObject(object);
 		} catch (SerializationException e) {
 			Logging.log("Serialization Exception "+e.getMessage());
 		}

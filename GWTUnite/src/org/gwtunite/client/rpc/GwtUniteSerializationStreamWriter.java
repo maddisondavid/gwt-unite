@@ -391,19 +391,24 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
    * </ol>
    */
   private static boolean needsUnicodeEscape(char ch) {
-//    switch (ch) {
-//      case ' ':
-//        // ASCII space gets caught in SPACE_SEPARATOR below, but does not
-//        // need to be escaped
-//        return false;
-//      case JS_QUOTE_CHAR:
-//      case JS_ESCAPE_CHAR:
-//        // these must be quoted or they will break the protocol
-//        return true;
-//      case NON_BREAKING_HYPHEN:
-//          // This can be expanded into a break followed by a hyphen
-//          return true;
-//      default:
+    switch (ch) {
+      case ' ':
+        // ASCII space gets caught in SPACE_SEPARATOR below, but does not
+        // need to be escaped
+        return false;
+      case JS_QUOTE_CHAR:
+      case JS_ESCAPE_CHAR:
+        // these must be quoted or they will break the protocol
+        return true;
+      case NON_BREAKING_HYPHEN:
+          // This can be expanded into a break followed by a hyphen
+          return true;
+      default:
+    	  /**
+    	   * Note : Not sure what to do here since we GWT doesn't support Character#getType.
+    	   * What's more, the implementation of Character.getType is complicated and dependent on the
+    	   * character set being used.
+    	   */
 //        switch (Character.getType(ch)) {
 //          // Conservative
 //          case Character.COMBINING_SPACING_MARK:
@@ -425,7 +430,7 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
 //            break;
 //        }
 //        break;
-//    }
+    }
     return false;
   }
 

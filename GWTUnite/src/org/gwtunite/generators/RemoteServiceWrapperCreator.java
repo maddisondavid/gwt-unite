@@ -126,7 +126,7 @@ public class RemoteServiceWrapperCreator{
 							sourceWriter.println(");");
 							
 							if (method.getReturnType().equals(JPrimitiveType.VOID)) {
-								sourceWriter.println("return VOID;");
+								sourceWriter.println("return VOID_RETURN;");
 							}
 						sourceWriter.outdent();
 					sourceWriter.println("}");
