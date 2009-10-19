@@ -262,11 +262,6 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
   private static final Map<Class<?>, ValueWriter> CLASS_TO_VALUE_WRITER = new IdentityHashMap<Class<?>, ValueWriter>();
 
   /**
-   * Map of {@link Class} vector objects to {@link VectorWriter}s.
-   */
-//  private static final Map<Class<?>, VectorWriter> CLASS_TO_VECTOR_WRITER = new IdentityHashMap<Class<?>, VectorWriter>();
-
-  /**
    * Number of escaped JS Chars.
    */
   private static final int NUMBER_OF_JS_ESCAPED_CHARS = 128;
@@ -314,17 +309,6 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
     JS_CHARS_ESCAPED[JS_ESCAPE_CHAR] = JS_ESCAPE_CHAR;
     JS_CHARS_ESCAPED[JS_QUOTE_CHAR] = JS_QUOTE_CHAR;
 
-//    CLASS_TO_VECTOR_WRITER.put(boolean[].class, VectorWriter.BOOLEAN_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(byte[].class, VectorWriter.BYTE_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(char[].class, VectorWriter.CHAR_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(double[].class, VectorWriter.DOUBLE_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(float[].class, VectorWriter.FLOAT_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(int[].class, VectorWriter.INT_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(long[].class, VectorWriter.LONG_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(Object[].class, VectorWriter.OBJECT_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(short[].class, VectorWriter.SHORT_VECTOR);
-//    CLASS_TO_VECTOR_WRITER.put(String[].class, VectorWriter.STRING_VECTOR);
-
     CLASS_TO_VALUE_WRITER.put(boolean.class, ValueWriter.BOOLEAN);
     CLASS_TO_VALUE_WRITER.put(byte.class, ValueWriter.BYTE);
     CLASS_TO_VALUE_WRITER.put(char.class, ValueWriter.CHAR);
@@ -363,22 +347,6 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
 
     charVector.add(JS_QUOTE_CHAR);
     return String.valueOf(charVector.asArray(), 0, charVector.getSize());
-  }
-
-  /**
-   * Returns the {@link Class} instance to use for serialization. Enumerations
-   * are serialized as their declaring class while all others are serialized
-   * using their true class instance.
-   */
-  private static Class<?> getClassForSerialization(Object instance) {
-    assert (instance != null);
-
-    if (instance instanceof Enum) {
-      Enum<?> e = (Enum<?>) instance;
-      return e.getDeclaringClass();
-    } else {
-      return instance.getClass();
-    }
   }
 
   /**
@@ -487,7 +455,6 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
   }
 
   private final Serializer serializer;
-//  private final SerializationPolicy serializationPolicy;
 
   private ArrayList<String> tokenList = new ArrayList<String>();
 
@@ -579,124 +546,8 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
 
   @Override
   protected void serialize(Object instance, String typeSignature) throws SerializationException {
-    assert (instance != null);
-
     serializer.serialize(this, instance, typeSignature);
-    
-//    Class<?> clazz = getClassForSerialization(instance);
-
-//    serializationPolicy.validateSerialize(clazz);
-
-//    serializeImpl(instance, clazz);
   }
-
-  /**
-   * Serialize an instance that is an array. Will default to serializing the
-   * instance as an Object vector if the instance is not a vector of primitives,
-   * Strings or Object.
-   * 
-   * @param instanceClass
-   * @param instance
-   * @throws SerializationException
-   */
-  private void serializeArray(Class<?> instanceClass, Object instance)
-      throws SerializationException {
-	  throw new UnsupportedOperationException("serializeArray NOt Finished Yet!");
-//    assert (instanceClass.isArray());
-//
-//    VectorWriter instanceWriter = CLASS_TO_VECTOR_WRITER.get(instanceClass);
-//    if (instanceWriter != null) {
-//      instanceWriter.write(this, instance);
-//    } else {
-//      VectorWriter.OBJECT_VECTOR.write(this, instance);
-//    }
-  }
-
-  private void serializeClass(Object instance, Class<?> instanceClass)
-      throws SerializationException {
-    assert (instance != null);
-
-    throw new UnsupportedOperationException("serialize Class not implemented yet");
-        
-//    Field[] serializableFields = SerializabilityUtil.applyFieldSerializationPolicy(instanceClass);
-//    for (Field declField : serializableFields) {
-//      assert (declField != null);
-//
-//      boolean isAccessible = declField.isAccessible();
-//      boolean needsAccessOverride = !isAccessible
-//          && !Modifier.isPublic(declField.getModifiers());
-//      if (needsAccessOverride) {
-//        // Override the access restrictions
-//        declField.setAccessible(true);
-//      }
-//
-//      Object value;
-//      try {
-//        value = declField.get(instance);
-//        serializeValue(value, declField.getType());
-//
-//      } catch (IllegalArgumentException e) {
-//        throw new SerializationException(e);
-//
-//      } catch (IllegalAccessException e) {
-//        throw new SerializationException(e);
-//      }
-//    }
-//
-//    Class<?> superClass = instanceClass.getSuperclass();
-//    if (serializationPolicy.shouldSerializeFields(superClass)) {
-//      serializeImpl(instance, superClass);
-//    }
-  }
-
-  private void serializeImpl(Object instance, Class<?> instanceClass)
-      throws SerializationException {
-    assert (instance != null);
-
-//    Class<?> customSerializer = SerializabilityUtil.hasCustomFieldSerializer(instanceClass);
-    Class<?> customSerializer = null;
-    if (customSerializer != null) {
-      // Use custom field serializer
-//      serializeWithCustomSerializer(customSerializer, instance, instanceClass);
-    } else if (instanceClass.isArray()) {
-      serializeArray(instanceClass, instance);
-    } else if (instanceClass.isEnum()) {
-      writeInt(((Enum<?>) instance).ordinal());
-    } else {
-      // Regular class instance
-      serializeClass(instance, instanceClass);
-    }
-  }
-
-//  private void serializeWithCustomSerializer(Class<?> customSerializer,
-//      Object instance, Class<?> instanceClass) throws SerializationException {
-//
-//    try {
-//      assert (!instanceClass.isArray());
-//
-//      for (Method method : customSerializer.getMethods()) {
-//        if ("serialize".equals(method.getName())) {
-//          method.invoke(null, this, instance);
-//          return;
-//        }
-//      }
-//      throw new NoSuchMethodException("serialize");
-//    } catch (SecurityException e) {
-//      throw new SerializationException(e);
-//
-//    } catch (NoSuchMethodException e) {
-//      throw new SerializationException(e);
-//
-//    } catch (IllegalArgumentException e) {
-//      throw new SerializationException(e);
-//
-//    } catch (IllegalAccessException e) {
-//      throw new SerializationException(e);
-//
-//    } catch (InvocationTargetException e) {
-//      throw new SerializationException(e);
-//    }
-//  }
 
   /**
    * Notice that the field are written in reverse order that the client can just

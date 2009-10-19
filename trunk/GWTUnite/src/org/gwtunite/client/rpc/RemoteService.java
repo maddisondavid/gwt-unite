@@ -23,17 +23,8 @@ public class RemoteService extends WebServerEventHandler {
 	
 	@Override
 	public void onConnection(WebServerRequest request, WebServerResponse response) {
-		//File appDir = FileSystem.getInstance().mountApplicationFileSystem();
-		//File testStuff = appDir.resolve("TestStuff");
 		try {
-//			String encodedRequest = IOUtils.getFileContentsAsString(testStuff, "personPayload.txt");
 			String encodedRequest = request.getBodyAsText();
-			
-//			GwtUniteSerializationStreamReader reader = new GwtUniteSerializationStreamReader(getSerializer());
-//			reader.prepareToRead(payLoad);
-//			
-//			Logging.log("STream VERSIOn : "+reader.getVersion());
-//			Logging.log("STream FLAGS : "+reader.getFlags());
 
 			RPCRequest rpcRequest = RPC.decodeRequest(encodedRequest, getSerializer());
 			Logging.log("Got RPC Request : "+rpcRequest);

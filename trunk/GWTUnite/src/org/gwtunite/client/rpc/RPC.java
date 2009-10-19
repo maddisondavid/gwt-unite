@@ -22,8 +22,6 @@ public class RPC {
 
 		try {
 			GwtUniteSerializationStreamReader streamReader = new GwtUniteSerializationStreamReader(serializer);
-//			ServerSerializationStreamReader streamReader = new ServerSerializationStreamReader(
-//					classLoader, serializationPolicyProvider);
 			streamReader.prepareToRead(encodedRequest);
 
 			// Read the name of the RemoteService interface
@@ -62,9 +60,7 @@ public class RPC {
 //			}
 
 			String serviceMethodName = streamReader.readString();
-Logging.log("Got MethodName"+serviceMethodName);
 			int paramCount = streamReader.readInt();
-Logging.log("Got ParameterCount="+paramCount);			
 			String[] parameterTypes = new String[paramCount];
 
 			// Read Parameter Types
