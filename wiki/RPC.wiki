@@ -13,14 +13,16 @@ We're going to split the application into three distict modules :
  * ServerSide
  * Remote Interfaces
  
-The ServerSide module will be compiled into an OperaUnite application, whereas the ClientSide module neneds to be accisble to the browser, hence the reason they need to be in seperate modules, and compiled seperately.  Both the client and server need access to the Remote interfaces and that's why these are placed in a common module.
+The ServerSide module will be compiled into an OperaUnite application, whereas the ClientSide module needs to be accessible to the browser, hence the reason they need to be in seperate modules, and compiled separately.  Both the client and server need access to the Remote interfaces and that's why these are placed in a common module.
 
 So that we can keep everything nice and neatly together, we're also going to override the default GWT source package names.  This leaves us with the following package structure.
 
+{{{
 gwtunite.testrpc
 gwtunite.testrpc.clientside  <-- Holds the client application
 gwtunite.testrpc.common      <-- Holds the common RemoteService interfaces
 gwtunite.testrpc.serverside  <-- Hosts the RemoteServices within OperaUnite
+}}}
 
 ==Remote Interfaces==
 Remote interfaces are defined in exactly the same was as if you were using standard GWT RPC :
