@@ -1,11 +1,10 @@
 #summary An introduction to GWT-Unite RPC
 ==Using GWT-Unite RPC==
-*NOTE: This is a new feature only currently available in the RC! Use it at your own risk, however things COULD change between now and V2!*
-The RPC framework in GWTUnite was designed to work seamlessly with the standard GWT RPC framework.  For the most part you can simply develop RemoteServices as you would when using standard GWT (described here), however GWT RPC assumes that the server side of the connection will be a Java Servlet.  In order to make the transition to OperaUnite, the server side must be written in JavaScript, luckily GWTUnite includes all the plumbing to make this happen with very little modifications to your GWT services.
+GWT Unite RPC has been written to be completely compatible with standard GWT RPC, in fact, if you already have a GWT client and server written, there is only one small code change to make (changing the RemoteServiceServlet to GwtUniteRemoteService).
 
-GWT-Unite RPC is completely compatible with standard GWT RPC, which means you don't have to learn (or even use) any new code in order to get it to work.
+Since everything is compatible, you develop a GWT-Unite service as you would a standard GWT RPC service.  For more information, see : http://code.google.com/webtoolkit/doc/1.6/DevGuideServerCommunication.html#DevGuideRemoteProcedureCalls
 
-The following provides an example of building a simple RPC solution.  It assumes your already familar with GWT RPC, if not, please see .... for more information.
+For completion, here is a complete tutorial on developing a simple RPC client and server.
 
 ==Module Structure==
 We're going to split the application into three distict modules : 
