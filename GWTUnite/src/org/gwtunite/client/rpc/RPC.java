@@ -1,12 +1,8 @@
 package org.gwtunite.client.rpc;
 
-import org.gwtunite.client.commons.Logging;
-
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.impl.Serializer;
-import com.google.gwt.user.server.rpc.SerializationPolicy;
-import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamWriter;
 
 public class RPC {
 
@@ -66,7 +62,6 @@ public class RPC {
 			// Read Parameter Types
 			for (int i = 0; i < parameterTypes.length; i++) {
 				parameterTypes[i] = streamReader.readString();
-				Logging.log("Read parameter type "+i+"=" +parameterTypes[i]);
 			}
 
 			// Read parameter values
@@ -94,12 +89,8 @@ public class RPC {
 		GwtUniteSerializationStreamWriter stream = new GwtUniteSerializationStreamWriter(serializer);
 		stream.prepareToWrite();
 		
-		try {
-			if (object != RemoteService.VOID_RETURN)
-				stream.writeObject(object);
-		} catch (SerializationException e) {
-			Logging.log("Serialization Exception "+e.getMessage());
-		}
+		if (object != RemoteService.VOID_RETURN)
+			stream.serializeValue(object);
 		
 		return (wasThrown ? "//EX" : "//OK") + stream.toString();
 	}	
