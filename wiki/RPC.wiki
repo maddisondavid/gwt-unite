@@ -221,7 +221,9 @@ Again, for completion, here is the ClientSide.gwt.xml module definition to be pl
 </module>
 }}}
 
-You'll notice we have a _public_ node in the module definition.  This node defines the path to artifacts which need to be included with the compiled application.  I've modified it from the standard public  In the case of the GWT client this is the bootstrap HTML page whic
+You'll notice we have a _public_ node in the module definition.  This node defines the path to artifacts which need to be included with the compiled application.  I've modified it from the standard public  In the case of the GWT client this is the bootstrap HTML page which will pull the compiled client code into the browser.
+
+If we were to use the standard _public_ folder for this file, it would also be picked up by our ServerSide.gwt.xml module and thus overwrite the generated html file for the server.  For that reason we put the client public files in a clientpublic folder.
 
 == Compilation ==
 Compilation of the application can be a tricky thing to get your head around seeing as we really need to compile two GWT applications (client AND server).  After compilation, we want the resulting .UA file to have the following structure : 
