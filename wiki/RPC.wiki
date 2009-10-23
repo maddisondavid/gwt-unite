@@ -35,7 +35,9 @@ public interface GreetServer extends RemoteService {
 }
 }}}
 
-Our service has two methods, one that returned "Hello "+name and one that returns an array of greetings.  When using GWT RPC you also have to define the asynchronous interface and ours looks as such :
+Our service has two methods, one that returned "Hello "+name and one that returns an array of greetings.  One important thing to note is the _@RemoteServiceRelativePath_ annotation.  Your interface MUST include this standard GWT annotation which tells GWTUnite the URL under which to register your server.  In this case our server will be registered under _http://<deviceurl>/<servicename>/MyGreetService_.
+
+When using GWT RPC you also have to define the asynchronous interface and ours looks as such :
 {{{
 public interface GreetServerAsync {
 
@@ -105,7 +107,7 @@ public class MyTestGreetServer extends GwtUniteRemoteService implements GreetSer
 }
 }}}
 
-Here there are two methods the client can call.  _Greet_ returns the string "Hello <Name>" and _greetPeople_ returns an array of greetings for each _Person_ passed in.  This looks exactly the same as if it were a standard GWT RPC servlet except for the _GwtUniteRemoteService_ which must be extended.
+Here there are two methods the client can call.  _Greet_ returns the string "Hello [Name]" and _greetPeople_ returns an array of greetings for each _Person_ passed in.  This looks exactly the same as if it were a standard GWT RPC servlet except for the _GwtUniteRemoteService_ which must be extended.
 
 The last thing is our ServerSide.gwt.xml module definition for Server which will be placed in _gwtunite_testrpc_:
 {{{
@@ -189,3 +191,7 @@ public class RPCTestApp implements EntryPoint {
 	}
 }
 }}}
+
+As you can see, this is a standard GWT application, there's no GWT-Unite code anywhere in it.  It displays two buttons that invoke the particular server methods and displays the response in alert boxes.
+
+== Compilation ==
