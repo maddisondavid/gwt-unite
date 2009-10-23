@@ -138,6 +138,7 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
     STRING {
       @Override
       void write(GwtUniteSerializationStreamWriter stream, Object instance) {
+    	Logging.log("Writing Stream!");
         stream.writeString((String) instance);
       }
     };
@@ -476,10 +477,8 @@ public final class GwtUniteSerializationStreamWriter extends AbstractSerializati
     tokenListCharCount = 0;
   }
 
-  public void serializeValue(Object value, Class<?> type)
-      throws SerializationException {
-    ValueWriter valueWriter = CLASS_TO_VALUE_WRITER.get(type);
-    Logging.log("Using value Writer ="+valueWriter);
+  public void serializeValue(Object value) throws SerializationException {
+    ValueWriter valueWriter = CLASS_TO_VALUE_WRITER.get(value.getClass());
     if (valueWriter != null) {
       valueWriter.write(this, value);
     } else {
