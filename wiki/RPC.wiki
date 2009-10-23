@@ -76,8 +76,7 @@ public class Person implements Serializable {
 	}
 }
 }}}
-
-The last thing with the common classes it to create a module definition so they can be imported: This will be placed in in _gwtunite.testrpc_:
+For completion we need a Common.gwt.xml module definition to be placed in _gwtunite.testrpc_:
 {{{
 <module>
 	<source path="common"/>
