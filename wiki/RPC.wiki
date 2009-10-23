@@ -241,7 +241,7 @@ ROOT
 
 }}}
 
-To compile, we'll use the standard gwt-unite-application-builder.xml which has been improved in V2 to handle client/server compilations.  A build script looks as follows:
+To compile, we'll use the standard gwt-unite-application-builder.xml which has been improved in V2 to handle client/server compilations.  A build.xml ANT script looks as follows:
 {{{
 <project name="RPCTestApp" basedir=".">
 	<property name="serverSideModule" value="gwtunite.testrpc.ServerSide"/>
