@@ -1,0 +1,191 @@
+#summary An introduction to GWT-Unite RPC
+==Using GWT-Unite RPC==
+*NOTE: This is a new feature only currently available in the RC! Use it at your own risk, however things COULD change between now and V2!*
+The RPC framework in GWTUnite was designed to work seamlessly with the standard GWT RPC framework.  For the most part you can simply develop RemoteServices as you would when using standard GWT (described here), however GWT RPC assumes that the server side of the connection will be a Java Servlet.  In order to make the transition to OperaUnite, the server side must be written in JavaScript, luckily GWTUnite includes all the plumbing to make this happen with very little modifications to your GWT services.
+
+GWT-Unite RPC is completely compatible with standard GWT RPC, which means you don't have to learn (or even use) any new code in order to get it to work.
+
+The following provides an example of building a simple RPC solution.  It assumes your already familar with GWT RPC, if not, please see .... for more information.
+
+==Module Structure==
+We're going to split the application into three distict modules : 
+
+ * ClientSide
+ * ServerSide
+ * Remote Interfaces
+ 
+The ServerSide module will be compiled into an OperaUnite application, whereas the ClientSide module neneds to be accisble to the browser, hence the reason they need to be in seperate modules, and compiled seperately.  Both the client and server need access to the Remote interfaces and that's why these are placed in a common module.
+
+So that we can keep everything nice and neatly together, we're also going to override the default GWT source package names.  This leaves us with the following package structure.
+
+gwtunite.testrpc
+gwtunite.testrpc.clientside  <-- Holds the client application
+gwtunite.testrpc.common      <-- Holds the common RemoteService interfaces
+gwtunite.testrpc.serverside  <-- Hosts the RemoteServices within OperaUnite
+
+==Remote Interfaces==
+Remote interfaces are defined in exactly the same was as if you were using standard GWT RPC :
+
+{{{
+@RemoteServiceRelativePath("MyGreetService")
+public interface GreetServer extends RemoteService {
+
+	public String greet(String name);
+	public String[] greetPeople(String greeting, Person[] people);
+}
+}}}
+
+Our service has two methods, one that returned "Hello "+name and one that returns an array of greetings.  When using GWT RPC you also have to define the asynchronous interface and ours looks as such :
+{{{
+public interface GreetServerAsync {
+
+	public void greet(String name, AsyncCallback<String> callback);
+	public void greetPeople(String greeting, Person[] people, AsyncCallback<String[]> callback);
+}
+}}}
+To complete the example, here's the definition of the Person object which is just a simple POJO :
+{{{
+public class Person implements Serializable {
+	private String salutation;
+	private String surname;
+	
+	public Person() {} // Required by GWT RPC
+	
+	public Person(String salutation, String surname) {
+		this.setSalutation(salutation);
+		this.setSurname(surname);
+	}
+
+	public void setSalutation(String salutation) {
+		this.salutation = salutation;
+	}
+
+	public String getSalutation() {
+		return salutation;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+}
+}}}
+
+The last thing with the common classes it to create a module definition so they can be imported: This will be placed in in _gwtunite.testrpc_:
+{{{
+<module>
+	<source path="common"/>
+</module>
+}}}
+
+==The Server==
+Again, the server code is written as if you were writing a standard GWT RPC service, but instead of the service extending the RemoteServiceServlet it needs to extend GwtUniteRemoteService.  This means our server code looks as follows:
+{{{
+public class MyTestGreetServer extends GwtUniteRemoteService implements GreetServer{
+
+	public String greet(String name) {
+		Logging.log("I got the message "+name);
+		String s = "Hello "+name;
+		Logging.log("Returning Hello "+name);
+		return s;
+	}
+
+	public String[] greetPeople(String greeting, Person[] people) {
+		String[] greetings = new String[people.length];
+		
+		for (int i=0;i<people.length;i++) {
+			greetings[i]="Hello "+people[i].getSalutation()+" "+people[i].getSurname();
+		}
+		
+		return greetings;
+	}
+}
+}}}
+
+Here there are two methods the client can call.  _Greet_ returns the string "Hello <Name>" and _greetPeople_ returns an array of greetings for each _Person_ passed in.  This looks exactly the same as if it were a standard GWT RPC servlet except for the _GwtUniteRemoteService_ which must be extended.
+
+The last thing is our ServerSide.gwt.xml module definition for Server which will be placed in _gwtunite_testrpc_:
+{{{
+<module>
+	<inherits name="org.gwtunite.RPC"/>
+	<inherits name="gwtunite.testrpc.Common"/>
+		
+	<source path="serverside"/>	
+</module>
+}}}
+Notice that your module definition *MUST* inherit org.gwtunite.RPC.  This is required, otherewise the plumbing to register and invoke your RemoteService's won't be created.
+
+==The Client==
+At this point you could compile the server and you'd have an RPC service, but it's probably better if we have some client to call it!
+
+The client code is written completely in standard GWT RPC, that is, as if it were communicating with a RemoteServiceServlet.  It's a bit long, but here is the complete Client code :
+{{{
+public class RPCTestApp implements EntryPoint {
+
+	@Override
+	public void onModuleLoad() {
+		RootPanel.get().add(createPanel());
+	}
+	
+	private Widget createPanel() {
+		FlowPanel panel = new FlowPanel();
+		
+		Button greetBtn = new Button("Greet");
+		greetBtn.addClickHandler(new ClickHandler() {
+			@Override public void onClick(ClickEvent event) {
+				greetName("Fred");
+			}
+		});
+		
+		panel.add(greetBtn);
+
+		Button greetPeopleBtn = new Button("Greet People");
+		greetPeopleBtn.addClickHandler(new ClickHandler() {
+			@Override public void onClick(ClickEvent event) {
+				greetPeople("Hello",new Person[]{
+						new Person("Dr","No"),
+						new Person("Mr","Smith"),
+						new Person("Mrs","Smith")});
+			}
+		});
+		
+		panel.add(greetPeopleBtn);
+		
+		return panel;
+	}
+	
+	private void greetName(String name) {
+		GreetServerAsync server = GWT.create(GreetServer.class);
+		server.greet(name, new AsyncCallback<String>() {
+			@Override public void onFailure(Throwable caught) {
+				Window.alert("I've Failed : "+caught.getMessage());
+			}
+			
+			@Override public void onSuccess(String result) {
+				Window.alert("Result="+result);
+			}
+		});
+	}
+	
+	private void greetPeople(String greeting, Person[] people) {
+		GreetServerAsync server = GWT.create(GreetServer.class);
+		server.greetPeople(greeting, people, new AsyncCallback<String[]>() {
+			@Override public void onFailure(Throwable caught) {
+				Window.alert("I've Failed : "+caught.getMessage());
+			}
+			
+			@Override public void onSuccess(String[] result) {
+				StringBuffer buffer = new StringBuffer();
+				for(String s : result) {
+					buffer.append(s+"\n");
+				}
+				
+				Window.alert(buffer.toString());
+			}
+		});
+	}
+}
+}}}
