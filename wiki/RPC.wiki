@@ -115,10 +115,24 @@ The last thing is our ServerSide.gwt.xml module definition for Server which will
 	<inherits name="org.gwtunite.RPC"/>
 	<inherits name="gwtunite.testrpc.Common"/>
 		
-	<source path="serverside"/>	
+	<source path="serverside"/>
+	
+	<entry-point class="gwtunite.testrpc.serverside.ClientRedirector"/>
 </module>
 }}}
 Notice that your module definition *MUST* inherit org.gwtunite.RPC.  This is required, otherewise the plumbing to register and invoke your RemoteService's won't be created.
+
+Notice also that we have an _entry-point_ definition.  This isn't a requirement of an RPC application, GWT-Unite will create an entry point to register your service, however we must remember that we have a GWT client application that our service must also serve up.  If anybody accesses the _Index_ page our our server, we want the clients index.html page sent back to the server and thus we use the GWT-Unite built in RedirectorHandler.  The servers ClientRedirector looks as follows:
+{{{
+public class ClientRedirector extends OperaUniteEntryPoint {
+
+	@Override
+	public void init(WebServer webServer) {
+		webServer.addEventListener(WebServer.INDEX_PATH, new RedirectHandler("index.html"), false);
+	}
+}
+}}}
+When a client accesses the index page, a redirect will be sent back for the index.html page.  Packaging the client and server is discussed further in the compilation section.
 
 ==The Client==
 At this point you could compile the server and you'd have an RPC service, but it's probably better if we have some client to call it!
