@@ -5,5 +5,5 @@
 		<when-type-assignable class="org.gwtunite.client.rpc.RemoteServiceRegistry"/>
 	</generate-with>
 	
-	<entry-point class="org.gwtunite.client.rpc.RemoteServiceApplication"/>
+	<entry-point class="org.gwtunite.client.rpc.RemoteServiceEntryPoint"/>
  </module>
