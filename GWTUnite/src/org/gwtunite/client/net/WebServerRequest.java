@@ -1,5 +1,9 @@
 package org.gwtunite.client.net;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.gwtunite.client.file.File;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -14,7 +18,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  * is called.</p>
  */
 final public class WebServerRequest extends JavaScriptObject {
-	
 	protected WebServerRequest() {
 	}
 	
@@ -138,14 +141,20 @@ final public class WebServerRequest extends JavaScriptObject {
 	        return this.headers[name];
 	}-*/;	
 	
-	public String getCookie(String name) {
-		if (hasHeader("Cookie")) {
-//			for (String header : getHeader(name)) {
-				return getHeader("Cookie")[0];
-	//		}
-		} else {
-			return null;
-		}
+	/** 
+	 * Returns all the cookies sent as part of this request
+	 * 
+	 * @return
+	 */
+	public Map<String, Cookie> getCookies() {
+		Map<String, Cookie> cookies = new HashMap<String, Cookie>();
+		if (hasHeader("Cookie"))
+			for (String cookie : getHeader("Cookie")) {
+				String cookieParts[] = cookie.split("=");
+				cookies.put(cookieParts[0],new Cookie(cookieParts[0],cookieParts[1]));
+			}
+
+		return cookies;
 	}
 	
     /**
