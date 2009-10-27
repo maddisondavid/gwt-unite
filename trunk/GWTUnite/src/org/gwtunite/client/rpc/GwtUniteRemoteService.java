@@ -13,9 +13,8 @@ import com.google.gwt.user.client.rpc.impl.Serializer;
 
 /**
  * Represents a Remote Service
- * 
  */
-public class RemoteService extends WebServerEventHandler {
+public class GwtUniteRemoteService extends WebServerEventHandler {
 	final static Object VOID_RETURN = new Object();
 	
 	@Override
@@ -27,12 +26,14 @@ public class RemoteService extends WebServerEventHandler {
 			Object methodResponse = callMethod(rpcRequest.getMethodName(), rpcRequest.getParameters());
 			
 			// What do we do about VOID response?
-			response.write(RPC.encodeResponseForSuccess(methodResponse, getSerializer()));
+			response.write(RPC.encodeResponseForSuccess(methodResponse, getSerializer(), getReturnType(rpcRequest.getMethodName())));
 		} catch (Exception e) {
+			Logging.handleException(e);
 			try {
 				response.write(RPC.encodeResponseForFailure(e, getSerializer()));
 			} catch(SerializationException se ) {
 				Logging.log("Unable to send result back to client due to "+se);
+				Logging.handleException(se);
 			}
 		}
 		finally {
@@ -40,11 +41,15 @@ public class RemoteService extends WebServerEventHandler {
 		}
 	}
 	
+	protected Class<?> getReturnType(String method) throws Exception {
+		throw new UnsupportedOperationException("Overriden at compile time");
+	}
+	
 	protected Object callMethod(String methodName, Object[] parameters) throws Exception {
-		throw new UnsupportedOperationException("Overrided at compile time");
+		throw new UnsupportedOperationException("Overriden at compile time");
 	}
 	
 	protected Serializer getSerializer() {
-		throw new UnsupportedOperationException("Overrided at compile time");
+		throw new UnsupportedOperationException("Overriden at compile time");
 	}
 }

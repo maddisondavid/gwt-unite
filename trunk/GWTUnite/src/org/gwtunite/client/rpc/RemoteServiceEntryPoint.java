@@ -12,7 +12,7 @@ public class RemoteServiceEntryPoint extends OperaUniteEntryPoint {
 	@Override
 	public void init(WebServer webServer) {
 		final RemoteServiceRegistry registry = GWT.create(RemoteServiceRegistry.class);
-		for (Map.Entry<String, RemoteService> entry : registry.getServices().entrySet()) {
+		for (Map.Entry<String, GwtUniteRemoteService> entry : registry.getServices().entrySet()) {
 			webServer.addEventListener(entry.getKey(), entry.getValue(), false);
 		}
 	}

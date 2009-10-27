@@ -77,20 +77,25 @@ public class RPC {
 		}
 	}
 	
-	public static String encodeResponseForSuccess(Object response, Serializer serializer) throws SerializationException{
-		return encodeResponse(response, serializer, false);
+	public static String encodeResponseForSuccess(Object response, Serializer serializer, Class returnType) throws SerializationException{
+		return encodeResponse(returnType, response, serializer, false);
 	}
 
 	public static String encodeResponseForFailure(Exception response, Serializer serializer) throws SerializationException{
-		return encodeResponse(response, serializer, true);
+		return encodeResponse(Exception.class, response, serializer, true);
 	}
 	
-	private static String encodeResponse(Object object, Serializer serializer, boolean wasThrown) throws SerializationException {	
+	private static String encodeResponse(Class responseClass, Object object, Serializer serializer, boolean wasThrown) throws SerializationException {	
 		GwtUniteSerializationStreamWriter stream = new GwtUniteSerializationStreamWriter(serializer);
 		stream.prepareToWrite();
 		
-		if (object != RemoteService.VOID_RETURN)
-			stream.serializeValue(object);
+		/**
+		 * We can't just send back the type of the object, we need to look at the return
+		 * type.  The reason for this is polymorphism.  Basically, the client doesn't know 
+		 * how to decode types if the return type is less specific
+		 */
+		if (responseClass != void.class)
+			stream.serializeValue(object, responseClass);
 		
 		return (wasThrown ? "//EX" : "//OK") + stream.toString();
 	}	
