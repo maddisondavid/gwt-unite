@@ -25,6 +25,11 @@ public class WebServerRequestTests extends TestCase {
 	}
 	
 	@Test
+	public void testCookiesAreParsed() throws Exception {
+		
+	}
+	
+	@Test
 	public void requestAttributesSet() throws Exception {
 		String handler = "attributeTest";
 		fixture.addTestHandler(handler, new WebServerEventHandler() {
