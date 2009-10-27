@@ -455,12 +455,6 @@ final public class File extends JavaScriptObject {
      * @throws IOException if this object represents a file
      */
     public native File[] listFiles() throws IOException /*-{
-    	if (!this.exists)
-    		throw @org.gwtunite.client.file.IOException::new(Ljava/lang/String;)("attempt to listFiles on a non existent directory '"+this.name+"'");
-    		
-    	if (!this.isDirectory)
-    		throw @org.gwtunite.client.file.IOException::new(Ljava/lang/String;)("attempt to listFiles on a file");
-    
     	this.refresh();
     	if (this.length == 0) 
     		return [];
