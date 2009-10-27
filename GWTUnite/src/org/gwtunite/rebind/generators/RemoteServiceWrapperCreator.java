@@ -64,6 +64,7 @@ public class RemoteServiceWrapperCreator{
 			emitConstructor(logger, srcWriter, className);
 			emitGetSerializerMethod(logger, srcWriter, serializerName);
 			emitCallMethod(logger, srcWriter, serviceInterfaces);
+			emitGetReturnTypeMethod(logger, srcWriter, serviceInterfaces);
 			srcWriter.commit(logger);
 			
 			return Collections.singletonMap(remotePath.value(), packageName+"."+className);
@@ -128,6 +129,25 @@ public class RemoteServiceWrapperCreator{
 							if (method.getReturnType().equals(JPrimitiveType.VOID)) {
 								sourceWriter.println("return VOID_RETURN;");
 							}
+						sourceWriter.outdent();
+					sourceWriter.println("}");
+					sourceWriter.println();
+				}
+			}
+		
+			sourceWriter.println("throw new Exception(\"Method \"+methodName+\" not found\");");
+		sourceWriter.outdent();
+		sourceWriter.println("}");
+	}
+	
+	private static void emitGetReturnTypeMethod(TreeLogger logger, SourceWriter sourceWriter, Collection<JClassType> serviceInterfaces) {
+		sourceWriter.println("@Override protected Class<?> getReturnType(String methodName) throws Exception {");
+		sourceWriter.indent();
+			for (JClassType intfType : serviceInterfaces) {
+				for (JMethod method : intfType.getMethods()) {
+					sourceWriter.println("if (methodName.equals(\""+method.getName()+"\")) {");
+						sourceWriter.indent();
+								sourceWriter.println("return "+method.getReturnType().getQualifiedSourceName()+".class;");
 						sourceWriter.outdent();
 					sourceWriter.println("}");
 					sourceWriter.println();

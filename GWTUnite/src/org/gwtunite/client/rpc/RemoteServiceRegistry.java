@@ -5,13 +5,13 @@ import java.util.Map;
 
 
 public class RemoteServiceRegistry {
-	private final Map<String, RemoteService> remoteServices = new HashMap<String, RemoteService>();
+	private final Map<String, GwtUniteRemoteService> remoteServices = new HashMap<String, GwtUniteRemoteService>();
 	
-	protected void registerService(String endPointName, RemoteService serviceClass) {
+	protected void registerService(String endPointName, GwtUniteRemoteService serviceClass) {
 		remoteServices.put(endPointName, serviceClass);
 	}
 
-	public Map<String, RemoteService> getServices() {
+	public Map<String, GwtUniteRemoteService> getServices() {
 		return remoteServices;
 	}
 }

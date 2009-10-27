@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.gwtunite.client.rpc.RemoteService;
+import org.gwtunite.client.rpc.GwtUniteRemoteService;
 import org.gwtunite.client.rpc.RemoteServiceRegistry;
 
 import com.google.gwt.core.ext.Generator;
@@ -38,13 +38,13 @@ public class RemoteServiceRegistryGenerator extends Generator {
 		// Generate All the RemoteServiceWrappers
 		Map<String, String> remoteServiceWrappers = new HashMap<String,String>();
 		try {
-			JClassType[] subTypes = typeOracle.getType(RemoteService.class.getName()).getSubtypes();
+			JClassType[] subTypes = typeOracle.getType(GwtUniteRemoteService.class.getName()).getSubtypes();
 			
 			for (JClassType remoteService : subTypes) {
 				remoteServiceWrappers.putAll(RemoteServiceWrapperCreator.create(logger, context, remoteService));
 			}
 		} catch (NotFoundException e) {
-			logger.log(Type.ERROR, "Unable to find type "+RemoteService.class.getName());
+			logger.log(Type.ERROR, "Unable to find type "+GwtUniteRemoteService.class.getName());
 			throw new UnableToCompleteException();
 		}
 		
