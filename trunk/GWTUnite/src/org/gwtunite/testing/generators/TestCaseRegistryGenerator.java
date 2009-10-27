@@ -75,16 +75,16 @@ public class TestCaseRegistryGenerator  extends Generator{
 	}
 	
 	private void emitNewTestCaseInstanceMethod(TreeLogger logger, SourceWriter sourceWriter, Map<String,String> testCaseExecutors) {
-		sourceWriter.println("public TestCase newTestCaseInstance(String testCaseName) {");
+		sourceWriter.println("public TestCase newTestCaseInstance(String testCaseClass) {");
 		sourceWriter.indent();
 			for (Map.Entry<String, String> entry : testCaseExecutors.entrySet()) {
-				sourceWriter.println("if (testCaseName.equals(\"" + entry.getValue()  + "\"))");
+				sourceWriter.println("if (testCaseClass.equals(\"" + entry.getValue()  + "\"))");
 				sourceWriter.indent();
 					sourceWriter.println("return new "+entry.getKey()+"();");
 				sourceWriter.outdent();
 				sourceWriter.println();
 			}
-			sourceWriter.println("throw new RuntimeException(testCaseName+\" Not found\");");
+			sourceWriter.println("throw new RuntimeException(\"Test case class \"+testCaseClass+\" Not found whilst creating a new instance\");");
 		sourceWriter.outdent();
 		sourceWriter.println("}");
 	}
