@@ -26,7 +26,8 @@ public class TestCaseInfoGenerator {
 		
 		SourceWriter sourceWriter = emitClassDefinition(logger, context, packageName, className);
 		if (sourceWriter != null) {
-			emitGetNameMethod(logger, sourceWriter, testCaseType.getQualifiedSourceName());
+			emitGetNameMethod(logger, sourceWriter, testCaseType.getName());
+			emitGetClassNameMethod(logger, sourceWriter, testCaseType.getQualifiedSourceName());
 			emitGetTestsMethod(logger, sourceWriter, TestReflectionUtils.findTestMethodNames(testCaseType));
 			
 			sourceWriter.commit(logger);
@@ -67,7 +68,15 @@ public class TestCaseInfoGenerator {
 		sourceWriter.outdent();
 		sourceWriter.println("}");		
 	}
-
+	
+	private static void emitGetClassNameMethod(TreeLogger logger, SourceWriter sourceWriter, String testCaseClass) {
+		sourceWriter.println("public String getClassName() {");
+		sourceWriter.indent();
+			sourceWriter.println("return \""+testCaseClass+"\";");
+		sourceWriter.outdent();
+		sourceWriter.println("}");		
+	}
+	
 	private static String getExecutorClassName(JClassType type) {
 		return type.getName()+TESTINFO_NAME_PREFIX;
 	}

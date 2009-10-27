@@ -6,5 +6,6 @@ package org.gwtunite.testing.client.framework;
 public interface TestCaseInfo {
 
 	public String getName();
+	public String getClassName();
 	public String[] getTests();
 }

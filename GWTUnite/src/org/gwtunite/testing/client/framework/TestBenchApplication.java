@@ -50,10 +50,10 @@ public class TestBenchApplication extends OperaUniteEntryPoint {
 			public void onConnection(WebServerRequest request, WebServerResponse response) {
 				response.writeLine("<html><link rel=\"stylesheet\" type=\"text/css\" href=\"Testing.css\"/><body><image src=\"images/Banner.png\"/>");
 				for (TestCaseInfo testCaseInfo : testCaseRegistry.getAllTestCaseInfo()) {
-					response.writeLine("<img src=\"images/WhiteArrow.png\">&nbsp;<img src=\"images/runTests.png\">&nbsp;<a target=\"testResults\" href=\""+RUN_TESTS_CONTEXT+"?"+TEST_CASE_QUERY_ITEM+"="+testCaseInfo.getName()+"\">"+testCaseInfo.getName()+"</a>");
+					response.writeLine("<img src=\"images/WhiteArrow.png\">&nbsp;<img src=\"images/runTests.png\">&nbsp;<a target=\"testResults\" href=\""+RUN_TESTS_CONTEXT+"?"+TEST_CASE_QUERY_ITEM+"="+testCaseInfo.getClassName()+"\">"+testCaseInfo.getName()+"</a>");
 					response.writeLine("<ul>");
 					for (String testName : testCaseInfo.getTests()) {
-						response.writeLine("<li><img src=\"images/runTest.png\">&nbsp;<a target=\"testResults\" href=\""+RUN_TESTS_CONTEXT+"?"+TEST_CASE_QUERY_ITEM+"="+testCaseInfo.getName()+"&"+TEST_NAME_QUERY_ITEM+"="+testName+"\"/>"+testName+"</a></li>");
+						response.writeLine("<li><img src=\"images/runTest.png\">&nbsp;<a target=\"testResults\" href=\""+RUN_TESTS_CONTEXT+"?"+TEST_CASE_QUERY_ITEM+"="+testCaseInfo.getClassName()+"&"+TEST_NAME_QUERY_ITEM+"="+testName+"\"/>"+testName+"</a></li>");
 					}
 					
 					response.writeLine("</ul>");
