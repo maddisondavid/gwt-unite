@@ -1,5 +1,6 @@
 package org.gwtunite.testing.client.tests;
 
+import org.gwtunite.client.commons.FileUtils;
 import org.gwtunite.client.file.File;
 import org.gwtunite.client.file.FileFilter;
 import org.gwtunite.client.file.FileStream;
@@ -9,19 +10,12 @@ import org.gwtunite.client.file.File.FileOperationCompletedHandler;
 import org.gwtunite.testing.client.framework.Test;
 import org.gwtunite.testing.client.framework.TestCase;
 
-
 public class FileTests extends TestCase{
 
 	public void setUp() throws Exception {
-		File appDir = FileSystem.getInstance().mountSharedFileSystem();
-		for (File file : appDir.listFiles()) {
-			if (file.isDirectory()) {
-				file.delete();
-			} else {
-				file.delete();
-			}
-		}
-		FileSystem.getInstance().removeMountPoint("application");
+		File sharedDir = FileSystem.getInstance().mountSharedFileSystem();
+		FileUtils.deleteDirectoryContents(sharedDir);
+		FileSystem.getInstance().removeMountPoint("shared");
 	}
 
 	@Test
@@ -30,7 +24,7 @@ public class FileTests extends TestCase{
 		File artifacts = mountPoint.resolve("TestArtifacts");
 		File[] files = artifacts.listFiles();
 		
-		assertEquals(2, files.length);
+		assertEquals(4, files.length);
 	}
 	
 	@Test

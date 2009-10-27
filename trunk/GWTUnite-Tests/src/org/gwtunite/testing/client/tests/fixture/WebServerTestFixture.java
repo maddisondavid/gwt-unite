@@ -11,6 +11,7 @@ import org.gwtunite.client.net.WebServerResponse;
 import org.gwtunite.testing.client.framework.TestCase;
 import org.gwtunite.testing.client.framework.TestCase.AssertionFailureException;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -34,13 +35,14 @@ public class WebServerTestFixture {
 	
 	public void setUp() {
 		webServer = WebServer.getInstance();
-		serverURL =  "http://localhost:"+webServer.getPort()+webServer.getCurrentServicePath();
+		serverURL =  GWT.getModuleBaseURL();
 	}
 	
 	public void invokeTestURLViaGet(final String localURL) throws Exception {
 		RequestBuilder requestBuilder = getLocalRequestBuilder(RequestBuilder.GET, localURL);
 	
 		requestBuilder.setCallback(new TestHttpHandler());
+		Logging.log("Calling "+requestBuilder.getUrl());
 		requestBuilder.send();
 	}
 	
