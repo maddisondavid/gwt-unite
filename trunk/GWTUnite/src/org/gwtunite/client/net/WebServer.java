@@ -5,7 +5,7 @@ package org.gwtunite.client.net;
 
 import org.gwtunite.client.FeatureUnavailableException;
 import org.gwtunite.client.file.File;
-
+import org.gwtunite.client.file.IOException;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -312,6 +312,24 @@ final public class WebServer extends JavaScriptObject {
 		this.shareFile(file, path);
 	}-*/;
 
+
+    /**
+     *  Shares all files in a directory and all sub-directories
+     *  
+     *  @param dir The directory to share
+     *  @param rootPath The path to which 
+     *  @throws IOException if the file is not a directory
+     */
+	public void shareDirectory(File dir, String rootPath) throws IOException {
+		for (File file : dir.listFiles()) {
+			if (file.isDirectory()) {
+				shareDirectory(file, rootPath);
+			} else if (file.isFile()) {
+                shareFile(file, rootPath+file.getVirtualPath());
+			}
+		}
+	}
+	
     /**
      * Unshares a previously shared file
      *
