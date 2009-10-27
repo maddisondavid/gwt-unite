@@ -70,7 +70,7 @@ public class OperaUniteLinker extends AbstractLinker {
 		
 		code.append("\n");
 		code.append("var $stats=null;\n");
-		code.append("gwtOnLoad(null,\""+ context.getModuleName()+"\",\"\");");
+		code.append("gwtOnLoad(null,\""+ context.getModuleName()+"\",\"http://\"+opera.io.webserver.hostName+opera.io.webserver.currentServicePath);");
         return emitString(logger, code.toString(), "scripts/script.js");
 	}
 
