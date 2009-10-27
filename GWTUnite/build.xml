@@ -6,7 +6,7 @@
 	<property name="dist.dir" value="dist"/>
 	<property name="jarname" value="GWTUnite"/>
 
-	<property name="version" value="1.0"/>
+	<property name="version" value="2.0"/>
 	
 	<target name="javadoc">
 			<mkdir dir="javadoc"/>
